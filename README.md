@@ -24,6 +24,7 @@ Because this project uses a multi-module Maven structure, IntelliJ might not imm
 * This will trigger IntelliJ to download all dependencies and link the microservices (like `auth-service`) properly.
 
 **3. How to add a microservices**
+To correctly configure a new microservice please follow these steps
 *While being in the backend folder right click on the folder -> New -> Module -> Spring Boot.
 *Name it however you think is suitable for the service. Ex: auth-service.
 *Language - java

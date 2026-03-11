@@ -6,7 +6,7 @@ Repository for team The night king - AIBEST Tech Academy
 ### Tech Stack
 * **Framework:** Spring Boot 3.x
 * **Build Tool:** Maven
-* [cite_start]**Database:** PostgreSQL [cite: 58]
+* **Database:** PostgreSQL [cite: 58]
 * **Architecture:** Multi-module microservices (Parent POM with child services)
 
 ### Getting Started

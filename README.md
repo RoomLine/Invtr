@@ -25,18 +25,18 @@ Because this project uses a multi-module Maven structure, IntelliJ might not imm
 
 **3. How to add a microservices**
 To correctly configure a new microservice please follow these steps
-*While being in the backend folder right click on the folder -> New -> Module -> Spring Boot.
-*Name it however you think is suitable for the service. Ex: auth-service.
-*Language - java
-*type - Maven
-*Group: com.invtr
-*Artifact: Match the name (e.g., auth-service)
-*Package name: com.invtr.authservice
-*JDK - 21
-*Java - 21
-*Packaging: Jar
-*Dependencies: Select the required Spring dependencies (e.g., Spring Web, Spring Data JPA, PostgreSQL Driver).
-*Crucial Linking Step: Once created, open the new service's pom.xml and change its <parent> tag to point to our custom backend parent POM instead of the default Spring Boot parent. Then, add the new module name to the <modules> list in the main backend/pom.xml.
+* While being in the backend folder right click on the folder -> New -> Module -> Spring Boot.
+* Name it however you think is suitable for the service. Ex: auth-service.
+* Language - java
+* type - Maven
+* Group: com.invtr
+* Artifact: Match the name (e.g., auth-service)
+* Package name: com.invtr.authservice
+* JDK - 21
+* Java - 21
+* Packaging: Jar
+* Dependencies: Select the required Spring dependencies (e.g., Spring Web, Spring Data JPA, PostgreSQL Driver).
+* Crucial Linking Step: Once created, open the new service's pom.xml and change its <parent> tag to point to our custom backend parent POM instead of the default Spring Boot parent. Then, add the new module name to the <modules> list in the main backend/pom.xml.
 
 
 # Invtr - Frontend

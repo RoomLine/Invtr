@@ -13,7 +13,10 @@ Repository for team The night king - AIBEST Tech Academy
 
 **1. Database Setup**
 * Ensure PostgreSQL is installed and running on your machine.
-* Create a new local database named `invtr_db`.
+* Make sure to also change the password in the application.properties (it is in (microservice_name)/src/main/resources/application.properties
+* Microservices Databases Setup: Because we use a database-per-service architecture, you must also create the separate databases in your PostgreSQL server - find in Discord:
+* After creation, make the connections to the each of them
+* Then run the rest of the code - table creation and more in the respective databases
 
 **2. IntelliJ Setup (Crucial Step)**
 Because this project uses a multi-module Maven structure, IntelliJ might not immediately recognize it as a Maven project when you first clone the repository.

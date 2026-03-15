@@ -30,4 +30,11 @@ public class AuthController {
     public AuthResponse login(@RequestBody LoginRequest request) {
         return authService.loginUser(request);
     }
+
+    @GetMapping("/logout")
+    public String logout() {
+        // Since we are using JWT, there is so such thing as a session.
+        // We just let the frontend know we need to delete the token
+        return "Successful logout! Please delete the jwt token."; // we need to change this soon
+    }
 }

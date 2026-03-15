@@ -1,5 +1,6 @@
 package com.invtr.authservice.config;
 
+import jakarta.servlet.DispatcherType; // Make sure to import this!
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -18,14 +19,14 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // 2. Настройваме кои пътища са заключени и кои са свободни
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll() // <-- THIS UNMASKS ERRORS!
                         .requestMatchers("/auth/**").permitAll()
-                        .anyRequest().authenticated() // Всичко останало ще изисква логин
+                        .anyRequest().authenticated()
                 );
 
         return http.build();

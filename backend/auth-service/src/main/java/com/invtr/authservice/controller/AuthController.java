@@ -17,10 +17,10 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @GetMapping("/")
-    public String home() {
-        return "if you're seeing this, the app(AuthController) is working";
-    }
+    @GetMapping("/health")
+    public ResponseEntity<String> home() {
+        return ResponseEntity.ok("if you're seeing this, the app(AuthController) is working");
+    } // change to /health or similar
 
     // POST /auth/register
     @PostMapping("/register")
@@ -37,9 +37,9 @@ public class AuthController {
     }
 
     @GetMapping("/logout")
-    public String logout() {
+    public ResponseEntity<String> logout() {
         // Since we are using JWT, there is so such thing as a session.
         // We just let the frontend know we need to delete the token
-        return "Successful logout! Please delete the jwt token."; // we need to change this soon
+        return ResponseEntity.ok("Successful logout! Please delete the jwt token.");
     }
 }

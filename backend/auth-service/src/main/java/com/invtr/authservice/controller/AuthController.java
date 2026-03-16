@@ -4,7 +4,10 @@ import com.invtr.authservice.dto.AuthResponse;
 import com.invtr.authservice.dto.LoginRequest;
 import com.invtr.authservice.dto.RegisterRequest;
 import com.invtr.authservice.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,14 +24,16 @@ public class AuthController {
 
     // POST /auth/register
     @PostMapping("/register")
-    public void register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterRequest request) {
         authService.registerUser(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User registered successfully");
     }
 
     // POST /auth/login
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody LoginRequest request) {
-        return authService.loginUser(request);
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
+        AuthResponse response = authService.loginUser(request);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/logout")

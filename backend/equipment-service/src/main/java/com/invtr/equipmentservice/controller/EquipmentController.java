@@ -1,16 +1,16 @@
 package com.invtr.equipmentservice.controller;
 
 
+import com.invtr.equipmentservice.dto.UpdateEquipmentStatusRequest;
 import com.invtr.equipmentservice.entity.Equipment;
 import com.invtr.equipmentservice.service.EquipmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/equipment")
+@RequestMapping("/equip")
 @RequiredArgsConstructor
 public class EquipmentController {
 
@@ -22,7 +22,7 @@ public class EquipmentController {
     }
 
     @GetMapping("/equipment/{id}")
-    public ResponseEntity<String> getEquipmentById(@RequestParam("id") String id) {
+    public ResponseEntity<String> getEquipmentById(@PathVariable Long id) {
         return ResponseEntity.ok("if you're seeing this, the app is working");
     }
 
@@ -37,12 +37,21 @@ public class EquipmentController {
     }
 
     @PutMapping("/equipment/{id}/status")
-    public ResponseEntity<String> updateEquipmentStatus(@Valid @RequestBody Equipment equipment, @PathVariable String id, String status) {
+    public ResponseEntity<String> updateEquipmentStatus(@Valid @RequestBody UpdateEquipmentStatusRequest request, @PathVariable Long id) {
         return ResponseEntity.ok("if you're seeing this, the app is working");
     }
 
     @DeleteMapping("/equipment/{id}")
-    public ResponseEntity<String> deleteEquipment(@Valid @RequestBody Equipment equipment, @PathVariable String id) {
+    public ResponseEntity<String> deleteEquipment(@PathVariable Long id) {
+        return ResponseEntity.ok("if you're seeing this, the app is working");
+    }
+
+    @GetMapping("/condition")
+    public ResponseEntity<String> getAllCondition() {
+        return ResponseEntity.ok("if you're seeing this, the app is working");
+    }
+    @GetMapping("/condition/{id}")
+    public ResponseEntity<String> getConditionById(@RequestParam("id") String id) {
         return ResponseEntity.ok("if you're seeing this, the app is working");
     }
 }

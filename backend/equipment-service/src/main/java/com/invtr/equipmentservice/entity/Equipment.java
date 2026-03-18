@@ -20,7 +20,7 @@ public class Equipment {
     private Long id;
 
     @Column(name = "type", nullable = false)
-    private String equipmentType;
+    private String type;
 
     @Column(name = "serial_no", nullable = false, unique = true)
     private String serialNumber;
@@ -31,8 +31,11 @@ public class Equipment {
     @Column(name = "condition", nullable = false)
     private String condition;
 
-    @Column(name = "location")
+    @Column(name = "location", nullable = false)
     private String location;
+
+    @Column(name = "is_sensitive")
+    private Boolean isSensitive;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

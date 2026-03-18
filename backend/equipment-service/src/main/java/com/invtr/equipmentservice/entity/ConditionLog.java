@@ -29,11 +29,10 @@ public class ConditionLog {
     private String notes;
 
     @Column(name = "logged_at", updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime loggedAt;
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
+        loggedAt = LocalDateTime.now();
     }
-
 }

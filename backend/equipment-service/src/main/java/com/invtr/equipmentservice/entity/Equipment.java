@@ -28,6 +28,9 @@ public class Equipment {
     @Column(name = "status", nullable = false)
     private String status;
 
+    @Column(name = "qr_code_url", nullable = false)
+    private String qrCodeUrl;
+
     @Column(name = "condition", nullable = false)
     private String condition;
 

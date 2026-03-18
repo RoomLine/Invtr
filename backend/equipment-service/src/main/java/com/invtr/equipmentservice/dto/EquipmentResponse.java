@@ -20,6 +20,7 @@ public class EquipmentResponse {
     private String equipmentStatus;
     private String condition;
     private String status;
+    private String qrCodeUrl;
     private String location;
     private Boolean isSensitive; // check if we want to include this field
     private LocalDateTime createdAt;

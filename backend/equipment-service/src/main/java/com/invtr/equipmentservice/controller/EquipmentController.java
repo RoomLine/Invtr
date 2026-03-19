@@ -1,12 +1,14 @@
 package com.invtr.equipmentservice.controller;
 
 
+import com.invtr.equipmentservice.dto.UpdateEquipmentRequest;
 import com.invtr.equipmentservice.dto.UpdateEquipmentStatusRequest;
 import com.invtr.equipmentservice.entity.Equipment;
 import com.invtr.equipmentservice.service.EquipmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -32,7 +34,7 @@ public class EquipmentController {
     }
 
     @PutMapping("/equipment/{id}")
-    public ResponseEntity<String> updateEquipment(@Valid @RequestBody Equipment equipment, @PathVariable String id) {
+    public ResponseEntity<Equipment> updateEquipment(@Valid @RequestBody Equipment equipment, @PathVariable String id) {
         return ResponseEntity.ok("if you're seeing this, the app is working");
     }
 
@@ -42,7 +44,7 @@ public class EquipmentController {
     }
 
     @DeleteMapping("/equipment/{id}")
-    public ResponseEntity<String> deleteEquipment(@PathVariable Long id) {
+    public ResponseEntity<String> deleteEquipmentById(@PathVariable Long id) {
         return ResponseEntity.ok("if you're seeing this, the app is working");
     }
 

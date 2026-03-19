@@ -22,6 +22,9 @@ public class Equipment {
     @Column(name = "type", nullable = false)
     private String type;
 
+    @Column(name = "name", nullable = false)
+    private String name;
+
     @Column(name = "serial_no", nullable = false, unique = true)
     private String serialNumber;
 

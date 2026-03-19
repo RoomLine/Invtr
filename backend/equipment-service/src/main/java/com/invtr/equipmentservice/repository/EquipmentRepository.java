@@ -4,11 +4,11 @@ import com.invtr.equipmentservice.entity.Equipment;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
-    Equipment findByEquipmentId(String equipmentId);
-    Equipment findByEquipmentName(String equipmentName);
-    Equipment findByEquipmentStatus(String equipmentStatus);
-    Equipment findByEquipmentType(String equipmentType);
+    Equipment findByID(long id);
+    Equipment findByName(String name);
+    Equipment findByStatus(String status);
+    Equipment findByType(String type);
     Equipment findBySerialNumber(String serialNumber);
-    Equipment findByEquipmentIdAndEquipmentStatus(String equipmentId, String equipmentStatus);
+    Equipment findByIdAndStatus(Long id, String equipmentStatus);
     Equipment findByCondition(String condition);
 }

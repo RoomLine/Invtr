@@ -14,7 +14,10 @@ import lombok.NoArgsConstructor;
 public class CreateEquipmentRequest {
     @NotBlank(message = "Type is required")
     private String type;
-    
+
+    @NotBlank(message = "Name is required")
+    private String name;
+
     @NotBlank(message = "Serial number is required")
     private String serialNumber;
     
@@ -26,6 +29,4 @@ public class CreateEquipmentRequest {
     
     @NotBlank(message = "Location is required")
     private String location;
-    
-    private Boolean isSensitive;
 }

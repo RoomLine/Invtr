@@ -12,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -53,5 +55,12 @@ public class AuthService {
         String token = jwtService.generateToken(user);
 
         return new AuthResponse(token);
+    }
+
+    public List<String> getAllAdminEmails() {
+        return userRepository.findByRoleName("ADMIN")
+                .stream()
+                .map(User::getEmail)
+                .toList();
     }
 }

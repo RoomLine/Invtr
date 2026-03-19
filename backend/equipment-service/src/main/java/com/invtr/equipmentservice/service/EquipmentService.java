@@ -1,16 +1,14 @@
 package com.invtr.equipmentservice.service;
 
 
-import com.invtr.equipmentservice.dto.CreateEquipmentRequest;
-import com.invtr.equipmentservice.dto.EquipmentResponse;
-import com.invtr.equipmentservice.dto.UpdateEquipmentRequest;
+import com.invtr.equipmentservice.dto.*;
+import com.invtr.equipmentservice.entity.ConditionLog;
 import com.invtr.equipmentservice.entity.Equipment;
 import com.invtr.equipmentservice.repository.ConditionLogRepository;
 import com.invtr.equipmentservice.repository.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -19,6 +17,7 @@ public class EquipmentService {
 
     private final EquipmentRepository equipmentRepository;
     private final ConditionLogRepository conditionLogRepository;
+    private final StockService stockService;
 
     private EquipmentResponse mapToResponse(Equipment equipment) {
         return EquipmentResponse.builder()
@@ -31,6 +30,16 @@ public class EquipmentService {
                 .location(equipment.getLocation())
                 .isSensitive(equipment.getIsSensitive())
                 .createdAt(equipment.getCreatedAt())
+                .build();
+    }
+
+    private ConditionLogResponse mapToConditionLogResponse(ConditionLog conditionLog) {
+        return ConditionLogResponse.builder()
+                .id(conditionLog.getId())
+                .equipmentId(conditionLog.getEquipmentId())
+                .condition(conditionLog.getCondition())
+                .notes(conditionLog.getNotes())
+                .loggedAt(conditionLog.getLoggedAt())
                 .build();
     }
 
@@ -73,20 +82,19 @@ public class EquipmentService {
     }
 
     public void deleteEquipmentById(Long id) {
-        if (equipmentRepository.existsById(id)) {
-            equipmentRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Equipment not found with id: " + id);
-        }
-    }
-    public EquipmentResponse updateEquipmentById(UpdateEquipmentRequest updateRequest, long id) {
         Equipment existing = equipmentRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not found"));
+                .orElseThrow(() -> new RuntimeException("Equipment not found with id: " + id));
+        equipmentRepository.deleteById(id);
+        stockService.checkStockAndNotify(existing.getName(), existing.getType());
+    }
+
+    public EquipmentResponse updateEquipmentById(UpdateEquipmentRequest updateRequest, Long id) {
+        Equipment existing = equipmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found equipment with id: " + id));
 
         if (updateRequest.getLocation() != null) {
             existing.setLocation(updateRequest.getLocation());
         }
-
         if (updateRequest.getCondition() != null) {
             existing.setCondition(updateRequest.getCondition());
         }
@@ -95,6 +103,48 @@ public class EquipmentService {
             existing.setIsSensitive("Electrical".equalsIgnoreCase(updateRequest.getType()));
         }
 
-        return mapToResponse(equipmentRepository.save(existing));
+        Equipment saved = equipmentRepository.save(existing);
+
+        if ("Broken".equalsIgnoreCase(saved.getCondition())) {
+            stockService.checkStockAndNotify(saved.getName(), saved.getType());
+        }
+
+        return mapToResponse(saved);
+    }
+
+    public EquipmentResponse updateEquipmentStatus(UpdateEquipmentStatusRequest updateStatusRequest, Long id) {
+        Equipment existing = equipmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Not found equipment with id: " + id));
+
+        String oldStatus = existing.getStatus();
+        String newStatus = updateStatusRequest.getStatus();
+
+        existing.setStatus(newStatus);
+        Equipment saved = equipmentRepository.save(existing);
+
+        boolean statusChangedToUnavailable =
+                ("Checked Out".equalsIgnoreCase(newStatus) ||
+                        "Under Repair".equalsIgnoreCase(newStatus) ||
+                        "Retired".equalsIgnoreCase(newStatus)) &&
+                        !newStatus.equalsIgnoreCase(oldStatus);
+
+        if (statusChangedToUnavailable) {
+            stockService.checkStockAndNotify(existing.getName(), existing.getType());
+        }
+
+        return mapToResponse(saved);
+    }
+
+    public List<ConditionLogResponse> getAllConditionLog() {
+        return conditionLogRepository.findAll()
+                .stream()
+                .map(this::mapToConditionLogResponse)
+                .toList();
+    }
+
+    public ConditionLogResponse getConditionLogById(Long id) {
+        return conditionLogRepository.findById(id)
+                .map(this::mapToConditionLogResponse)
+                .orElseThrow(() -> new RuntimeException("ConditionLog not found with id: " + id));
     }
 }

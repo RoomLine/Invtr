@@ -28,8 +28,14 @@ public class AuthService {
             throw new RuntimeException("Този имейл вече е регистриран!");
         }
 
-        Role userRole = roleRepository.findByRoleName("USER")
-                .orElseThrow(() -> new RuntimeException("Грешка: Ролята 'USER' не е намерена в базата данни."));
+        // Role userRole = roleRepository.findByRoleName("USER")
+        //         .orElseThrow(() -> new RuntimeException("Грешка: Ролята 'USER' не е намерена в базата данни.")); //outdated code, delete if new code passes testing
+
+        Role userRole = roleRepository.findByRoleName("ROLE_USER")
+        .or(() -> roleRepository.findByRoleName("USER"))
+        .orElseThrow(() -> new RuntimeException(
+                "Грешка: Ролята 'USER/ROLE_USER' не е намерена в базата данни."
+        ));
 
         User newUser = User.builder()
                 .email(request.getEmail())

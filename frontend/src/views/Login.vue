@@ -14,6 +14,26 @@
 <button class="register-button" @click="showRegisterModal = true">Register</button>
 </div>
 <div v-if="showModal" class="modal-overlay">
+<div v-if="showModal" class="modal-overlay">
+  <div class="modal-box">
+    <div v-if="!isSent">
+      <h3>Reset Password</h3>
+      <p style="font-size: 14px; margin-bottom: 15px; color: #636e72;">Enter your email to receive a reset link</p>
+      <div class="input-field">
+        <input type="email" v-model="resetEmail" placeholder="Email Address" required>
+      </div>
+      <button class="login-button" @click="sendResetInstructions">Send Link</button>
+      <button @click="showModal = false" class="close-link" style="display: block; width: 100%; margin-top: 10px; background: none; border: none; color: #5896dc; cursor: pointer;">Cancel</button>
+    </div>
+
+    <div v-else>
+      <div class="success-icon">✓</div>
+      <h3>Sent!</h3>
+      <p>Instructions for new password have been sent to:<br><strong>{{ resetEmail }}</strong></p>
+      <button @click="closeResetModal" class="close-modal-button">OK</button>
+    </div>
+  </div>
+</div>
 <div class="modal-box">
 <div class="success-icon">✓</div>
 <h3>Sent!</h3>
@@ -36,18 +56,64 @@
 
 
 <script setup>
+import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+const router = useRouter()
 const email = ref('')
 const password = ref('')
 const rememberMe = ref(false)
 const showModal = ref(false) 
 const showRegisterModal = ref(false)
-const handleLogin = () => {
-if (email.value === 'admin@school.com') {
-alert('Log In for Admin! Remember me: ' +rememberMe.value)
-} else {
-alert('Log In for User: ' + email.value)
+const resetEmail = ref('') 
+const isSent = ref(false) 
+const sendResetInstructions = () => {
+  if (resetEmail.value && resetEmail.value.includes('@')) {
+    isSent.value = true
+  } else {
+    alert('Please enter your email address')
+  }
 }
+const closeResetModal = () => {
+  showModal.value = false
+  isSent.value = false
+  resetEmail.value = ''
+}
+const handleLogin = async () => {
+  if (!email.value || !password.value) {
+    alert('Please enter both email and password!')
+    return
+  }
+
+  try {
+    const response = await fetch('http://localhost:5000/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email.value,
+        password: password.value
+      })
+    })
+
+    const data = await response.json()
+
+    if (!response.ok) {
+      alert(data.message || 'Invalid email or password!')
+      return
+    }
+
+    localStorage.setItem('token', data.token)
+    localStorage.setItem('role', data.role)
+
+    if (data.role === 'admin') {
+      router.push('/admin')
+    } else {
+      router.push('/user')
+    }
+
+  } catch (error) {
+    alert('Cannot connect to server. Please try again.')
+    console.error(error)
+  }
 }
 const handleForgot = () => {
   showModal.value = true
@@ -68,6 +134,13 @@ alert('Please fill in all fields');
 
 
 <style scoped>
+:deep(body), :deep(html) {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
 .login-fon {
 display: flex;
 justify-content: center;
@@ -101,6 +174,7 @@ box-sizing: border-box;
 .options {
 display: flex;
 justify-content: space-between;
+align-items: center;
 font-size: 13px;
 margin: 15px 0 25px 0;
 color: #636e72;
@@ -120,7 +194,37 @@ color: #636e72;
 }
 .login-button:hover { background: #27ae60; }
 @media (max-width: 480px) {
-.login-center-card { padding: 25px; } }
+.login-center-card {
+width: 85%;
+max-width: 320px;
+padding: 25px;
+margin: auto;
+border-radius: 15px;
+padding: 20px;
+}
+.logo-image {
+height: 60px;
+max-width: 100%;
+object-fit: contain;
+margin-bottom: 10px;
+}
+.options {
+flex-direction: row;
+justify-content: space-between;
+width: 100%;
+font-size: 11px;
+margin-top: 10px;
+gap: 15px;
+align-items: center;
+}
+.subtitle {
+font-size: 12px;
+}
+.login-button, .register-button {
+padding: 12px;
+font-size: 16px;
+}
+}
 .register-button {
   width: 100%;
   padding: 15px;

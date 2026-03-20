@@ -58,7 +58,7 @@ public class AuthService {
     }
 
     public List<String> getAllAdminEmails() {
-        return userRepository.findByRoleName("ADMIN")
+        return userRepository.findByRole(2)
                 .stream()
                 .map(User::getEmail)
                 .toList();

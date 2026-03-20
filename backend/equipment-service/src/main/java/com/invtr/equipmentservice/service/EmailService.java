@@ -1,30 +1,33 @@
 package com.invtr.equipmentservice.service;
 
-import com.sendgrid.*;
-import com.sendgrid.helpers.mail.Mail;
-import com.sendgrid.helpers.mail.objects.Content;
-import com.sendgrid.helpers.mail.objects.Email;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailException;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class EmailService {
 
-    @Value("${sendgrid.api-key}")
-    private String apiKey;
+    private final JavaMailSender mailSender;
 
-    @Value("${sendgrid.from-email}")
+    @Value("${mail.from}")
     private String fromEmail;
 
-    public void sendLowStockAlert(String itemName, String itemType, long currentStock, long threshold, List<String> adminEmails) throws IOException {
+    private static final int MAX_RETRIES = 3;
+
+    public void sendLowStockAlert(String itemName, String itemType, long currentStock, long threshold, List<String> adminEmails) {
         if (adminEmails == null || adminEmails.isEmpty()) {
+            log.warn("No admin emails provided, skipping low stock alert for '{}'.", itemName);
             return;
         }
 
-        Email from = new Email(fromEmail);
         String subject = "⚠️ Low Stock Alert: " + itemName;
         String body = String.format(
                 "Stock alert for item '%s' (type: %s).%n" +
@@ -35,17 +38,33 @@ public class EmailService {
         );
 
         for (String adminEmail : adminEmails) {
-            Mail mail = new Mail(from, subject, new Email(adminEmail), new Content("text/plain", body));
-            SendGrid sg = new SendGrid(apiKey);
-            Request request = new Request();
-            request.setMethod(Method.POST);
-            request.setEndpoint("mail/send");
-            request.setBody(mail.build());
+            sendWithRetry(adminEmail, subject, body);
+        }
+    }
 
-            Response response = sg.api(request);
-            if (response.getStatusCode() >= 400) {
-                throw new IOException("SendGrid error: " + response.getStatusCode() + " - " + response.getBody());
+    private void sendWithRetry(String to, String subject, String body) {
+        for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+            try {
+                SimpleMailMessage message = new SimpleMailMessage();
+                message.setFrom(fromEmail);
+                message.setTo(to);
+                message.setSubject(subject);
+                message.setText(body);
+                mailSender.send(message);
+                log.info("Email sent to {} (attempt {})", to, attempt);
+                return;
+            } catch (MailException e) {
+                log.warn("Failed to send email to {} on attempt {}: {}", to, attempt, e.getMessage());
+                if (attempt < MAX_RETRIES) {
+                    try {
+                        Thread.sleep(500L * attempt);
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        return;
+                    }
+                }
             }
         }
+        log.error("Failed to send email to {} after {} attempts.", to, MAX_RETRIES);
     }
 }

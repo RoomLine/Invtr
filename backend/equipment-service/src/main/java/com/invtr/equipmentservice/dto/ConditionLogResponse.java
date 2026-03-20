@@ -1,6 +1,8 @@
 package com.invtr.equipmentservice.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import com.invtr.equipmentservice.enums.EquipmentCondition;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +16,7 @@ import java.time.LocalDateTime;
 public class ConditionLogResponse {
     private Long id;
     private Long equipmentId;
-    private String condition;
-    private String notes;
+    @Enumerated(EnumType.STRING)
+    private EquipmentCondition condition;
     private LocalDateTime loggedAt;
 }

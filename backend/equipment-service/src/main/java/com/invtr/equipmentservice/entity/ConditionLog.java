@@ -1,6 +1,8 @@
 package com.invtr.equipmentservice.entity;
 
 import java.time.LocalDateTime;
+
+import com.invtr.equipmentservice.enums.EquipmentCondition;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,10 +25,8 @@ public class ConditionLog {
     private Long equipmentId;
 
     @Column(name = "condition", nullable = false)
-    private String condition;
-
-    @Column(name = "notes")
-    private String notes;
+    @Enumerated(EnumType.STRING)
+    private EquipmentCondition condition;
 
     @Column(name = "logged_at", updatable = false)
     private LocalDateTime loggedAt;

@@ -1,6 +1,10 @@
 package com.invtr.equipmentservice.entity;
 
 import java.time.LocalDateTime;
+
+import com.invtr.equipmentservice.enums.EquipmentCondition;
+import com.invtr.equipmentservice.enums.EquipmentStatus;
+import com.invtr.equipmentservice.enums.EquipmentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +24,8 @@ public class Equipment {
     private Long id;
 
     @Column(name = "type", nullable = false)
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private EquipmentType type;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -29,13 +34,15 @@ public class Equipment {
     private String serialNumber;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private EquipmentStatus status;
 
     @Column(name = "qr_code_url", nullable = false)
     private String qrCodeUrl;
 
     @Column(name = "condition", nullable = false)
-    private String condition;
+    @Enumerated(EnumType.STRING)
+    private EquipmentCondition condition;
 
     @Column(name = "location", nullable = false)
     private String location;
@@ -50,4 +57,7 @@ public class Equipment {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+
+    @Column(name = "photo_url")
+    private String photoUrl;
 }

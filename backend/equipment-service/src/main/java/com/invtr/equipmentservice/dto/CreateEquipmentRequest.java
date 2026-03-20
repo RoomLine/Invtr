@@ -1,5 +1,10 @@
 package com.invtr.equipmentservice.dto;
 
+import com.invtr.equipmentservice.enums.EquipmentCondition;
+import com.invtr.equipmentservice.enums.EquipmentStatus;
+import com.invtr.equipmentservice.enums.EquipmentType;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -12,8 +17,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class CreateEquipmentRequest {
-    @NotBlank(message = "Type is required")
-    private String type;
+    @NotNull(message = "Type is required")
+    @Enumerated(EnumType.STRING)
+    private EquipmentType type;
 
     @NotBlank(message = "Name is required")
     private String name;
@@ -21,12 +27,16 @@ public class CreateEquipmentRequest {
     @NotBlank(message = "Serial number is required")
     private String serialNumber;
     
-    @NotBlank(message = "Status is required")
-    private String status;
+    @NotNull(message = "Status is required")
+    @Enumerated(EnumType.STRING)
+    private EquipmentStatus status;
     
-    @NotBlank(message = "Condition is required")
-    private String condition;
+    @NotNull(message = "Condition is required")
+    @Enumerated(EnumType.STRING)
+    private EquipmentCondition condition;
     
     @NotBlank(message = "Location is required")
     private String location;
+
+    private String photoUrl;
 }

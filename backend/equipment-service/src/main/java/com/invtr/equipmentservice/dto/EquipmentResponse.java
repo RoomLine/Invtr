@@ -1,6 +1,8 @@
 package com.invtr.equipmentservice.dto;
 
-import jakarta.validation.constraints.NotBlank;
+import com.invtr.equipmentservice.enums.EquipmentCondition;
+import com.invtr.equipmentservice.enums.EquipmentStatus;
+import com.invtr.equipmentservice.enums.EquipmentType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,15 +16,15 @@ import java.time.LocalDateTime;
 @Builder
 public class EquipmentResponse {
 
-    private Long equipmentId;
-    private String equipmentName;
-    private String equipmentType;
-    private String equipmentStatus;
-    private String condition;
-    private String status;
+    private Long id;
+    private String name;
+    private EquipmentStatus status;
+    private EquipmentCondition condition;
+    private EquipmentType type;
     private String qrCodeUrl;
     private String location;
     private Boolean isSensitive; // check if we want to include this field
     private LocalDateTime createdAt;
+    private String photoUrl;
 
 }

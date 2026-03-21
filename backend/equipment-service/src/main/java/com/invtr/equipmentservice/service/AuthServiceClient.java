@@ -1,5 +1,6 @@
 package com.invtr.equipmentservice.service;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -15,17 +16,22 @@ import java.util.List;
 public class AuthServiceClient {
 
     private final RestClient restClient;
+    private final HttpServletRequest httpServletRequest;
 
-    public AuthServiceClient(@Value("${auth.service.url}") String authServiceUrl) {
+    public AuthServiceClient(@Value("${auth.service.url}") String authServiceUrl,
+                             HttpServletRequest httpServletRequest) {
         this.restClient = RestClient.builder()
                 .baseUrl(authServiceUrl)
                 .build();
+        this.httpServletRequest = httpServletRequest;
     }
 
     public List<String> getAdminEmails() {
+        String authHeader = httpServletRequest.getHeader("Authorization");
         try {
             List<String> emails = restClient.get()
                     .uri("/auth/internal/admins/emails")
+                    .header("Authorization", authHeader)
                     .retrieve()
                     .body(new ParameterizedTypeReference<List<String>>() {});
             return emails != null ? emails : Collections.emptyList();

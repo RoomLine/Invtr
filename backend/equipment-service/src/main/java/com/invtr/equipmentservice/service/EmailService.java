@@ -37,24 +37,19 @@ public class EmailService {
                 itemName, itemType, currentStock, threshold
         );
 
-        for (String adminEmail : adminEmails) {
-            sendWithRetry(adminEmail, subject, body);
-        }
-    }
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom(fromEmail);
+        message.setTo(adminEmails.toArray(new String[0]));
+        message.setSubject(subject);
+        message.setText(body);
 
-    private void sendWithRetry(String to, String subject, String body) {
         for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
             try {
-                SimpleMailMessage message = new SimpleMailMessage();
-                message.setFrom(fromEmail);
-                message.setTo(to);
-                message.setSubject(subject);
-                message.setText(body);
                 mailSender.send(message);
-                log.info("Email sent to {} (attempt {})", to, attempt);
+                log.info("Low stock alert sent to {} admins (attempt {})", adminEmails.size(), attempt);
                 return;
             } catch (MailException e) {
-                log.warn("Failed to send email to {} on attempt {}: {}", to, attempt, e.getMessage());
+                log.warn("Failed to send alert on attempt {}: {}", attempt, e.getMessage());
                 if (attempt < MAX_RETRIES) {
                     try {
                         Thread.sleep(500L * attempt);
@@ -65,6 +60,6 @@ public class EmailService {
                 }
             }
         }
-        log.error("Failed to send email to {} after {} attempts.", to, MAX_RETRIES);
+        log.error("Failed to send low stock alert after {} attempts.", MAX_RETRIES);
     }
 }

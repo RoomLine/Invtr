@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 @Service
@@ -50,7 +52,7 @@ public class EquipmentService {
 
     public EquipmentResponse createEquipment(CreateEquipmentRequest request) {
         String generatedQrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data="
-                + request.getSerialNumber();
+                + URLEncoder.encode(request.getSerialNumber(), StandardCharsets.UTF_8);
 
         Equipment newEquipment = Equipment.builder()
                 .name(request.getName())

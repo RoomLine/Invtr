@@ -9,6 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.invtr.authservice.service.AuthService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -41,5 +44,10 @@ public class AuthController {
         // Since we are using JWT, there is so such thing as a session.
         // We just let the frontend know we need to delete the token
         return ResponseEntity.ok("Successful logout! Please delete the jwt token.");
+    }
+
+    @GetMapping("/internal/admins/emails")
+    public ResponseEntity<List<String>> getAdminEmails() {
+        return ResponseEntity.ok(authService.getAllAdminEmails());
     }
 }

@@ -26,8 +26,8 @@ public interface EquipmentRepository extends JpaRepository<Equipment, Long> {
     List<Equipment> findWithFilters(@Param("status") EquipmentStatus status,
                                     @Param("type") EquipmentType type,
                                     @Param("condition") EquipmentCondition condition);
-    Optional<Equipment> findByName(String name);
-    Optional<Equipment> findBySerialNumber(String serialNumber);
+    List<Equipment> findByName(String name);
+    List<Equipment> findBySerialNumber(String serialNumber);
     List<Equipment> findByStatus(String status);
     List<Equipment> findByType(String type);
     List<Equipment> findByCondition(String condition);

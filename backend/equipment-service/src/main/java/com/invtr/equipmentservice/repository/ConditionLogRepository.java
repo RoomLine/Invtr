@@ -9,9 +9,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ConditionLogRepository extends JpaRepository<ConditionLog, Long> {
-    ConditionLog findByEquipmentId(Long equipmentId);
-    ConditionLog findByCondition(String condition);
-    ConditionLog findByEquipmentIdAndCondition(Long equipmentId, String condition);
+    List<ConditionLog> findByEquipmentId(Long equipmentId);
+    List<ConditionLog> findByCondition(EquipmentCondition condition);
+    List<ConditionLog> findByEquipmentIdAndCondition(Long equipmentId, String condition);
 
     @Query("SELECT c FROM ConditionLog c WHERE " +
             "(:equipmentId IS NULL OR c.equipmentId = :equipmentId) AND " +

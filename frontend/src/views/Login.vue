@@ -1,335 +1,205 @@
 <template>
-<div class="login-fon">
-<div class="login-center-card">
-<div class="card-header">
-<h1><img src="@/assets/logo-png.jpg" alt="INVTR Logo" class="logo-image"></h1>
-<p class="subtitle"><span>School Management</span></p>
-</div>
-<div class="input-field"><input type ="email" v-model="email" placeholder="Email Address" required></div>
-<div class="input-field"><input type ="password" v-model="password" placeholder="Password" required></div>
-<div class="options"><label><input type="checkbox" v-model="rememberMe">Remember Me</label>
-<div><a href="#" @click.prevent="handleForgot">Forgotten Password</a></div>
-</div>
-<button class="login-button" @click="handleLogin">Log In</button>
-<button class="register-button" @click="showRegisterModal = true">Register</button>
-</div>
-<div v-if="showModal" class="modal-overlay">
-<div v-if="showModal" class="modal-overlay">
-  <div class="modal-box">
-    <div v-if="!isSent">
-      <h3>Reset Password</h3>
-      <p style="font-size: 14px; margin-bottom: 15px; color: #636e72;">Enter your email to receive a reset link</p>
-      <div class="input-field">
-        <input type="email" v-model="resetEmail" placeholder="Email Address" required>
+  <div class="login-fon">
+    <div class="login-center-card">
+
+      <!-- Logo -->
+      <div class="card-header">
+        <img src="@/assets/logo-png.jpg" alt="INVTR Logo" class="logo-image">
+        <p class="subtitle"><span>School Inventory System</span></p>
       </div>
-      <button class="login-button" @click="sendResetInstructions">Send Link</button>
-      <button @click="showModal = false" class="close-link" style="display: block; width: 100%; margin-top: 10px; background: none; border: none; color: #5896dc; cursor: pointer;">Cancel</button>
+
+      <!-- Tab switcher -->
+      <div class="tab-switcher">
+        <button class="tab-btn" :class="{ active: activeTab === 'login' }" @click="switchTab('login')">Log In</button>
+        <button class="tab-btn" :class="{ active: activeTab === 'register' }" @click="switchTab('register')">Register</button>
+      </div>
+
+      <!-- ── LOGIN FORM ── -->
+      <template v-if="activeTab === 'login'">
+        <div v-if="errorMsg"   class="alert alert-error">{{ errorMsg }}</div>
+        <div v-if="successMsg" class="alert alert-success">{{ successMsg }}</div>
+
+        <div class="input-field">
+          <label>Email Address</label>
+          <input type="email" v-model="email" placeholder="you@example.com" :disabled="loading" />
+        </div>
+        <div class="input-field">
+          <label>Password</label>
+          <input type="password" v-model="password" placeholder="••••••••" :disabled="loading" />
+        </div>
+        <div class="options">
+          <label><input type="checkbox" v-model="rememberMe"> Remember Me</label>
+          <a href="#" @click.prevent="handleForgot">Forgotten Password</a>
+        </div>
+
+        <button class="login-button" @click="handleLogin" :disabled="loading">
+          <span v-if="loading" class="spinner"></span>
+          <span v-else>Log In</span>
+        </button>
+
+        <p class="bottom-link">
+          Don't have an account? <a href="#" @click.prevent="switchTab('register')">Register →</a>
+        </p>
+      </template>
+
+      <!-- ── REGISTER FORM ── -->
+      <template v-if="activeTab === 'register'">
+        <div v-if="regError"   class="alert alert-error">{{ regError }}</div>
+        <div v-if="regSuccess" class="alert alert-success">{{ regSuccess }}</div>
+
+        <div class="name-row">
+          <div class="input-field">
+            <label>First Name</label>
+            <input type="text" v-model="regFirstName" placeholder="First Name" :disabled="regLoading" />
+          </div>
+          <div class="input-field">
+            <label>Last Name</label>
+            <input type="text" v-model="regFamilyName" placeholder="Last Name" :disabled="regLoading" />
+          </div>
+        </div>
+        <div class="input-field">
+          <label>Email Address</label>
+          <input type="email" v-model="regEmail" placeholder="you@example.com" :disabled="regLoading" />
+        </div>
+        <div class="input-field">
+          <label>Password</label>
+          <input type="password" v-model="regPassword" placeholder="••••••••" :disabled="regLoading" />
+        </div>
+        <div class="input-field">
+          <label>Confirm Password</label>
+          <input type="password" v-model="regConfirmPassword" placeholder="••••••••" :disabled="regLoading" />
+        </div>
+
+        <button class="login-button" @click="handleFinalRegister" :disabled="regLoading">
+          <span v-if="regLoading" class="spinner"></span>
+          <span v-else>Create Account</span>
+        </button>
+
+        <p class="bottom-link">
+          Already have an account? <a href="#" @click.prevent="switchTab('login')">Log in →</a>
+        </p>
+      </template>
     </div>
 
-    <div v-else>
-      <div class="success-icon">✓</div>
-      <h3>Sent!</h3>
-      <p>Instructions for new password have been sent to:<br><strong>{{ resetEmail }}</strong></p>
-      <button @click="closeResetModal" class="close-modal-button">OK</button>
+    <!-- Forgot Password Modal -->
+    <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
+      <div class="modal-box">
+        <div class="success-icon">✓</div>
+        <h3 class="modal-title">Email Sent!</h3>
+        <p style="color:#7a8a9a;font-size:14px;line-height:1.5">
+          Password reset instructions have been sent to<br>
+          <strong style="color:#1a2d3e">{{ email }}</strong>
+        </p>
+        <button @click="showModal = false" class="close-modal-button">OK, Got it</button>
+      </div>
     </div>
   </div>
-</div>
-<div class="modal-box">
-<div class="success-icon">✓</div>
-<h3>Sent!</h3>
-<p>Instruction for new password have been sent to:<br><strong>{{ email }}</strong></p>
-<button @click="showModal = false" class="close-modal-button">OK</button>
-</div>
-</div>
-<div  v-if="showRegisterModal" class="modal-overlay">
-<div class="modal-box register-box">
-<div class="input-field"><input type="text" v-model="regFirstName" placeholder="First Name" required></div>
-<div class="input-field"><input type="text" v-model="regLastName" placeholder="Last Name" required></div>
-<div class="input-field"><input type="email" v-model="regEmail" placeholder="Email Address" required></div>
-<div class="input-field"><input type="password" v-model="regPassword" placeholder="Password" required></div>
-<button class="login-button" @click="handleFinalRegister">Create Account</button>
-<button class="close-modal-btn" @click="showRegisterModal = false" style="background-color: #95a5a6; margin-top: 10px;">Cancel</button>
-</div>
-</div>
-</div>
 </template>
-
 
 <script setup>
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
-const router = useRouter()
-const email = ref('')
-const password = ref('')
-const rememberMe = ref(false)
-const showModal = ref(false) 
-const showRegisterModal = ref(false)
-const resetEmail = ref('') 
-const isSent = ref(false) 
-const sendResetInstructions = () => {
-  if (resetEmail.value && resetEmail.value.includes('@')) {
-    isSent.value = true
-  } else {
-    alert('Please enter your email address')
-  }
-}
-const closeResetModal = () => {
-  showModal.value = false
-  isSent.value = false
-  resetEmail.value = ''
-}
-const handleLogin = async () => {
-  if (!email.value || !password.value) {
-    alert('Please enter both email and password!')
-    return
-  }
 
+const API_BASE = ''
+const router = useRouter()
+
+// Tab
+const activeTab = ref('login')
+const switchTab = (tab) => {
+  activeTab.value = tab
+  errorMsg.value = successMsg.value = regError.value = regSuccess.value = ''
+}
+
+// Login
+const email      = ref('')
+const password   = ref('')
+const rememberMe = ref(false)
+const loading    = ref(false)
+const errorMsg   = ref('')
+const successMsg = ref('')
+const showModal  = ref(false)
+
+const handleLogin = async () => {
+  errorMsg.value = ''
+  successMsg.value = ''
+  if (!email.value || !password.value) { errorMsg.value = 'Please fill in all fields.'; return }
+  loading.value = true
   try {
-    const response = await fetch('http://localhost:5000/api/auth/login', {
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: email.value, password: password.value })
+    })
+    if (!res.ok) {
+      let msg = 'Invalid email or password.'
+      try { const d = await res.json(); msg = d.message || d.error || msg } catch (_) {}
+      errorMsg.value = msg; return
+    }
+    const data = await res.json()
+    const token = data.token
+    if (rememberMe.value) localStorage.setItem('invtr_token', token)
+    else sessionStorage.setItem('invtr_token', token)
+    successMsg.value = 'Login successful! Redirecting...'
+    setTimeout(() => {
+      if (data.role == 'admin') router.push(' /admin')
+      else router.push(' /user')
+    }, 800) 
+  } catch (_) {
+    errorMsg.value = 'Could not reach the server. Is the backend running?'
+  } finally {
+    loading.value = false
+  }
+}
+
+const handleForgot = () => {
+  if (!email.value) { errorMsg.value = 'Enter your email first, then click Forgotten Password.'; return }
+  showModal.value = true
+}
+
+// Register
+const regFirstName       = ref('')
+const regFamilyName      = ref('')
+const regEmail           = ref('')
+const regPassword        = ref('')
+const regConfirmPassword = ref('')
+const regLoading         = ref(false)
+const regError           = ref('')
+const regSuccess         = ref('')
+
+const handleFinalRegister = async () => {
+  regError.value = ''
+  regSuccess.value = ''
+  if (!regFirstName.value || !regFamilyName.value || !regEmail.value || !regPassword.value || !regConfirmPassword.value) {
+    regError.value = 'Please fill in all fields.'; return
+  }
+  if (regPassword.value !== regConfirmPassword.value) {
+    regError.value = 'Passwords do not match.'; return
+  }
+  regLoading.value = true
+  try {
+    const res = await fetch(`${API_BASE}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        email: email.value,
-        password: password.value
+        email: regEmail.value, password: regPassword.value,
+        firstName: regFirstName.value, familyName: regFamilyName.value
       })
     })
-
-    const data = await response.json()
-
-    if (!response.ok) {
-      alert(data.message || 'Invalid email or password!')
-      return
+    if (!res.ok) {
+      let msg = 'Registration failed. Please try again.'
+      try { const d = await res.json(); msg = d.message || d.error || msg } catch (_) {}
+      regError.value = msg; return
     }
-
-    localStorage.setItem('token', data.token)
-    localStorage.setItem('role', data.role)
-
-    if (data.role === 'admin') {
-      router.push('/admin')
-    } else {
-      router.push('/user')
-    }
-
-  } catch (error) {
-    alert('Cannot connect to server. Please try again.')
-    console.error(error)
+    regSuccess.value = 'Account created! You can now log in.'
+    setTimeout(() => { email.value = regEmail.value; switchTab('login') }, 2000)
+  } catch (_) {
+    regError.value = 'Could not reach the server. Is the backend running?'
+  } finally {
+    regLoading.value = false
   }
-}
-const handleForgot = () => {
-  showModal.value = true
-}
-const regFirstName = ref('')
-const regLastName = ref('')
-const regEmail = ref('')
-const regPassword = ref('')
-const handleFinalRegister = () => {
-if (regEmail.value && regPassword.value) {
-alert('Account created successfully for ' + regFirstName.value);
-showRegisterModal.value = false;
-} else {
-alert('Please fill in all fields');
-}
 }
 </script>
 
-
-<style scoped>
-:deep(body), :deep(html) {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  overflow-x: hidden;
-}
-.login-fon {
-display: flex;
-justify-content: center;
-align-items: center;
-min-height: 100vh;
-background: linear-gradient(135deg, #5896dc 0%, #043357 100%);
-margin: 0;
-padding: 0%; 
-font-family: 'Segoe UI', sans-serif;
-}
-.login-center-card {
-background: white;
-width: 90%;
-max-width: 400px; 
-padding: 40px;
-border-radius: 20px;
-box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-text-align: center;
-}
-.card-header p { color: #636e72; font-size: 25px; margin-bottom: 30px; }
-.card-body h2 { color: #2d3436; margin-bottom: 14px; }
-.input-field { margin-bottom: 15px; }
-.input-field input {
-width: 100%;
-padding: 14px;
-border: 1px solid #dfe6e9;
-border-radius: 10px;
-font-size: 16px;
-box-sizing: border-box;
-}
-.options {
-display: flex;
-justify-content: space-between;
-align-items: center;
-font-size: 13px;
-margin: 15px 0 25px 0;
-color: #636e72;
-}
-.login-button {
-  margin-bottom: 15px;
-  width: 100%;
-  padding: 15px;
-  background: #2ecc71;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.login-button:hover { background: #27ae60; }
-@media (max-width: 480px) {
-.login-center-card {
-width: 85%;
-max-width: 320px;
-padding: 25px;
-margin: auto;
-border-radius: 15px;
-padding: 20px;
-}
-.logo-image {
-height: 60px;
-max-width: 100%;
-object-fit: contain;
-margin-bottom: 10px;
-}
-.options {
-flex-direction: row;
-justify-content: space-between;
-width: 100%;
-font-size: 11px;
-margin-top: 10px;
-gap: 15px;
-align-items: center;
-}
-.subtitle {
-font-size: 12px;
-}
-.login-button, .register-button {
-padding: 12px;
-font-size: 16px;
-}
-}
-.register-button {
-  width: 100%;
-  padding: 15px;
-  background: #f3f4f5;
-  color: #2ecc71;
-  border: none;
-  border-radius: 10px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: 0.3s;
-}
-.register-button:hover { background: rgb(201, 201, 201);}
-.register-box {
-  max-width: 350px;
-  padding: 25px;
-}
-.close-link {
-  background: none;
-  border: none;
-  color: #5896dc;
-  margin-top: 10px;
-  font-size: 14px;
-}
-.subtitle {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  color: #4f5050;
-  font-size: 14px;
-  margin-bottom: 30px;
-}
-.subtitle::before, .subtitle::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: #27ae60;
-}
-.subtitle span {
-  padding: 0 15px;
-}
-.logo-image {
-  height: 110px;
-  margin: 0;
-}
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
-}
-.modal-box {
-  background: white;
-  padding: 30px;
-  border-radius: 20px;
-  text-align: center;
-  width: 90%;
-  max-width: 320px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-}
-.success-icon {
-  width: 60px;
-  height: 60px;
-  background: #2ecc71;
-  color: white;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 30px;
-  margin: 0 auto 15px;
-}
-.close-btn {
-  background: #2ecc71;
-  color: white;
-  border: none;
-  padding: 10px 0;
-  width: 100%;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  margin-top: 20px;
-}
-.close-btn:hover { background: #27ae60; }
-.close-modal-btn {
-background-color: #1e4985;
-color: white;
-border: none;
-padding: 10px 40px;
-border-radius: 8px;
-font-size: 16px;
-font-weight: bold;
-cursor: pointer;
-margin-top: 25px;
-width: 100%;
-}
-.close-modal-btn:hover {
-background-color: #e5e6f2;
-}
+<style>
+@import '@/assets/login.css';
 </style>
-

@@ -5,6 +5,7 @@ import sys
 # 1. Add your microservice folder names to this list as you build them
 SERVICES = [
     "auth-service",
+    "api-gateway"
     # "equipment-service",  <-- Just uncomment and add new ones later!
     # "request-service"
 ]

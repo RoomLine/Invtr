@@ -1,23 +1,22 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
-import Login          from '@/views/Login.vue'
+import Login from '@/views/Login.vue'
 import AdminDashboard from '@/views/AdminDashboard.vue'
+import UserDashboard from '@/views/UserDashboard.vue'
 
 const routes = [
-  {
-    path: '/',
-    redirect: '/login'
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
+  { path: '/', redirect: '/login' },
+  { path: '/login', name: 'Login', component: Login },
   {
     path: '/admin',
     name: 'AdminDashboard',
     component: AdminDashboard,
-    meta: { requiresAuth: true, role: 'admin' }
+    meta: {requiresAuth: true}
+  },
+  {
+    path: '/dashboard',
+    name: 'Dashboard',
+    component: UserDashboard,
+    meta: { requiresAuth: true }
   }
 ]
 
@@ -26,18 +25,9 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const requiresAuth = to.meta.requiresAuth
-  const token = localStorage.getItem('token')
-  const role  = localStorage.getItem('role')
-
-  if (requiresAuth && !token) {
-    next('/login')
-  } else if (requiresAuth && to.meta.role && to.meta.role !== role) {
-    next('/login')
-  } else {
-    next()
-  }
+router.beforeEach((to) => {
+  const token = localStorage.getItem('invtr_token') || sessionStorage.getItem('invtr_token')
+  if (to.meta.requiresAuth && !token) return '/login'
 })
 
 export default router

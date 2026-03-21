@@ -21,6 +21,7 @@ __pycache__/
 *.log
 *.logs
 
+backend/api-gateway/target
 */.DS_Store
 */node_modules
 */dist

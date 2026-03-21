@@ -743,7 +743,6 @@ function deleteUser(id) {
 }
 .link-btn:hover { text-decoration: underline; }
 .category-list { display: flex; flex-direction: column; gap: 12px; }
-.cat-row {}
 .cat-header { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: #103852; margin-bottom: 5px; }
 .cat-bar-bg { background: #f0f4f8; border-radius: 6px; height: 8px; }
 .cat-bar-fill { background: #52d265; height: 8px; border-radius: 6px; transition: width 0.5s ease; }

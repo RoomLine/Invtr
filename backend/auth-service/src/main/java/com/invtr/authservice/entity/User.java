@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder // Lombok: Allows clean object creation (e.g., User.builder().email("...").build())
+@Builder
 public class User {
 
     @Id

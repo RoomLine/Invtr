@@ -1,13 +1,12 @@
 package com.invtr.authservice.controller;
 
-import com.invtr.authservice.dto.AuthResponse;
-import com.invtr.authservice.dto.LoginRequest;
-import com.invtr.authservice.dto.RegisterRequest;
+import com.invtr.authservice.dto.*;
 import com.invtr.authservice.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import com.invtr.authservice.service.AuthService;
 
@@ -37,6 +36,24 @@ public class AuthController {
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
         AuthResponse response = authService.loginUser(request);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/users")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<UsersResponse>> getAllUsers(
+            @RequestParam(required = false) String firstName,
+            @RequestParam(required = false) String familyName,
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String roleName){
+        return ResponseEntity.ok(authService.getAllUsers(firstName, familyName, email, roleName));
+    }
+
+    @PatchMapping("/users/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UsersResponse> updateUserById(
+            @Valid @RequestBody UpdateUserRequest request,
+            @PathVariable long id) {
+        return ResponseEntity.ok(authService.updateUserById(request, id));
     }
 
     @GetMapping("/logout")

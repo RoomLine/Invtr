@@ -5,6 +5,7 @@ import com.invtr.authservice.entity.Role;
 import com.invtr.authservice.entity.User;
 import com.invtr.authservice.exception.EmailAlreadyExistsException;
 import com.invtr.authservice.exception.RoleNotFoundException;
+import com.invtr.authservice.exception.RoleNotFoundInDbException;
 import com.invtr.authservice.exception.UserNotFoundException;
 import com.invtr.authservice.repository.RoleRepository;
 import com.invtr.authservice.repository.UserRepository;
@@ -44,7 +45,7 @@ public class AuthService {
 
         Role userRole = roleRepository.findByRoleName("ROLE_USER")
         .or(() -> roleRepository.findByRoleName("USER"))
-        .orElseThrow(() -> new RuntimeException("ERROR: USER/ROLE_USER not found in DB"));
+        .orElseThrow(() -> new RoleNotFoundInDbException("USER/ROLE_USER"));
 
         User newUser = User.builder()
                 .email(request.getEmail())

@@ -139,8 +139,14 @@ const handleLogin = async () => {
     const token = data.token
     if (rememberMe.value) localStorage.setItem('invtr_token', token)
     else sessionStorage.setItem('invtr_token', token)
-    successMsg.value = 'Login successful! Redirecting...'
-    setTimeout(() => router.push('/dashboard'), 800)
+const payload = JSON.parse(atob(token.split('.')[1]))
+const role = payload.role  // "ADMIN" or "USER"
+
+successMsg.value = 'Login successful! Redirecting...'
+setTimeout(() => {
+  if (role === 'ADMIN') router.push('/admin-dashboard')
+  else router.push('/dashboard')
+}, 800)
   } catch (_) {
     errorMsg.value = 'Could not reach the server. Is the backend running?'
   } finally {

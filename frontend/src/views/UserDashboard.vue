@@ -413,7 +413,9 @@ const submitRequest = async () => {
 // ── Logout ──
 const handleLogout = () => {
   localStorage.removeItem('invtr_token')
+  localStorage.removeItem('invtr_role')
   sessionStorage.removeItem('invtr_token')
+  sessionStorage.removeItem('invtr_role')
   router.push('/login')
 }
 </script>

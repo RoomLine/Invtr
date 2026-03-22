@@ -3,7 +3,7 @@ module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave: false,
   devServer: {
-    port: 8082,
+    port: 5173,
     proxy: {
       '/auth': {
         target: 'http://localhost:8080',

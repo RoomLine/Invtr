@@ -30,8 +30,8 @@
 }
 .sidebar-logo {
   height: 36px;
-  object-fit: contain;
-  flex-shrink: 0;
+  transform: scale(2); /* adjust: 1.2–2 */
+  transform-origin: left center;
 }
 .sidebar.collapsed .sidebar-logo { display: none; }
 

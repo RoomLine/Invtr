@@ -97,8 +97,8 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
 const API_BASE = ''
 const router = useRouter()
@@ -140,7 +140,10 @@ const handleLogin = async () => {
     if (rememberMe.value) localStorage.setItem('invtr_token', token)
     else sessionStorage.setItem('invtr_token', token)
     successMsg.value = 'Login successful! Redirecting...'
-    setTimeout(() => router.push('/dashboard'), 800)
+    setTimeout(() => {
+      if (data.role == 'admin') router.push(' /admin')
+      else router.push(' /user')
+    }, 800) 
   } catch (_) {
     errorMsg.value = 'Could not reach the server. Is the backend running?'
   } finally {

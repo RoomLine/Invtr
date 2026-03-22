@@ -1,10 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Login from '@/views/Login.vue'
+import AdminDashboard from '@/views/AdminDashboard.vue'
 import UserDashboard from '@/views/UserDashboard.vue'
 
 const routes = [
   { path: '/', redirect: '/login' },
   { path: '/login', name: 'Login', component: Login },
+  {
+    path: '/admin',
+    name: 'AdminDashboard',
+    component: AdminDashboard,
+    meta: {requiresAuth: true}
+  },
   {
     path: '/dashboard',
     name: 'Dashboard',

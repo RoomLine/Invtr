@@ -42,8 +42,9 @@ public class AuthService {
             throw new EmailAlreadyExistsException(request.getEmail());
         }
 
-        Role userRole = roleRepository.findByRoleName("USER")
-                .orElseThrow(() -> new RoleNotFoundException("USER"));
+        Role userRole = roleRepository.findByRoleName("ROLE_USER")
+        .or(() -> roleRepository.findByRoleName("USER"))
+        .orElseThrow(() -> new RuntimeException("ERROR: USER/ROLE_USER not found in DB"));
 
         User newUser = User.builder()
                 .email(request.getEmail())

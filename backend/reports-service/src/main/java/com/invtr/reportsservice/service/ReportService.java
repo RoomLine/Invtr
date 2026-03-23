@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Slf4j
@@ -37,9 +38,13 @@ public class ReportService {
     public byte[] exportReport(Format format) {
         List<EquipmentResponse> equipment = equipmentServiceClient.getAllEquipment();
         if (Format.CSV.equals(format)) {
-            return csvExporter.exportEquipment(equipment);
+            return csvExporter.exportEquipmentAsCSV(equipment);
         } else if (Format.EXCEL.equals(format)) {
-            return excelExporter.exportEquipment(equipment);
+            try {
+                return excelExporter.exportEquipmentAsExcel(equipment);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         } else {
             throw new IllegalArgumentException("Unsupported format: " + format);
         }

@@ -9,7 +9,7 @@ import java.util.List;
 @Component
 public class CsvExporter {
 
-    public byte[] exportEquipment(List<EquipmentResponse> equipment) {
+    public byte[] exportEquipmentAsCSV(List<EquipmentResponse> equipment) {
         StringBuilder builder = new StringBuilder();
         String file;
         builder.append("id,name,type,status,condition,location,isSensitive,createdAt\n");

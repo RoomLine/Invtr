@@ -1,4 +1,4 @@
-package com.invtr.requestservice.client.enums;
+package com.invtr.requestservice.enums;
 
 /** Mirrors equipment-service JSON for RestClient deserialization. */
 public enum EquipmentStatus {

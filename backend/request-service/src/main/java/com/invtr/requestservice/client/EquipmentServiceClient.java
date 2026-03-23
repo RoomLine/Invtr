@@ -1,7 +1,9 @@
-package com.invtr.requestservice.service;
+package com.invtr.requestservice.client;
 
-import com.invtr.requestservice.client.dto.*;
-import com.invtr.requestservice.client.enums.EquipmentStatus;
+import com.invtr.requestservice.enums.EquipmentStatus;
+import com.invtr.requestservice.dto.EquipmentResponse;
+import com.invtr.requestservice.dto.UpdateEquipmentPatchRequest;
+import com.invtr.requestservice.dto.UpdateEquipmentStatusRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
@@ -37,22 +39,22 @@ public class EquipmentServiceClient {
 	public void updateEquipmentStatus(Long equipmentId, EquipmentStatus status, String authorizationHeader) {
 		var body = UpdateEquipmentStatusRequest.builder().status(status).build();
 		try {
-			restClient.patch()
-					.uri("/equipment/{id}/status", equipmentId)
-					.header("Authorization", authorizationHeader)
+			restClient.patch() // Остава PUT
+					.uri("/equipment/internal/{id}/status", equipmentId) // Удряме интернал пътя
+					.header("Authorization", authorizationHeader) // ПРАЩАМЕ ТОКЕНА!
 					.contentType(MediaType.APPLICATION_JSON)
 					.body(body)
 					.retrieve()
 					.toBodilessEntity();
 		} catch (RestClientException e) {
-			log.error("PATCH /equipment/{}/status failed: {}", equipmentId, e.getMessage());
+			log.error("PATCH /equipment/internal/{}/status failed: {}", equipmentId, e.getMessage());
 			throw e;
 		}
 	}
 
 	public void patchEquipment(Long equipmentId, UpdateEquipmentPatchRequest patch, String authorizationHeader) {
 		try {
-			restClient.patch()
+			restClient.patch() // ПРОМЯНА: от patch() на put()
 					.uri("/equipment/{id}", equipmentId)
 					.header("Authorization", authorizationHeader)
 					.contentType(MediaType.APPLICATION_JSON)

@@ -1,26 +1,28 @@
 package com.invtr.requestservice.dto;
 
-import com.invtr.requestservice.enums.BorrowRequestStatus;
+import com.invtr.requestservice.enums.RequestStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BorrowRequestResponse {
+public class RequestResponse {
 	private Long id;
 	private Long userId;
-	private String userEmail;
-	private Long equipmentId;
-	private String equipmentName;
-	private BorrowRequestStatus status;
-	private LocalDateTime borrowStart;
-	private LocalDateTime borrowEnd;
+	private List<Long> equipmentIds;
+	private RequestStatus status;
+	private LocalDateTime startDateTime;
+	private LocalDateTime endDateTime;
+	private LocalDate requestDate;
+	private Long approvedBy;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 }

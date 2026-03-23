@@ -1,6 +1,6 @@
-package com.invtr.requestservice.client.dto;
+package com.invtr.requestservice.dto;
 
-import com.invtr.requestservice.client.enums.EquipmentStatus;
+import com.invtr.requestservice.enums.EquipmentStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

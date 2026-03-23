@@ -1,8 +1,8 @@
-package com.invtr.requestservice.client.dto;
+package com.invtr.requestservice.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.invtr.requestservice.client.enums.EquipmentCondition;
-import com.invtr.requestservice.client.enums.EquipmentStatus;
+import com.invtr.requestservice.enums.EquipmentCondition;
+import com.invtr.requestservice.enums.EquipmentStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

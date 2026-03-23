@@ -7,13 +7,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CreateBorrowRequestDto {
+public class CreateRequestDto {
 	@NotNull(message = "equipmentId is required")
-	private Long equipmentId;
+	private List<Long> equipmentIds;
 
 	@NotBlank(message = "fromDate is required")
 	private String fromDate;

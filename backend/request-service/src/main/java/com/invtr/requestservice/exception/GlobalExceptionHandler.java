@@ -14,8 +14,8 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-	@ExceptionHandler(BorrowRequestNotFoundException.class)
-	public ResponseEntity<Map<String, Object>> handleNotFound(BorrowRequestNotFoundException ex) {
+	@ExceptionHandler(RequestNotFoundException.class)
+	public ResponseEntity<Map<String, Object>> handleNotFound(RequestNotFoundException ex) {
 		return buildResponse(HttpStatus.NOT_FOUND, ex.getMessage());
 	}
 

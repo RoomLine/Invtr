@@ -1,21 +1,24 @@
 package com.invtr.requestservice.entity;
 
-import com.invtr.requestservice.enums.BorrowRequestStatus;
+import com.invtr.requestservice.enums.RequestStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "borrow_requests")
+@Table(name = "requests")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BorrowRequest {
+public class Request {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,24 +27,21 @@ public class BorrowRequest {
 	@Column(name = "user_id", nullable = false)
 	private Long userId;
 
-	@Column(name = "user_email", nullable = false)
-	private String userEmail;
+	@Column(name = "request_date")
+	private LocalDate requestDate;
 
-	@Column(name = "equipment_id", nullable = false)
-	private Long equipmentId;
+	@Column(name = "start_date_time", nullable = false)
+	private LocalDateTime startDateTime;
 
-	@Column(name = "equipment_name", nullable = false)
-	private String equipmentName;
+	@Column(name = "end_date_time", nullable = false)
+	private LocalDateTime endDateTime;
 
-	@Column(name = "status", nullable = false)
 	@Enumerated(EnumType.STRING)
-	private BorrowRequestStatus status;
+	@Column(name = "status", nullable = false)
+	private RequestStatus status;
 
-	@Column(name = "borrow_start", nullable = false)
-	private LocalDateTime borrowStart;
-
-	@Column(name = "borrow_end", nullable = false)
-	private LocalDateTime borrowEnd;
+	@Column(name = "approved_by")
+	private Long approvedBy;
 
 	@Column(name = "created_at", updatable = false)
 	private LocalDateTime createdAt;
@@ -49,11 +49,16 @@ public class BorrowRequest {
 	@Column(name = "updated_at")
 	private LocalDateTime updatedAt;
 
+	@OneToMany(mappedBy = "request", cascade = CascadeType.ALL, orphanRemoval = true)
+	@Builder.Default
+	private List<RequestItem> items = new ArrayList<>();
+
 	@PrePersist
 	protected void onCreate() {
 		LocalDateTime now = LocalDateTime.now();
 		createdAt = now;
 		updatedAt = now;
+		requestDate = LocalDate.now();
 	}
 
 	@PreUpdate

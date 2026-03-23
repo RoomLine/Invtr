@@ -1,8 +1,10 @@
 package com.invtr.requestservice.enums;
 
-public enum BorrowRequestStatus {
+public enum RequestStatus {
 	PENDING,
 	APPROVED,
 	REJECTED,
-	RETURNED
+	TAKEN,
+	RETURNED,
+	LATE
 }

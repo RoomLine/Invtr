@@ -2,6 +2,7 @@ package com.invtr.reportsservice.controller;
 
 import com.invtr.reportsservice.dto.HistoryReportResponse;
 import com.invtr.reportsservice.dto.UsageReportResponse;
+import com.invtr.reportsservice.enums.Format;
 import com.invtr.reportsservice.service.ReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -33,11 +34,11 @@ public class ReportController {
 
     @GetMapping("/export")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<byte[]> exportReport(@RequestParam String format) {
+    public ResponseEntity<byte[]> exportReport(@RequestParam Format format) {
         byte[] file = reportService.exportReport(format);
 
-        String filename = format.equalsIgnoreCase("csv") ? "report.csv" : "report.xlsx";
-        String contentType = format.equalsIgnoreCase("csv")
+        String filename = Format.CSV.equals(format) ? "report.csv" : "report.xlsx";
+        String contentType = Format.CSV.equals(format)
                 ? "text/csv"
                 : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 

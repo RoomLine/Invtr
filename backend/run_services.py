@@ -6,7 +6,7 @@ SERVICES = [
     "auth-service",
     "api-gateway",
     "equipment-service",
-    # "request-service"
+    "request-service",
 ]
 
 def run_all():

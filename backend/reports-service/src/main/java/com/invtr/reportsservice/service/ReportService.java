@@ -2,8 +2,10 @@ package com.invtr.reportsservice.service;
 
 import com.invtr.reportsservice.client.AuthServiceClient;
 import com.invtr.reportsservice.client.EquipmentServiceClient;
+import com.invtr.reportsservice.client.RequestServiceClient;
 import com.invtr.reportsservice.dto.EquipmentResponse;
 import com.invtr.reportsservice.dto.HistoryReportResponse;
+import com.invtr.reportsservice.dto.RequestResponse;
 import com.invtr.reportsservice.dto.UsageReportResponse;
 import com.invtr.reportsservice.enums.Format;
 import com.invtr.reportsservice.export.CsvExporter;
@@ -22,6 +24,7 @@ public class ReportService {
 
     private final EquipmentServiceClient equipmentServiceClient;
     private final AuthServiceClient authServiceClient;
+    private final RequestServiceClient requestServiceClient;
     private final CsvExporter csvExporter;
     private final ExcelExporter excelExporter;
 
@@ -35,13 +38,28 @@ public class ReportService {
         return List.of();
     }
 
-    public byte[] exportReport(Format format) {
+    public byte[] exportEquipmentReport(Format format) {
         List<EquipmentResponse> equipment = equipmentServiceClient.getAllEquipment();
         if (Format.CSV.equals(format)) {
             return csvExporter.exportEquipmentAsCSV(equipment);
         } else if (Format.EXCEL.equals(format)) {
             try {
                 return excelExporter.exportEquipmentAsExcel(equipment);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            throw new IllegalArgumentException("Unsupported format: " + format);
+        }
+    }
+
+    public byte[] exportRequestsReport(Format format) {
+        List<RequestResponse> requests= requestServiceClient.getAllRequests();
+        if (Format.CSV.equals(format)) {
+            return csvExporter.exportRequestAsCSV(requests);
+        } else if (Format.EXCEL.equals(format)) {
+            try {
+                return excelExporter.exportRequestsAsExcel(requests);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

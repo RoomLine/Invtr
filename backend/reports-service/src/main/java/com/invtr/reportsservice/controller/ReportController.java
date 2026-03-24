@@ -35,7 +35,7 @@ public class ReportController {
     @GetMapping("/export-equipment")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<byte[]> exportReportEquipment(@RequestParam Format format) {
-        byte[] file = reportService.exportReport(format);
+        byte[] file = reportService.exportEquipmentReport(format);
 
         String filename = Format.CSV.equals(format) ? "report.csv" : "report.xlsx";
         String contentType = Format.CSV.equals(format)
@@ -51,7 +51,7 @@ public class ReportController {
     @GetMapping("/export-requests")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<byte[]> exportReportRequests(@RequestParam Format format) {
-        byte[] file = reportService.exportReport(format);
+        byte[] file = reportService.exportRequestsReport(format);
 
         String filename = Format.CSV.equals(format) ? "report.csv" : "report.xlsx";
         String contentType = Format.CSV.equals(format)

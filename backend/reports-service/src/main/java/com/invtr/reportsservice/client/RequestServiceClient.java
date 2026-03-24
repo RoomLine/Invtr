@@ -27,7 +27,8 @@ public class RequestServiceClient {
         this.httpServletRequest = httpServletRequest;
     }
 
-    public List<RequestResponse> getAllRequests(String authHeader) {
+    public List<RequestResponse> getAllRequests() {
+        String authHeader = httpServletRequest.getHeader("Authorization");
         try {
             List<RequestResponse> requests = restClient.get()
                     .uri("/requests")

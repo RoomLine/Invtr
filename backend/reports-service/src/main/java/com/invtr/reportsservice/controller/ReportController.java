@@ -32,9 +32,25 @@ public class ReportController {
         return ResponseEntity.ok(reportService.getHistoryReport());
     }
 
-    @GetMapping("/export")
+    @GetMapping("/export-equipment")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<byte[]> exportReport(@RequestParam Format format) {
+    public ResponseEntity<byte[]> exportReportEquipment(@RequestParam Format format) {
+        byte[] file = reportService.exportReport(format);
+
+        String filename = Format.CSV.equals(format) ? "report.csv" : "report.xlsx";
+        String contentType = Format.CSV.equals(format)
+                ? "text/csv"
+                : "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)
+                .contentType(MediaType.parseMediaType(contentType))
+                .body(file);
+    }
+
+    @GetMapping("/export-requests")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<byte[]> exportReportRequests(@RequestParam Format format) {
         byte[] file = reportService.exportReport(format);
 
         String filename = Format.CSV.equals(format) ? "report.csv" : "report.xlsx";

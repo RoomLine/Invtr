@@ -99,3 +99,156 @@ To correctly configure a new microservice please follow these steps
 ---
 
 # Invtr - Frontend
+
+### Tech Stack
+* **Framework:** Vue 3 (Composition API with `<script setup>`)
+* **Build Tool:** Vue CLI 5 (Webpack)
+* **Routing:** Vue Router 4
+* **HTTP:** Native `fetch` API
+* **Port:** 5173
+
+### Prerequisites (Read Before Anything Else)
+
+**Node.js 16 or higher is required.** Vue CLI 5 will fail with older Node versions.
+
+**Check your Node version:**
+```
+node -v
+```
+It must show `v16.x.x` or higher. If it shows something older, stop and fix this first.
+
+**Install Node.js:**
+* Download from: https://nodejs.org/en/download (choose LTS)
+* Or use **nvm** (Node Version Manager) to manage multiple versions
+
+**Verify npm is available:**
+```
+npm -v
+```
+
+---
+
+### Getting Started
+
+**1. Install Dependencies**
+
+Open a terminal in the `frontend` folder and run:
+```
+npm install
+```
+This installs all packages listed in `package.json` into a local `node_modules` folder. Run this once after cloning, and again whenever `package.json` changes.
+
+**2. Make Sure the Backend is Running**
+
+The frontend proxies all API calls through the dev server to `http://localhost:8080` (the API Gateway). If the backend is not running, login will fail and all data will be empty.
+
+Start the backend first — see the backend README for instructions. Ports expected:
+* `8080` — API Gateway
+* `8081` — Auth Service
+* `8082` — Equipment Service
+* `8083` — Request Service *(not yet implemented)*
+
+**3. Run the Dev Server**
+```
+npm run serve
+```
+The app will be available at: **http://localhost:5173**
+
+---
+
+**4. How to Add a New View**
+
+To correctly add a new page or section to the frontend, follow these steps:
+* Create your component in `src/views/` (full pages) or `src/components/` (reusable pieces).
+* Open `src/router/index.js` and import your new component.
+* Add a new route object to the `routes` array. Example:
+```js
+{ path: '/my-page', name: 'MyPage', component: MyPage, meta: { requiresAuth: true, role: 'USER' } }
+```
+* Use `role: 'USER'` or `role: 'ADMIN'` in `meta` to protect the route — the auth guard handles redirection automatically.
+
+---
+
+### Project Structure
+
+```
+frontend/
+├── public/
+│   └── index.html
+├── src/
+│   ├── assets/
+│   │   ├── dashboard.css       # Styles for user + admin dashboards
+│   │   ├── login.css           # Styles for the login/register page
+│   │   └── logo-png.jpg        # App logo
+│   ├── components/
+│   │   └── admin/
+│   │       ├── AdminSidebar.vue
+│   │       ├── AdminTopbar.vue
+│   │       ├── DashboardView.vue
+│   │       ├── InventoryView.vue
+│   │       ├── RequestsView.vue
+│   │       ├── UsersView.vue
+│   │       ├── SettingsView.vue
+│   │       ├── AddItemModal.vue
+│   │       └── AddUserModal.vue
+│   ├── router/
+│   │   └── index.js            # Route definitions + auth guard
+│   ├── views/
+│   │   ├── Login.vue           # Login + Register page
+│   │   ├── UserDashboard.vue   # User-facing dashboard
+│   │   └── AdminDashboard.vue  # Admin dashboard (shell + view switcher)
+│   ├── App.vue
+│   └── main.js
+├── vue.config.js               # Dev server proxy config
+└── package.json
+```
+
+---
+
+### Routing & Auth Guard
+
+Routes are defined in `src/router/index.js`. The router guard checks for a JWT token in `localStorage` or `sessionStorage` before allowing access to protected routes. After login, the JWT payload is decoded client-side to read the `role` claim and the user is redirected to their respective dashboard automatically.
+
+| Path | Component | Access |
+|------|-----------|--------|
+| `/` | → redirects to `/login` | Public |
+| `/login` | `Login.vue` | Public |
+| `/dashboard` | `UserDashboard.vue` | USER only |
+| `/admin-dashboard` | `AdminDashboard.vue` | ADMIN only |
+
+---
+
+### API Integration
+
+All `fetch` calls target `http://localhost:8080` (the API Gateway). The dev server proxy in `vue.config.js` forwards requests automatically so you do not need to worry about CORS during development.
+
+| Endpoint | Service | Used in |
+|----------|---------|---------|
+| `POST /auth/login` | Auth Service | `Login.vue` |
+| `POST /auth/register` | Auth Service | `Login.vue` |
+| `GET /auth/me` | Auth Service | `UserDashboard.vue` |
+| `GET /equipment` | Equipment Service | `UserDashboard.vue` |
+| `POST /request` | Request Service | `UserDashboard.vue` |
+| `GET /requests/my` | Request Service | `UserDashboard.vue` |
+| `GET /requests/history` | Request Service | `UserDashboard.vue` |
+
+**Note:** The Request Service (port 8083) is not yet implemented. The frontend handles this gracefully — the Requests and History sections show an empty state with a small offline warning until the service is ready.
+
+---
+
+### Authentication Flow
+
+1. User submits email + password on `/login`
+2. Frontend calls `POST /auth/login` → receives `{ token: "..." }`
+3. Token is stored in `localStorage` (if Remember Me is checked) or `sessionStorage`
+4. All subsequent API calls include `Authorization: Bearer <token>` in the request header
+5. On logout, the token is removed and the user is redirected to `/login`
+
+---
+
+### Available Scripts
+
+From the `frontend` folder:
+* `npm run serve` — Start the dev server on port 5173
+* `npm run build` — Build for production (outputs to `dist/`)
+* `npm run lint` — Run ESLint across all `.vue` files

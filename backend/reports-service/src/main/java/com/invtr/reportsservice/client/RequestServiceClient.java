@@ -27,15 +27,13 @@ public class RequestServiceClient {
         this.httpServletRequest = httpServletRequest;
     }
 
-    public List<RequestResponse> getAllRequests() {
-        String authHeader = httpServletRequest.getHeader("Authorization");
+    public List<RequestResponse> getAllRequests(String authHeader) {
         try {
             List<RequestResponse> requests = restClient.get()
-                    .uri("/requests")
+                    .uri("/requests/manager")
                     .header("Authorization", authHeader)
                     .retrieve()
                     .body(new ParameterizedTypeReference<List<RequestResponse>>() {});
-
             return requests != null ? requests : Collections.emptyList();
         } catch (RestClientException e) {
             log.error("Failed to fetch requests from request-service: {}", e.getMessage());

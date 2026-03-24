@@ -27,8 +27,7 @@ public class EquipmentServiceClient {
         this.httpServletRequest = httpServletRequest;
     }
 
-    public List<EquipmentResponse> getAllEquipment() {
-        String authHeader = httpServletRequest.getHeader("Authorization");
+    public List<EquipmentResponse> getAllEquipment(String authHeader) {
         try {
             List<EquipmentResponse> equipment = restClient.get()
                     .uri("/equipment")

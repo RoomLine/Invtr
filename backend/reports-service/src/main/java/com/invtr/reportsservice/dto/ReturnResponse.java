@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UsageReportResponse {
+public class ReturnResponse {
     private Long equipmentId;
-    private int totalRequests;
-    private long totalUsageHours;
+    private String condition;
+    private LocalDateTime returnDateTime;
 }

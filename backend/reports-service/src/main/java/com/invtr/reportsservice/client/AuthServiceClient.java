@@ -27,8 +27,7 @@ public class AuthServiceClient {
         this.httpServletRequest = httpServletRequest;
     }
 
-    public List<UsersResponse> getAllUsers() {
-        String authHeader = httpServletRequest.getHeader("Authorization");
+    public List<UsersResponse> getAllUsers(String authHeader) {
         try {
             List<UsersResponse> users = restClient.get()
                     .uri("/auth/users")
@@ -41,4 +40,5 @@ public class AuthServiceClient {
             return Collections.emptyList();
         }
     }
+
 }

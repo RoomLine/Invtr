@@ -78,4 +78,13 @@ public class EquipmentController {
         return ResponseEntity.ok(equipmentService.getConditionLogById(id));
     }
 
+    @PatchMapping("/internal/{id}/status")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<EquipmentResponse> updateStatusInternal(
+            @Valid @RequestBody UpdateEquipmentStatusRequest request,
+            @PathVariable Long id) {
+
+        return ResponseEntity.ok(equipmentService.updateEquipmentStatus(request, id));
+    }
+
 }

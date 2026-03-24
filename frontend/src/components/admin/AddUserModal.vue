@@ -1,7 +1,6 @@
 <template>
   <Teleport to="body">
-    <div class="modal-overlay" :class="{ open: modelValue }" @click.self="$emit('update:modelValue', false)">
-      <div class="modal-box">
+<div v-if="modelValue" class="modal-overlay" @click.self="$emit('update:modelValue', false)">      <div class="modal-box">
         <div class="modal-title">👤 Add New User</div>
         <div class="input-field">
           <label>Full Name</label>

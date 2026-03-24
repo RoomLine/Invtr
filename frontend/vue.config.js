@@ -13,8 +13,8 @@ module.exports = defineConfig({
         target: 'http://localhost:8081', 
         changeOrigin: true
       },
-      '/request': {
-        target: 'http://localhost:8081', 
+      '/requests': {
+        target: 'http://localhost:8080',
         changeOrigin: true
       },
       '/reports': {

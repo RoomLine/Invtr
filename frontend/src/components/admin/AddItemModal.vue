@@ -1,6 +1,6 @@
 <template>
   <Teleport to="body">
-    <div class="modal-overlay" :class="{ open: modelValue }" @click.self="$emit('update:modelValue', false)">
+<div v-if="modelValue" class="modal-overlay" @click.self="$emit('update:modelValue', false)">
       <div class="modal-box">
         <div class="modal-title">➕ {{ editingItem ? 'Edit Item' : 'Add New Item' }}</div>
         <div class="input-field">
@@ -12,9 +12,8 @@
           <label>Category</label>
           <select v-model="form.category">
             <option>Electronics</option>
-            <option>Books</option>
-            <option>Tools</option>
             <option>Furniture</option>
+            <option>Tools</option>
           </select>
         </div>
         <div class="input-field">
@@ -36,9 +35,13 @@
           <select v-model="form.condition">
             <option value="excellent">Excellent</option>
             <option value="good">Good</option>
-            <option value="fair">Fair</option>
-            <option value="poor">Poor</option>
+            <option value="damaged">Damaged</option>
+            <option value="broken">Broken</option>
           </select>
+        </div>
+        <div class="input-field">
+          <label>Location</label>
+          <input type="text" v-model="form.location" placeholder="e.g. Room 101" />
         </div>
         <div class="modal-actions">
           <button class="primary-btn" @click="save">
@@ -62,14 +65,14 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'save'])
 
 const form = reactive({
-  name: '', category: 'Electronics', serial: '', status: 'Available', condition: 'excellent'
+  name: '', category: 'Electronics', serial: '', status: 'Available', condition: 'excellent', location: ''
 })
 
 const errors = reactive({ name: '', serial: '' })
 
 watch(() => props.editingItem, (item) => {
   if (item) Object.assign(form, item)
-  else Object.assign(form, { name: '', category: 'Electronics', serial: '', status: 'Available', condition: 'excellent' })
+  else Object.assign(form, { name: '', category: 'Electronics', serial: '', status: 'Available', condition: 'excellent', location: '' })
 })
 
 function save() {

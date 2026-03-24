@@ -26,8 +26,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  const token = localStorage.getItem('invtr_token') || sessionStorage.getItem('invtr_token')
-  if (to.meta.requiresAuth && !token) return '/login'
+const token = localStorage.getItem('invtr_token') || sessionStorage.getItem('invtr_token')
+if (to.meta.requiresAuth && !token) return '/login'
 })
 
 export default router

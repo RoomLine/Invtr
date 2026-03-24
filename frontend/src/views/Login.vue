@@ -4,7 +4,7 @@
 
       <!-- Logo -->
       <div class="card-header">
-        <img src="@/assets/logo-png.jpg" alt="INVTR Logo" class="logo-image">
+        <img src="@/assets/logo-full.jpg" alt="INVTR Logo" class="logo-image">
         <p class="subtitle"><span>School Inventory System</span></p>
       </div>
 
@@ -97,8 +97,8 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
 const API_BASE = ''
 const router = useRouter()
@@ -139,11 +139,24 @@ const handleLogin = async () => {
     const token = data.token
     if (rememberMe.value) localStorage.setItem('invtr_token', token)
     else sessionStorage.setItem('invtr_token', token)
+const payload = JSON.parse(atob(token.split('.')[1]))
+    // Normalize role — handles string, camelCase roleId, snake_case role_id, roles array
+    const role = (() => {
+      if (payload.role) return String(payload.role).toUpperCase()
+      const numericId = payload.roleId !== undefined ? payload.roleId
+                      : payload.role_id !== undefined ? payload.role_id
+                      : null
+      if (numericId !== null) return Number(numericId) === 2 ? 'ADMIN' : 'USER'
+      if (Array.isArray(payload.roles))
+        return payload.roles.some(r => String(r).toUpperCase().includes('ADMIN')) ? 'ADMIN' : 'USER'
+      return 'USER'
+    })()
+
     successMsg.value = 'Login successful! Redirecting...'
     setTimeout(() => {
-      if (data.role == 'admin') router.push(' /admin')
-      else router.push(' /user')
-    }, 800) 
+      if (role === 'ADMIN') router.push('/admin-dashboard')
+      else router.push('/dashboard')
+    }, 800)
   } catch (_) {
     errorMsg.value = 'Could not reach the server. Is the backend running?'
   } finally {

@@ -2,7 +2,7 @@
   <Teleport to="body">
 <div v-if="modelValue" class="modal-overlay" @click.self="$emit('update:modelValue', false)">
       <div class="modal-box">
-        <div class="modal-title">➕ {{ editingItem ? 'Edit Item' : 'Add New Item' }}</div>
+        <h3 class="modal-title">{{ editingItem ? 'Edit Item' : 'Add New Item' }}</h3>
         <div class="input-field">
           <label>Item Name</label>
           <input type="text" v-model="form.name" placeholder="e.g. Dell XPS Laptop" :class="{ 'input-error': errors.name }" />
@@ -13,7 +13,7 @@
           <select v-model="form.category">
             <option>Electronics</option>
             <option>Furniture</option>
-            <option>Tools</option>
+            <option>Utility</option>
           </select>
         </div>
         <div class="input-field">

@@ -30,6 +30,7 @@
         <module>api-gateway</module>
         <module>equipment-service</module>
         <module>request-service</module>
+        <module>reports-service</module>
     </modules>
 
     <dependencyManagement>

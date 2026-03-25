@@ -1,6 +1,8 @@
 package com.invtr.requestservice.dto;
 
 import com.invtr.requestservice.enums.EquipmentCondition;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,5 +18,10 @@ import java.util.Map;
 @AllArgsConstructor
 @Builder
 public class ReturnRequestBodyDto {
-	private Map<Long, EquipmentCondition> conditionPerEquipment;
+
+	@NotNull(message = "Condition per equipment map cannot be null")
+	@NotEmpty(message = "Condition per equipment map cannot be empty")
+	private Map< @NotNull(message = "Equipment ID cannot be null") Long,
+					@NotNull(message = "Equipment condition cannot be null") EquipmentCondition >
+			conditionPerEquipment;
 }

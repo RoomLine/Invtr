@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateEquipmentStatusRequest {
-	@NotNull
+
+	@NotNull(message = "Equipment status cannot be null")
 	private EquipmentStatus status;
 }

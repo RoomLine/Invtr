@@ -15,6 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class UpdateEquipmentStatusRequest {
+
     @NotNull(message = "Status is required")
     @Enumerated(EnumType.STRING)
     private EquipmentStatus status;

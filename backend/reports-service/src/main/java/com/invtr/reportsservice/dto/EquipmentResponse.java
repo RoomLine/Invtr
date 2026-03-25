@@ -1,5 +1,8 @@
 package com.invtr.reportsservice.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,15 +16,38 @@ import java.time.LocalDateTime;
 @Builder
 public class EquipmentResponse {
 
+    @NotNull(message = "ID cannot be null")
     private Long id;
-    private String name;
-    private String status;
-    private String condition;
-    private String type;
-    private String qrCodeUrl;
-    private String location;
-    private Boolean isSensitive; // check if we want to include this field
-    private LocalDateTime createdAt;
-    private String photoUrl;
 
+    @NotBlank(message = "Name cannot be blank")
+    @Size(max = 100, message = "Name must be at most 100 characters")
+    private String name;
+
+    @NotBlank(message = "Status cannot be blank")
+    @Size(max = 20, message = "Status must be at most 20 characters")
+    private String status;
+
+    @NotBlank(message = "Condition cannot be blank")
+    @Size(max = 20, message = "Condition must be at most 20 characters")
+    private String condition;
+
+    @NotBlank(message = "Type cannot be blank")
+    @Size(max = 20, message = "Type must be at most 20 characters")
+    private String type;
+
+    @Size(max = 255, message = "QR code URL must be at most 255 characters")
+    private String qrCodeUrl;
+
+    @NotBlank(message = "Location cannot be blank")
+    @Size(max = 100, message = "Location must be at most 100 characters")
+    private String location;
+
+//    @NotNull(message = "Sensitive flag cannot be null")
+    private Boolean isSensitive; // TODO: check if we want to include this field
+
+    @NotNull(message = "Created at timestamp cannot be null")
+    private LocalDateTime createdAt;
+
+    @Size(max = 255, message = "Photo URL must be at most 255 characters")
+    private String photoUrl;
 }

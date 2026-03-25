@@ -6,7 +6,7 @@
         <input
           class="search-input"
           type="text"
-          placeholder="Search equipment..."
+          :placeholder="$t('inventory.search')"
           :value="modelValue"
           @input="$emit('update:modelValue', $event.target.value)"
         />
@@ -14,11 +14,12 @@
     </div>
     <div class="topbar-right">
       <div class="topbar-date">{{ todayDate }}</div>
+      
       <div class="admin-chip">
         <div class="admin-chip-avatar">{{ initials }}</div>
         <div class="admin-chip-info">
           <span class="admin-chip-name">{{ adminName || 'Admin' }}</span>
-          <span class="admin-chip-role">Administrator</span>
+          <span class="admin-chip-role">{{ $t('auth.adminRole') }}</span>
         </div>
       </div>
     </div>

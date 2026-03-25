@@ -562,7 +562,6 @@ const handleLogout = () => {
   router.push('/login')
 }
 </script>
-
 <style>
 @import '@/assets/dashboard.css';
 </style>

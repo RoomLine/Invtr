@@ -13,7 +13,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
 
     List<Request> findByUserIdOrderByCreatedAtDesc(Long userId);
 
-    List<Request> findAllByOrderByCreatedAtDesc();
+    List<Request> findAllByOrderByCreatedAtAsc();
 
     @Query("SELECT COUNT(ri) > 0 FROM RequestItem ri WHERE ri.id.equipmentId = :equipmentId AND ri.request.status IN :statuses")
     boolean existsByEquipmentIdAndStatusIn(@Param("equipmentId") Long equipmentId,

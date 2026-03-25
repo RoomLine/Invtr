@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@AtLeastOneField(fields = {"email", "firstName", "familyName", "roleName"})
+@AtLeastOneField(fields = {"email", "firstName", "familyName", "role"})
 public class UpdateUserRequest {
     @Email(message = "Must be a valid email format")
     private String email;

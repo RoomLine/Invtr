@@ -48,7 +48,7 @@ public class RequestService {
 	}
 
 	public List<RequestResponse> listAllForManager() {
-		return requestRepository.findAllByOrderByCreatedAtDesc()
+		return requestRepository.findAllByOrderByCreatedAtAsc()
 				.stream().map(this::mapToResponse).toList();
 	}
 

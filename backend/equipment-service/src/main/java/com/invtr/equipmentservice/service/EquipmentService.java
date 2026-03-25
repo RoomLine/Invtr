@@ -1,5 +1,6 @@
 package com.invtr.equipmentservice.service;
 
+import com.invtr.equipmentservice.ai.GeminiService;
 import com.invtr.equipmentservice.dto.*;
 import com.invtr.equipmentservice.entity.ConditionLog;
 import com.invtr.equipmentservice.entity.Equipment;
@@ -13,7 +14,9 @@ import com.invtr.equipmentservice.repository.EquipmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -25,6 +28,8 @@ public class EquipmentService {
     private final EquipmentRepository equipmentRepository;
     private final ConditionLogRepository conditionLogRepository;
     private final StockService stockService;
+    private final GeminiService geminiService;
+
 
     private EquipmentResponse mapToResponse(Equipment equipment) {
         return EquipmentResponse.builder()
@@ -173,5 +178,12 @@ public class EquipmentService {
         return conditionLogRepository.findById(id)
                 .map(this::mapToConditionLogResponse)
                 .orElseThrow(() -> new ConditionLogNotFoundException(id));
+    }
+
+    public ConditionAssessmentResponse assessCondition(Long id, MultipartFile file) throws IOException {
+        // verify equipment exists first
+        equipmentRepository.findById(id)
+                .orElseThrow(() -> new EquipmentNotFoundException(id));
+        return geminiService.assessCondition(file);
     }
 }

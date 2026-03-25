@@ -35,7 +35,7 @@ public class RequestController {
 	}
 
 	@PostMapping
-	@PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+	@PreAuthorize("hasRole('USER')")
 	public ResponseEntity<RequestResponse> createRequest(
 			@Valid @RequestBody CreateRequestDto dto,
 			@RequestAttribute(value = "userId", required = false) Long userId,

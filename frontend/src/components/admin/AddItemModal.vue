@@ -40,6 +40,11 @@
           </select>
         </div>
         <div class="input-field">
+<label>Item Photo URL</label>
+<input type="text" v-model="form.photoUrl" placeholder="" />
+<p class="field-help" style="font-size: 12px; color: #64748b; margin-top: 4px;">Paste a direct link to a JPG or PNG image.</p>
+</div>
+        <div class="input-field">
           <label>Location</label>
           <input type="text" v-model="form.location" placeholder="e.g. Room 101" />
         </div>
@@ -65,14 +70,14 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'save'])
 
 const form = reactive({
-  name: '', category: 'Electronics', serial: '', status: 'Available', condition: 'excellent', location: ''
+  name: '', category: 'Electronics', serial: '', status: 'Available', condition: 'excellent', location: '', photoUrl: ''
 })
 
 const errors = reactive({ name: '', serial: '' })
 
 watch(() => props.editingItem, (item) => {
   if (item) Object.assign(form, item)
-  else Object.assign(form, { name: '', category: 'Electronics', serial: '', status: 'Available', condition: 'excellent', location: '' })
+  else Object.assign(form, { name: '', category: 'Electronics', serial: '', status: 'Available', condition: 'excellent', location: '', photoUrl: '' })
 })
 
 function save() {

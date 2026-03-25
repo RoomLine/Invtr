@@ -40,12 +40,15 @@
         </thead>
         <tbody>
           <tr v-for="item in filteredItems" :key="item.id">
-            <td>
-              <div class="item-name-cell">
-                <span class="item-emoji">{{ item.emoji }}</span>
-                <span>{{ item.name }}</span>
-              </div>
-            </td>
+          <td>
+<div class="item-name-cell">
+<div class="item-img-wrapper">
+<img v-if="item.photoUrl" :src="item.photoUrl" class="item-actual-img" alt="item" />
+<span v-else class="item-emoji">{{ item.emoji }}</span>
+</div>
+<span class="item-text-name">{{ item.name }}</span>
+</div>
+</td> 
             <td>{{ item.category }}</td>
             <td class="mono-cell">{{ item.serial || '—' }}</td>
             <td><span class="status-badge" :class="statusClass(item.status)">{{ item.status.replace(/-/g, ' ') }}</span></td>
@@ -53,14 +56,8 @@
             <td class="location-cell">{{ item.location || '—' }}</td>
             <td>
               <div class="action-btns">
-<<<<<<< HEAD
-                <button class="act-btn act-duplicate" @click="$emit('duplicateItem', item)" title="Duplicate">📑</button>
-                <button class="act-btn act-edit" @click="$emit('editItem', item)" title="Edit">✏️</button>
-                <button class="act-btn act-delete" @click="$emit('deleteItem', item.id)" title="Delete">🗑️</button>
-=======
                 <button class="act-btn act-edit" @click="$emit('editItem', item)">Edit</button>
                 <button class="act-btn act-delete" @click="$emit('deleteItem', item.id)">Delete</button>
->>>>>>> 1b09005a8d12322e547a183e2395f7acf7622341
               </div>
             </td>
           </tr>
@@ -77,14 +74,7 @@ defineProps({
   filterStatus: String,
 })
 
-const emit = defineEmits([
-  'openAddItem', 
-  'editItem', 
-  'deleteItem', 
-  'update:filterCategory', 
-  'update:filterStatus',
-  'duplicateItem' 
-])
+defineEmits(['openAddItem', 'editItem', 'deleteItem', 'update:filterCategory', 'update:filterStatus'])
 
 function statusClass(status) {
   return 'status-' + (status || '').replace(/\s+/g, '-')

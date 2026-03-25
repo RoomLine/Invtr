@@ -34,18 +34,18 @@
         @navigate="currentView = $event"
       />
 
-    <InventoryView 
+      <InventoryView
   v-if="currentView === 'inventory'"
   :filteredItems="filteredItems"
   :filterCategory="filterCategory"
   :filterStatus="filterStatus"
   @update:filterCategory="filterCategory = $event"
   @update:filterStatus="filterStatus = $event"
-  @openAddItem="openAddModal" 
+  @openAddItem="openAddModal"
   @editItem="editItem"
   @deleteItem="deleteItem"
-  @duplicateItem="handleDuplicate" 
 />
+
       <RequestsView
   v-if="currentView === 'requests'"
   :filteredRequests="filteredRequests"
@@ -164,6 +164,7 @@ const items       = ref([])
 const users       = ref([])
 const rawRequests = ref([])
 
+// Enrich raw requests with user names and equipment names reactively
 const requests = computed(() =>
   rawRequests.value.map(r => {
     const user = users.value.find(u => u.id === r.userId)
@@ -197,6 +198,7 @@ const loadItems = async () => {
         status:    STATUS_MAP[e.status] || e.status,
         condition: COND_MAP[e.condition] || (e.condition || '').toLowerCase(),
         location:  e.location || '',
+        photoUrl:  e.photoUrl || '',
       }))
     }
   } catch (_) {}
@@ -235,6 +237,23 @@ onMounted(async () => {
   await loadRequests()
 })
 
+// ── Computed ──
+const availableCount    = computed(() => items.value.filter(i => i.status === 'Available').length)
+const pendingCount      = computed(() => requests.value.filter(r => r.status === 'pending').length)
+const repairCount       = computed(() => items.value.filter(i => i.status === 'Under-Repair').length)
+const categoryBreakdown = computed(() => items.value.reduce((acc, item) => {
+  acc[item.category] = (acc[item.category] || 0) + 1
+  return acc
+}, {}))
+
+const searchedItems = computed(() =>
+  items.value.filter(i =>
+    i.name.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    i.category.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+    i.serial.toLowerCase().includes(searchQuery.value.toLowerCase())
+  )
+)
+
 const filterCategory = ref('')
 const filterStatus   = ref('')
 const filteredItems  = computed(() =>
@@ -244,9 +263,6 @@ const filteredItems  = computed(() =>
   )
 )
 
-<<<<<<< HEAD
-const showAddModal     = ref(false)
-=======
 const reqFilter = ref('all')
 const filteredRequests = computed(() =>
   reqFilter.value === 'all'
@@ -282,30 +298,78 @@ const settings = reactive({
 })
 
 const showAddModal    = ref(false)
->>>>>>> 1b09005a8d12322e547a183e2395f7acf7622341
 const showAddUserModal = ref(false)
-const editingItemObj   = ref(null)
+const editingItemObj  = ref(null)
 
-// ── MODAL ACTIONS ──
 function openAddModal() {
   editingItemObj.value = null
   showAddModal.value   = true
 }
 
-// ФУНКЦИЯ ЗА ДУБЛИРАНЕ
-function handleDuplicate(item) {
-  editingItemObj.value = { 
-    ...item, 
-    id: null, 
-    serial: '', 
-    name: item.name + ' (Copy)' 
-  }
-  showAddModal.value = true
-}
-
 function editItem(item) {
   editingItemObj.value = { ...item }
   showAddModal.value   = true
+}
+
+async function saveItem(form) {
+  if (editingItemObj.value) {
+    // PATCH — name cannot be changed (backend limitation)
+    const body = {
+      type:      TYPE_ENUM[form.category] || 'ELECTRICAL',
+      condition: COND_ENUM[form.condition] || 'GOOD',
+      location:  form.location || 'Unknown',
+      status:    STATUS_ENUM[form.status] || 'AVAILABLE',
+    }
+    try {
+      const res = await fetch(`/equipment/${editingItemObj.value.id}`, {
+        method: 'PATCH', headers: authHeaders(), body: JSON.stringify(body),
+      })
+      if (res.ok) {
+        const updated = await res.json()
+        const idx = items.value.findIndex(i => i.id === editingItemObj.value.id)
+        if (idx !== -1) {
+          items.value[idx] = {
+            ...items.value[idx],
+            category:  TYPE_MAP[updated.type]      || items.value[idx].category,
+            status:    STATUS_MAP[updated.status]   || items.value[idx].status,
+            condition: COND_MAP[updated.condition]  || items.value[idx].condition,
+            location:  updated.location             || items.value[idx].location,
+          }
+        }
+      }
+    } catch (_) {}
+  } else {
+    // POST — create new item
+    const body = {
+      type:         TYPE_ENUM[form.category] || 'ELECTRICAL',
+      name:         form.name,
+      serialNumber: form.serial,
+      status:       STATUS_ENUM[form.status] || 'AVAILABLE',
+      condition:    COND_ENUM[form.condition] || 'GOOD',
+      location:     form.location || 'Unknown',
+      photoUrl:     form.photoUrl || null,
+    }
+    try {
+      const res = await fetch('/equipment', {
+        method: 'POST', headers: authHeaders(), body: JSON.stringify(body),
+      })
+      if (res.ok || res.status === 201) {
+        const created = await res.json()
+        items.value.push({
+          id:        created.id,
+          name:      created.name,
+          emoji:     EMOJI_MAP[TYPE_MAP[created.type]] || '📦',
+          category:  TYPE_MAP[created.type] || created.type,
+          serial:    created.serialNumber || '',
+          status:    STATUS_MAP[created.status] || created.status,
+          condition: COND_MAP[created.condition] || (created.condition || '').toLowerCase(),
+          location:  created.location || '',
+          photoUrl:  created.photoUrl || form.photoUrl || '',
+        })
+      }
+    } catch (_) {}
+  }
+  editingItemObj.value = null
 }
 
 async function deleteItem(id) {
@@ -319,44 +383,27 @@ async function deleteItem(id) {
   }
 }
 
-async function saveItem(form) {
-  if (editingItemObj.value && editingItemObj.value.id) {
-    // PATCH
-    const body = {
-      type:      TYPE_ENUM[form.category] || 'ELECTRICAL',
-      condition: COND_ENUM[form.condition] || 'GOOD',
-      location:  form.location || 'Unknown',
-      status:    STATUS_ENUM[form.status] || 'AVAILABLE',
+async function saveUser(form) {
+  const parts = form.name.trim().split(' ')
+  const firstName  = parts[0] || form.name
+  const familyName = parts.slice(1).join(' ') || parts[0]
+  try {
+    const res = await fetch('/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: form.email, password: 'Invtr@1234', firstName, familyName }),
+    })
+    if (res.ok) {
+      await loadUsers()
     }
-    try {
-      const res = await fetch(`/equipment/${editingItemObj.value.id}`, {
-        method: 'PATCH', headers: authHeaders(), body: JSON.stringify(body),
-      })
-      if (res.ok) { await loadItems() }
-    } catch (_) {}
-  } else {
-    // POST (New or Duplicate)
-    const body = {
-      type:         TYPE_ENUM[form.category] || 'ELECTRICAL',
-      name:         form.name,
-      serialNumber: form.serial,
-      status:       STATUS_ENUM[form.status] || 'AVAILABLE',
-      condition:    COND_ENUM[form.condition] || 'GOOD',
-      location:     form.location || 'Unknown',
-    }
-    try {
-      const res = await fetch('/equipment', {
-        method: 'POST', headers: authHeaders(), body: JSON.stringify(body),
-      })
-      if (res.ok || res.status === 201) { await loadItems() }
-    } catch (_) {}
-  }
-  showAddModal.value = false
-  editingItemObj.value = null
+  } catch (_) {}
 }
-<<<<<<< HEAD
-</script>
-=======
+
+function deleteUser(id) {
+  if (confirm('Remove this user?')) {
+    users.value = users.value.filter(u => u.id !== id)
+  }
+}
 
 async function updateUserRole({ userId, role }) {
   try {
@@ -385,4 +432,3 @@ watch(() => settings.system.find(s => s.key === 'dark')?.value, (val) => {
 <style>
 @import '@/assets/dashboard.css';
 </style>
->>>>>>> 1b09005a8d12322e547a183e2395f7acf7622341

@@ -49,7 +49,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in (searchedItems || []).slice(0, 6)" :key="item.id">
+            <tr v-for="item in searchedItems.slice(0, 6)" :key="item.id">
               <td>
                 <div class="item-name-cell">
                   <span class="item-emoji">{{ item.emoji }}</span>
@@ -57,13 +57,8 @@
                 </div>
               </td>
               <td>{{ item.category }}</td>
-<<<<<<< HEAD
-              <td class="serial-cell">{{ item.serial }}</td>
-              <td><span class="status-badge" :class="statusClass(item.status)">{{ (item.status || '').replace(/-/g, ' ') }}</span></td>
-=======
               <td class="mono-cell">{{ item.serial || '—' }}</td>
               <td><span class="status-badge" :class="statusClass(item.status)">{{ item.status.replace(/-/g, ' ') }}</span></td>
->>>>>>> 1b09005a8d12322e547a183e2395f7acf7622341
               <td>
                 <div class="action-btns">
                   <button class="act-btn act-edit" @click="$emit('editItem', item)" title="Edit">Edit</button>
@@ -83,13 +78,6 @@
           <h3>Recent Requests</h3>
           <button class="link-btn" @click="$emit('navigate', 'requests')">View all →</button>
         </div>
-<<<<<<< HEAD
-        <div class="borrow-list">
-          <div class="borrow-row" v-for="req in (requests || []).slice(0, 4)" :key="req.id">
-            <div class="borrow-info">
-              <span class="borrow-name">{{ req.user }} — {{ req.item }}</span>
-              <span class="borrow-date">Requested {{ req.requested }} · Return by {{ req.returnBy }}</span>
-=======
         <div v-if="requests.length === 0" class="empty-state">No requests yet.</div>
         <div v-else class="borrow-list">
           <div class="borrow-row" v-for="req in requests.slice(0, 5)" :key="req.id">
@@ -99,7 +87,6 @@
                 <span class="borrow-name">{{ req.user }}</span>
                 <span class="borrow-date">{{ req.item }} · return {{ req.returnBy || '—' }}</span>
               </div>
->>>>>>> 1b09005a8d12322e547a183e2395f7acf7622341
             </div>
             <span class="status-badge" :class="statusClass(req.status)">{{ req.status }}</span>
           </div>

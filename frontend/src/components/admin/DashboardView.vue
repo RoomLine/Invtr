@@ -48,7 +48,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="item in searchedItems.slice(0, 6)" :key="item.id">
+            <tr v-for="item in (searchedItems || []).slice(0, 6)" :key="item.id">
               <td>
                 <div class="item-name-cell">
                   <span class="item-emoji">{{ item.emoji }}</span>
@@ -57,7 +57,7 @@
               </td>
               <td>{{ item.category }}</td>
               <td class="serial-cell">{{ item.serial }}</td>
-              <td><span class="status-badge" :class="statusClass(item.status)">{{ item.status.replace(/-/g, ' ') }}</span></td>
+              <td><span class="status-badge" :class="statusClass(item.status)">{{ (item.status || '').replace(/-/g, ' ') }}</span></td>
               <td>
                 <div class="action-btns">
                   <button class="act-btn act-edit" @click="$emit('editItem', item)" title="Edit">✏️</button>
@@ -75,7 +75,7 @@
           <button class="link-btn" @click="$emit('navigate', 'requests')">View all</button>
         </div>
         <div class="borrow-list">
-          <div class="borrow-row" v-for="req in requests.slice(0, 4)" :key="req.id">
+          <div class="borrow-row" v-for="req in (requests || []).slice(0, 4)" :key="req.id">
             <div class="borrow-info">
               <span class="borrow-name">{{ req.user }} — {{ req.item }}</span>
               <span class="borrow-date">Requested {{ req.requested }} · Return by {{ req.returnBy }}</span>

@@ -4,6 +4,7 @@
       <h2>📦 Inventory Management</h2>
       <button class="add-btn" @click="$emit('openAddItem')">+ Add New Item</button>
     </div>
+
     <div class="filter-bar">
       <select class="filter-select" :value="filterCategory" @change="$emit('update:filterCategory', $event.target.value)">
         <option value="">All Categories</option>
@@ -20,6 +21,7 @@
         <option value="Retired">Retired</option>
       </select>
     </div>
+
     <div class="panel">
       <table class="data-table">
         <thead>
@@ -46,6 +48,7 @@
             <td><span class="cond-badge" :class="'cond-' + item.condition">{{ item.condition }}</span></td>
             <td>
               <div class="action-btns">
+                <button class="act-btn act-duplicate" @click="$emit('duplicateItem', item)" title="Duplicate">📑</button>
                 <button class="act-btn act-edit" @click="$emit('editItem', item)" title="Edit">✏️</button>
                 <button class="act-btn act-delete" @click="$emit('deleteItem', item.id)" title="Delete">🗑️</button>
               </div>
@@ -67,7 +70,14 @@ defineProps({
   filterStatus: String,
 })
 
-defineEmits(['openAddItem', 'editItem', 'deleteItem', 'update:filterCategory', 'update:filterStatus'])
+const emit = defineEmits([
+  'openAddItem', 
+  'editItem', 
+  'deleteItem', 
+  'update:filterCategory', 
+  'update:filterStatus',
+  'duplicateItem' 
+])
 
 function statusClass(status) {
   return 'status-' + (status || '').replace(/\s+/g, '-')

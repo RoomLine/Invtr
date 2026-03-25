@@ -5,7 +5,7 @@ import AdminDashboard from '@/views/AdminDashboard.vue'
 
 const routes = [
   { path: '/', redirect: '/login' },
-  { path: '/login', name: 'Login', component: Login },
+  { path: '/login', name: 'Login', component: Login }, 
   {
     path: '/dashboard',
     name: 'Dashboard',
@@ -16,7 +16,7 @@ const routes = [
     path: '/admin-dashboard',
     name: 'AdminDashboard',
     component: AdminDashboard,
-    meta: { requiresAuth: true, role: 'ADMIN' }
+    meta: { requiresAuth: true, role: 'ADMIN'}
   }
 ]
 
@@ -57,4 +57,7 @@ router.beforeEach((to) => {
   }
 })
 
+
+
 export default router
+

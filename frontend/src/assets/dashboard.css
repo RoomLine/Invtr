@@ -401,6 +401,7 @@
   color: #666;
 }
 
+
 /* ── CONDITION BADGES ── */
 .cond-badge {
   font-size: 11px;
@@ -611,6 +612,24 @@
 .data-table tr:hover td {
   background: #f8fafc;
 }
+.act-duplicate {
+  background: rgba(82, 210, 101, 0.1); 
+  border: none;
+  color: #52d265;                      
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+.act-duplicate:hover {
+  background: #52d265;
+  color: #103852; 
+}
+
 
 /* ── REQUEST MODAL ── */
 .modal-overlay {

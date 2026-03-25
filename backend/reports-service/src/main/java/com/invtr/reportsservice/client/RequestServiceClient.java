@@ -19,10 +19,10 @@ public class RequestServiceClient {
     private final RestClient restClient;
     private final HttpServletRequest httpServletRequest;
 
-    public RequestServiceClient(@Value("${request.service.url}") String equipmentServiceUrl,
+    public RequestServiceClient(@Value("${request.service.url}") String requestServiceUrl,
                                 HttpServletRequest httpServletRequest) {
         this.restClient = RestClient.builder()
-                .baseUrl(equipmentServiceUrl)
+                .baseUrl(requestServiceUrl)
                 .build();
         this.httpServletRequest = httpServletRequest;
     }

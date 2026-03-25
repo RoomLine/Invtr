@@ -1,4 +1,8 @@
 const { defineConfig } = require('@vue/cli-service')
+
+// Automatically switch between Docker's API Gateway and Localhost
+const apiTarget = process.env.VUE_APP_API_TARGET || 'http://localhost:8080';
+
 module.exports = defineConfig({
   transpileDependencies: true,
   lintOnSave: false,
@@ -6,19 +10,19 @@ module.exports = defineConfig({
     port: 5173,
     proxy: {
       '/auth': {
-        target: 'http://localhost:8080',
+        target: apiTarget,
         changeOrigin: true
       },
       '/equipment': {
-        target: 'http://localhost:8080',
+        target: apiTarget,
         changeOrigin: true
       },
       '/requests': {
-        target: 'http://localhost:8080',
+        target: apiTarget,
         changeOrigin: true
       },
       '/reports': {
-        target: 'http://localhost:8080',
+        target: apiTarget,
         changeOrigin: true
       }
     }

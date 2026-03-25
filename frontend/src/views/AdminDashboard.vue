@@ -5,14 +5,18 @@
       v-model="sidebarCollapsed"
       :currentView="currentView"
       :navItems="navItems"
+      :adminName="adminName"
+      :isDark="isDark"
       @navigate="currentView = $event"
       @logout="logout"
+      @toggleTheme="toggleTheme"
     />
     <div class="main-content">
 
       <AdminTopbar
         v-model="searchQuery"
         :todayDate="todayDate"
+        :adminName="adminName"
       />
 
       <DashboardView
@@ -56,6 +60,7 @@
         :users="users"
         @openAddUser="showAddUserModal = true"
         @deleteUser="deleteUser"
+        @changeRole="updateUserRole"
       />
 
       <SettingsView
@@ -80,7 +85,7 @@
 </template>
 
 <script setup>
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, onMounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import AdminSidebar  from '@/components/admin/AdminSidebar.vue'
@@ -94,10 +99,38 @@ import AddItemModal  from '@/components/admin/AddItemModal.vue'
 import AddUserModal  from '@/components/admin/AddUserModal.vue'
 
 const router = useRouter()
+const token = localStorage.getItem('invtr_token') || sessionStorage.getItem('invtr_token')
+const authHeaders = () => ({ 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' })
+
+// ── Theme ──
+const isDark = ref(localStorage.getItem('invtr_theme') === 'dark')
+function applyTheme(dark) {
+  if (dark) document.documentElement.classList.add('dark')
+  else document.documentElement.classList.remove('dark')
+  localStorage.setItem('invtr_theme', dark ? 'dark' : 'light')
+}
+applyTheme(isDark.value)
+
+function toggleTheme() {
+  document.documentElement.classList.add('theme-transitioning')
+  isDark.value = !isDark.value
+  applyTheme(isDark.value)
+  const darkSetting = settings.system.find(s => s.key === 'dark')
+  if (darkSetting) darkSetting.value = isDark.value
+  setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 400)
+}
+
+// ── Admin name ──
+const adminName = ref('')
+let adminEmail = ''
+try {
+  const payload = JSON.parse(atob(token.split('.')[1]))
+  adminEmail = payload.sub || ''
+} catch (_) {}
 
 function logout() {
-  localStorage.removeItem('token')
-  localStorage.removeItem('role')
+  localStorage.removeItem('invtr_token')
+  sessionStorage.removeItem('invtr_token')
   router.push('/login')
 }
 
@@ -117,50 +150,93 @@ const todayDate = new Date().toLocaleDateString('en-US', {
   weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
 })
 
-const EMOJI_MAP = { Electronics: '💻', Books: '📖', Tools: '🔧', Furniture: '🪑' }
+// ── Enum mapping helpers ──
+const TYPE_MAP    = { ELECTRICAL: 'Electronics', FURNITURE: 'Furniture', UTILITY: 'Utility' }
+const TYPE_ENUM   = { Electronics: 'ELECTRICAL', Furniture: 'FURNITURE', Utility: 'UTILITY' }
+const STATUS_MAP  = { AVAILABLE: 'Available', CHECKED_OUT: 'Checked-Out', UNDER_REPAIR: 'Under-Repair', RETIRED: 'Retired' }
+const STATUS_ENUM = { Available: 'AVAILABLE', 'Checked-Out': 'CHECKED_OUT', 'Under-Repair': 'UNDER_REPAIR', Retired: 'RETIRED' }
+const COND_MAP    = { EXCELLENT: 'excellent', GOOD: 'good', DAMAGED: 'damaged', BROKEN: 'broken' }
+const COND_ENUM   = { excellent: 'EXCELLENT', good: 'GOOD', damaged: 'DAMAGED', broken: 'BROKEN', fair: 'GOOD', poor: 'DAMAGED' }
+const EMOJI_MAP   = { Electronics: '💻', Furniture: '🪑', Utility: '🔧' }
 
-const items = ref([
-  { id: 1, name: 'Dell XPS Laptop',    emoji: '💻', category: 'Electronics', serial: 'SN-DELL-001', status: 'Available',    condition: 'excellent' },
-  { id: 2, name: 'Epson Projector',     emoji: '📽️',  category: 'Electronics', serial: 'SN-EPS-123',  status: 'Checked-Out',  condition: 'good'      },
-  { id: 3, name: 'Biology Textbook',    emoji: '📖', category: 'Books',       serial: 'ISBN-978-3',  status: 'Available',    condition: 'fair'      },
-  { id: 4, name: 'Canon DSLR Camera',   emoji: '📷', category: 'Electronics', serial: 'SN-CAM-007',  status: 'Under-Repair', condition: 'fair'      },
-  { id: 5, name: 'Standing Desk',       emoji: '🪑', category: 'Furniture',   serial: 'FN-DESK-011', status: 'Available',    condition: 'good'      },
-  { id: 6, name: 'Cordless Drill',      emoji: '🔧', category: 'Tools',       serial: 'TL-DRL-033',  status: 'Available',    condition: 'excellent' },
-  { id: 7, name: 'HP LaserJet Printer', emoji: '🖨️',  category: 'Electronics', serial: 'SN-HP-099',   status: 'Checked-Out',  condition: 'good'      },
-  { id: 8, name: 'Chemistry Textbook',  emoji: '📗', category: 'Books',       serial: 'ISBN-341-A',  status: 'Available',    condition: 'excellent' },
-])
+// ── Data ──
+const items       = ref([])
+const users       = ref([])
+const rawRequests = ref([])
 
-const requests = ref([
-  { id: 1, user: 'Alice Johnson', item: 'Dell XPS Laptop',  requested: '2026-03-15', returnBy: '2026-03-29', status: 'pending'  },
-  { id: 2, user: 'Bob Smith',     item: 'Epson Projector',   requested: '2026-03-14', returnBy: '2026-03-21', status: 'approved' },
-  { id: 3, user: 'Carol White',   item: 'Canon DSLR Camera', requested: '2026-03-13', returnBy: '2026-03-20', status: 'rejected' },
-  { id: 4, user: 'David Lee',     item: 'HP LaserJet',       requested: '2026-03-16', returnBy: '2026-03-30', status: 'pending'  },
-  { id: 5, user: 'Eva Green',     item: 'Standing Desk',     requested: '2026-03-17', returnBy: '2026-04-03', status: 'pending'  },
-])
+// Enrich raw requests with user names and equipment names reactively
+const requests = computed(() =>
+  rawRequests.value.map(r => {
+    const user = users.value.find(u => u.id === r.userId)
+    const itemNames = (r.equipmentIds || []).map(id => {
+      const item = items.value.find(i => i.id === id)
+      return item ? item.name : `Item #${id}`
+    }).join(', ')
+    return {
+      id:        r.id,
+      user:      user ? user.name : `User #${r.userId}`,
+      item:      itemNames,
+      requested: r.requestDate || '',
+      returnBy:  r.endDateTime ? r.endDateTime.split('T')[0] : '',
+      status:    (r.status || '').toLowerCase(),
+    }
+  })
+)
 
-const users = ref([
-  { id: 1, name: 'Alice Johnson', email: 'alice@school.edu', role: 'Student', borrows: 1, active: true  },
-  { id: 2, name: 'Bob Smith',     email: 'bob@school.edu',   role: 'Teacher', borrows: 2, active: true  },
-  { id: 3, name: 'Carol White',   email: 'carol@school.edu', role: 'Staff',   borrows: 0, active: false },
-  { id: 4, name: 'David Lee',     email: 'david@school.edu', role: 'Student', borrows: 1, active: true  },
-  { id: 5, name: 'Eva Green',     email: 'eva@school.edu',   role: 'Teacher', borrows: 0, active: true  },
-])
+// ── API calls ──
+const loadItems = async () => {
+  try {
+    const res = await fetch('/equipment', { headers: authHeaders() })
+    if (res.ok) {
+      const data = await res.json()
+      items.value = data.map(e => ({
+        id:        e.id,
+        name:      e.name,
+        emoji:     EMOJI_MAP[TYPE_MAP[e.type]] || '📦',
+        category:  TYPE_MAP[e.type] || e.type,
+        serial:    e.serialNumber || '',
+        status:    STATUS_MAP[e.status] || e.status,
+        condition: COND_MAP[e.condition] || (e.condition || '').toLowerCase(),
+        location:  e.location || '',
+      }))
+    }
+  } catch (_) {}
+}
 
-const settings = reactive({
-  notifications: [
-    { key: 'email',   label: 'Email Notifications', sub: 'Send emails on new requests',     value: true  },
-    { key: 'overdue', label: 'Overdue Alerts',       sub: 'Notify when items are overdue',   value: true  },
-    { key: 'repair',  label: 'Repair Reminders',     sub: 'Remind about items under repair', value: false },
-  ],
-  system: [
-    { key: 'dark',  label: 'Dark Mode',             sub: 'Switch interface theme',           value: false },
-    { key: 'auto',  label: 'Auto-approve Requests', sub: 'Skip manual approval step',        value: false },
-    { key: 'maint', label: 'Maintenance Mode',      sub: 'Disable user access temporarily',  value: false },
-  ],
-  profile: { name: 'Admin User', email: 'admin@equipro.com', password: '' },
-  policy:  { maxDays: 14, maxItems: 3, lateFee: '$2.00' },
+const loadUsers = async () => {
+  try {
+    const res = await fetch('/auth/users', { headers: authHeaders() })
+    if (res.ok) {
+      const data = await res.json()
+      users.value = data.map(u => ({
+        id:      u.id,
+        name:    `${u.firstName} ${u.familyName}`.trim(),
+        email:   u.email,
+        role:    u.roleName || 'USER',
+        borrows: 0,
+        active:  true,
+      }))
+      const me = data.find(u => u.email === adminEmail)
+      if (me) adminName.value = `${me.firstName} ${me.familyName}`.trim()
+    }
+  } catch (_) {}
+}
+
+const loadRequests = async () => {
+  try {
+    const res = await fetch('/requests/manager', { headers: authHeaders() })
+    if (res.ok) {
+      rawRequests.value = await res.json()
+    }
+  } catch (_) {}
+}
+
+onMounted(async () => {
+  await Promise.all([loadItems(), loadUsers()])
+  await loadRequests()
 })
 
+// ── Computed ──
 const availableCount    = computed(() => items.value.filter(i => i.status === 'Available').length)
 const pendingCount      = computed(() => requests.value.filter(r => r.status === 'pending').length)
 const repairCount       = computed(() => items.value.filter(i => i.status === 'Under-Repair').length)
@@ -193,12 +269,33 @@ const filteredRequests = computed(() =>
     : requests.value.filter(r => r.status === reqFilter.value)
 )
 
-function updateReqStatus(id, status) {
-  const req = requests.value.find(r => r.id === id)
-  if (req) req.status = status
+async function updateReqStatus(id, status) {
+  const endpoint = status === 'approved' ? `/requests/${id}/approve` : `/requests/${id}/reject`
+  try {
+    const res = await fetch(endpoint, { method: 'PUT', headers: authHeaders() })
+    if (res.ok) {
+      const updated = await res.json()
+      const raw = rawRequests.value.find(r => r.id === id)
+      if (raw) raw.status = updated.status
+    }
+  } catch (_) {}
 }
 
-let nextId = 9
+const settings = reactive({
+  notifications: [
+    { key: 'email',   label: 'Email Notifications', sub: 'Send emails on new requests',     value: true  },
+    { key: 'overdue', label: 'Overdue Alerts',       sub: 'Notify when items are overdue',   value: true  },
+    { key: 'repair',  label: 'Repair Reminders',     sub: 'Remind about items under repair', value: false },
+  ],
+  system: [
+    { key: 'dark',  label: 'Dark Mode',             sub: 'Switch interface theme',           value: isDark.value },
+    { key: 'auto',  label: 'Auto-approve Requests', sub: 'Skip manual approval step',        value: false },
+    { key: 'maint', label: 'Maintenance Mode',      sub: 'Disable user access temporarily',  value: false },
+  ],
+  profile: { name: 'Admin User', email: 'admin@equipro.com', password: '' },
+  policy:  { maxDays: 14, maxItems: 3, lateFee: '$2.00' },
+})
+
 const showAddModal    = ref(false)
 const showAddUserModal = ref(false)
 const editingItemObj  = ref(null)
@@ -213,28 +310,90 @@ function editItem(item) {
   showAddModal.value   = true
 }
 
-function saveItem(form) {
+async function saveItem(form) {
   if (editingItemObj.value) {
-    const idx = items.value.findIndex(i => i.id === editingItemObj.value.id)
-    if (idx !== -1) items.value[idx] = { ...items.value[idx], ...form }
+    // PATCH — name cannot be changed (backend limitation)
+    const body = {
+      type:      TYPE_ENUM[form.category] || 'ELECTRICAL',
+      condition: COND_ENUM[form.condition] || 'GOOD',
+      location:  form.location || 'Unknown',
+      status:    STATUS_ENUM[form.status] || 'AVAILABLE',
+    }
+    try {
+      const res = await fetch(`/equipment/${editingItemObj.value.id}`, {
+        method: 'PATCH', headers: authHeaders(), body: JSON.stringify(body),
+      })
+      if (res.ok) {
+        const updated = await res.json()
+        const idx = items.value.findIndex(i => i.id === editingItemObj.value.id)
+        if (idx !== -1) {
+          items.value[idx] = {
+            ...items.value[idx],
+            category:  TYPE_MAP[updated.type]      || items.value[idx].category,
+            status:    STATUS_MAP[updated.status]   || items.value[idx].status,
+            condition: COND_MAP[updated.condition]  || items.value[idx].condition,
+            location:  updated.location             || items.value[idx].location,
+          }
+        }
+      }
+    } catch (_) {}
   } else {
-    items.value.push({
-      id: nextId++,
-      ...form,
-      emoji: EMOJI_MAP[form.category] || '📦',
-    })
+    // POST — create new item
+    const body = {
+      type:         TYPE_ENUM[form.category] || 'ELECTRICAL',
+      name:         form.name,
+      serialNumber: form.serial,
+      status:       STATUS_ENUM[form.status] || 'AVAILABLE',
+      condition:    COND_ENUM[form.condition] || 'GOOD',
+      location:     form.location || 'Unknown',
+    }
+    try {
+      const res = await fetch('/equipment', {
+        method: 'POST', headers: authHeaders(), body: JSON.stringify(body),
+      })
+      if (res.ok || res.status === 201) {
+        const created = await res.json()
+        items.value.push({
+          id:        created.id,
+          name:      created.name,
+          emoji:     EMOJI_MAP[TYPE_MAP[created.type]] || '📦',
+          category:  TYPE_MAP[created.type] || created.type,
+          serial:    created.serialNumber || '',
+          status:    STATUS_MAP[created.status] || created.status,
+          condition: COND_MAP[created.condition] || (created.condition || '').toLowerCase(),
+          location:  created.location || '',
+        })
+      }
+    } catch (_) {}
   }
   editingItemObj.value = null
 }
 
-function deleteItem(id) {
+async function deleteItem(id) {
   if (confirm('Delete this item?')) {
-    items.value = items.value.filter(i => i.id !== id)
+    try {
+      const res = await fetch(`/equipment/${id}`, { method: 'DELETE', headers: authHeaders() })
+      if (res.ok) {
+        items.value = items.value.filter(i => i.id !== id)
+      }
+    } catch (_) {}
   }
 }
 
-function saveUser(form) {
-  users.value.push({ id: nextId++, ...form, borrows: 0, active: true })
+async function saveUser(form) {
+  const parts = form.name.trim().split(' ')
+  const firstName  = parts[0] || form.name
+  const familyName = parts.slice(1).join(' ') || parts[0]
+  try {
+    const res = await fetch('/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: form.email, password: 'Invtr@1234', firstName, familyName }),
+    })
+    if (res.ok) {
+      await loadUsers()
+    }
+  } catch (_) {}
 }
 
 function deleteUser(id) {
@@ -242,6 +401,29 @@ function deleteUser(id) {
     users.value = users.value.filter(u => u.id !== id)
   }
 }
+
+async function updateUserRole({ userId, role }) {
+  try {
+    const res = await fetch(`/auth/users/${userId}`, {
+      method: 'PATCH',
+      headers: authHeaders(),
+      body: JSON.stringify({ role: role }),
+    })
+    if (res.ok) {
+      const updated = await res.json()
+      const u = users.value.find(u => u.id === userId)
+      if (u) u.role = updated.roleName || role
+    }
+  } catch (_) {}
+}
+
+// Wire Settings dark mode toggle
+watch(() => settings.system.find(s => s.key === 'dark')?.value, (val) => {
+  if (val !== undefined && val !== isDark.value) {
+    isDark.value = val
+    applyTheme(val)
+  }
+})
 </script>
 
 <style>

@@ -1,11 +1,16 @@
 <template>
   <div class="view-section">
     <div class="section-header">
-      <h2>👥 Users</h2>
+      <div>
+        <h2 class="section-title">Users</h2>
+        <p class="section-sub">Manage registered users and their access</p>
+      </div>
       <button class="add-btn" @click="$emit('openAddUser')">+ Add User</button>
     </div>
+
     <div class="panel">
-      <table class="data-table">
+      <div v-if="users.length === 0" class="empty-state">No users found.</div>
+      <table v-else class="data-table">
         <thead>
           <tr>
             <th>Name</th>
@@ -20,15 +25,24 @@
           <tr v-for="user in users" :key="user.id">
             <td>
               <div class="item-name-cell">
-                <div class="user-initials" :class="{ inactive: !user.active }">
-                  {{ user.name.split(' ').map(n => n[0]).join('') }}
+                <div class="user-initials" :class="{ 'user-initials-admin': user.role !== 'USER' }">
+                  {{ user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase() }}
                 </div>
-                {{ user.name }}
+                <span>{{ user.name }}</span>
               </div>
             </td>
-            <td class="date-cell">{{ user.email }}</td>
-            <td><span class="role-badge">{{ user.role }}</span></td>
-            <td style="text-align:center">{{ user.borrows }}</td>
+            <td class="email-cell">{{ user.email }}</td>
+            <td>
+              <select
+                class="role-select"
+                :value="user.role"
+                @change="$emit('changeRole', { userId: user.id, role: $event.target.value })"
+              >
+                <option value="USER">USER</option>
+                <option value="ADMIN">ADMIN</option>
+              </select>
+            </td>
+            <td class="center-cell">{{ user.borrows }}</td>
             <td>
               <span class="status-badge" :class="user.active ? 'status-Available' : 'status-Retired'">
                 {{ user.active ? 'Active' : 'Inactive' }}
@@ -36,13 +50,9 @@
             </td>
             <td>
               <div class="action-btns">
-                <button class="act-btn act-edit" title="Edit">✏️</button>
-                <button class="act-btn act-delete" @click="$emit('deleteUser', user.id)" title="Remove">🗑️</button>
+                <button class="act-btn act-delete" @click="$emit('deleteUser', user.id)">Remove</button>
               </div>
             </td>
-          </tr>
-          <tr v-if="users.length === 0">
-            <td colspan="6" class="empty-state">No users found</td>
           </tr>
         </tbody>
       </table>
@@ -55,5 +65,5 @@ defineProps({
   users: Array,
 })
 
-defineEmits(['openAddUser', 'deleteUser'])
+defineEmits(['openAddUser', 'deleteUser', 'changeRole'])
 </script>

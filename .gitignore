@@ -45,4 +45,3 @@ backend/api-gateway/target
 */*.njsproj
 */*.sln
 */*.sw?
-

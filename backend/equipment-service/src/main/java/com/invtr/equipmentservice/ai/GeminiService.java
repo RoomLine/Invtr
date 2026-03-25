@@ -3,6 +3,7 @@ package com.invtr.equipmentservice.ai;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.invtr.equipmentservice.dto.ConditionAssessmentResponse;
+import com.invtr.equipmentservice.exception.ExternalServiceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -63,7 +64,7 @@ public class GeminiService {
 
             if (response.statusCode() != 200) {
                 log.error("Gemini API error: {}", response.body());
-                throw new RuntimeException("Gemini API returned status: " + response.statusCode());
+                throw new ExternalServiceException("Unable to assess equipment condition");
             }
 
             JsonNode root = objectMapper.readTree(response.body());
@@ -83,7 +84,9 @@ public class GeminiService {
 
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new RuntimeException("Gemini API call interrupted");
+            throw new ExternalServiceException("AI service call interrupted");
+        } catch (IOException e) {
+            throw new ExternalServiceException("Failed to process AI response");
         }
     }
 }

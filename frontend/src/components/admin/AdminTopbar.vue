@@ -1,30 +1,43 @@
 <template>
   <div class="topbar">
-    <div class="search-bar">
-      <span class="search-icon">🔍</span>
-      <input
-        class="search-input"
-        type="text"
-        placeholder="Search equipment..."
-        :value="modelValue"
-        @input="$emit('update:modelValue', $event.target.value)"
-      />
+    <div class="topbar-left">
+      <div class="search-bar">
+        <span class="search-icon">🔍</span>
+        <input
+          class="search-input"
+          type="text"
+          placeholder="Search equipment..."
+          :value="modelValue"
+          @input="$emit('update:modelValue', $event.target.value)"
+        />
+      </div>
     </div>
     <div class="topbar-right">
-      <span class="topbar-date">{{ todayDate }}</span>
-      <div class="welcome-chip">
-        <span class="welcome-text">Welcome, <strong>Admin</strong></span>
-        <div class="admin-avatar">AD</div>
+      <div class="topbar-date">{{ todayDate }}</div>
+      <div class="admin-chip">
+        <div class="admin-chip-avatar">{{ initials }}</div>
+        <div class="admin-chip-info">
+          <span class="admin-chip-name">{{ adminName || 'Admin' }}</span>
+          <span class="admin-chip-role">Administrator</span>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+
+const props = defineProps({
   modelValue: String,
   todayDate: String,
+  adminName: String,
 })
 
 defineEmits(['update:modelValue'])
+
+const initials = computed(() => {
+  if (!props.adminName) return 'AD'
+  return props.adminName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+})
 </script>

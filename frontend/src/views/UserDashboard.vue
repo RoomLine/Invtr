@@ -31,6 +31,9 @@
             <span class="user-role">User</span>
           </div>
         </div>
+        <button class="theme-toggle-btn" @click="toggleTheme" :title="isDark ? 'Light mode' : 'Dark mode'">
+          {{ isDark ? '☀️' : '🌙' }}
+        </button>
         <button class="logout-btn" @click="handleLogout" title="Log out">⏻</button>
       </div>
     </aside>
@@ -141,7 +144,12 @@
         <div v-else-if="equipmentError" class="empty-state-full" style="color:#e74c3c">{{ equipmentError }}</div>
         <div v-else-if="filteredEquipment.length === 0" class="empty-state-full">No equipment found.</div>
         <div v-else class="equipment-grid">
-          <div v-for="item in filteredEquipment" :key="item.id" class="equip-card">
+          <div
+            v-for="item in filteredEquipment"
+            :key="item.id"
+            class="equip-card"
+            :class="{ 'equip-card-selected': selectedItemIds.has(item.id) }"
+          >
             <!-- Photo if available -->
             <div v-if="item.photoUrl" class="equip-photo-container">
               <img :src="item.photoUrl" :alt="item.name" class="equip-photo" @error="$event.target.closest('.equip-photo-container').style.display='none'" />
@@ -167,13 +175,22 @@
             </p>
 
             <button
+              v-if="item.status === 'Available'"
               class="request-btn"
-              :disabled="item.status !== 'Available'"
-              @click="openRequestModal(item)"
+              :class="{ 'request-btn-selected': selectedItemIds.has(item.id) }"
+              @click="toggleItemSelection(item)"
             >
-              {{ item.status === 'Available' ? 'Request Borrow' : 'Unavailable' }}
+              {{ selectedItemIds.has(item.id) ? '✓ Selected' : '+ Add to Request' }}
             </button>
+            <button v-else class="request-btn" disabled>Unavailable</button>
           </div>
+        </div>
+
+        <!-- Floating request bar -->
+        <div v-if="selectedItemIds.size > 0" class="request-cart-bar">
+          <span class="cart-summary">{{ selectedItemIds.size }} item{{ selectedItemIds.size !== 1 ? 's' : '' }} selected</span>
+          <button class="cart-clear-btn" @click="selectedItemIds.clear()">Clear</button>
+          <button class="cart-submit-btn" @click="openRequestModal()">Request All →</button>
         </div>
       </section>
 
@@ -248,11 +265,16 @@
     <div v-if="showRequestModal" class="modal-overlay" @click.self="showRequestModal = false">
       <div class="modal-box request-modal">
         <h3 class="modal-title">Request Borrow</h3>
-        <div class="modal-item-preview">
-          <span class="modal-item-icon">{{ selectedItem?.icon }}</span>
-          <div>
-            <p class="modal-item-name">{{ selectedItem?.name }}</p>
-            <p class="modal-item-meta">{{ selectedItem?.type }} · {{ selectedItem?.location }}</p>
+
+        <!-- Selected items list -->
+        <div class="modal-items-list">
+          <div v-for="item in selectedItemsList" :key="item.id" class="modal-item-preview">
+            <span class="modal-item-icon">{{ item.icon }}</span>
+            <div>
+              <p class="modal-item-name">{{ item.name }}</p>
+              <p class="modal-item-meta">{{ item.type }} · {{ item.location }}</p>
+            </div>
+            <button class="modal-item-remove" @click="toggleItemSelection(item)" title="Remove">✕</button>
           </div>
         </div>
 
@@ -293,15 +315,30 @@ const token = localStorage.getItem('invtr_token') || sessionStorage.getItem('inv
 
 const userName = ref('User')
 const userInitials = computed(() =>
-  userName.value.includes('@')
-    ? userName.value.split('@')[0].slice(0, 2).toUpperCase()
-    : userName.value.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
+  userName.value.split(' ').map(w => w[0]).filter(Boolean).join('').toUpperCase().slice(0, 2) || 'U'
 )
 
+// ── Theme ──
+const isDark = ref(localStorage.getItem('invtr_theme') === 'dark')
+function applyTheme(dark) {
+  if (dark) document.documentElement.classList.add('dark')
+  else document.documentElement.classList.remove('dark')
+  localStorage.setItem('invtr_theme', dark ? 'dark' : 'light')
+}
+applyTheme(isDark.value)
+function toggleTheme() {
+  document.documentElement.classList.add('theme-transitioning')
+  isDark.value = !isDark.value
+  applyTheme(isDark.value)
+  setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 400)
+}
+
+let userEmail = ''
 if (token) {
   try {
     const payload = JSON.parse(atob(token.split('.')[1]))
-    userName.value = payload.sub || 'User'
+    userEmail = payload.sub || ''
+    userName.value = userEmail || 'User'
   } catch (_) {}
 }
 
@@ -451,16 +488,28 @@ onMounted(() => {
 })
 
 // ── Request Modal ──
-const showRequestModal = ref(false)
-const selectedItem     = ref(null)
-const reqFrom          = ref('')
-const reqTo            = ref('')
-const reqLoading       = ref(false)
-const requestError     = ref('')
-const requestSuccess   = ref('')
+const showRequestModal  = ref(false)
+const selectedItemIds   = ref(new Set())
+const reqFrom           = ref('')
+const reqTo             = ref('')
+const reqLoading        = ref(false)
+const requestError      = ref('')
+const requestSuccess    = ref('')
 
-const openRequestModal = (item) => {
-  selectedItem.value   = item
+const selectedItemsList = computed(() =>
+  equipment.value.filter(e => selectedItemIds.value.has(e.id))
+)
+
+const toggleItemSelection = (item) => {
+  const ids = new Set(selectedItemIds.value)
+  if (ids.has(item.id)) ids.delete(item.id)
+  else ids.add(item.id)
+  selectedItemIds.value = ids
+  // Close modal if all items removed
+  if (showRequestModal.value && ids.size === 0) showRequestModal.value = false
+}
+
+const openRequestModal = () => {
   reqFrom.value        = ''
   reqTo.value          = ''
   requestError.value   = ''
@@ -470,15 +519,17 @@ const openRequestModal = (item) => {
 
 const submitRequest = async () => {
   requestError.value = ''
-  if (!reqFrom.value || !reqTo.value) { requestError.value = 'Please select both dates.'; return }
-  if (reqTo.value < reqFrom.value)    { requestError.value = 'End date must be after start date.'; return }
+  if (selectedItemIds.value.size === 0) { requestError.value = 'No items selected.'; return }
+  if (!reqFrom.value || !reqTo.value)   { requestError.value = 'Please select both dates.'; return }
+  if (reqTo.value < reqFrom.value)      { requestError.value = 'End date must be after start date.'; return }
 
   reqLoading.value = true
   try {
+    const ids = [...selectedItemIds.value]
     const res = await fetch(`${API_BASE}/requests`, {
       method: 'POST',
       headers: authHeaders(),
-      body: JSON.stringify({ equipmentIds: [selectedItem.value.id], fromDate: reqFrom.value, toDate: reqTo.value })
+      body: JSON.stringify({ equipmentIds: ids, fromDate: reqFrom.value, toDate: reqTo.value })
     })
     if (!res.ok) {
       let msg = 'Request failed. Please try again.'
@@ -489,12 +540,13 @@ const submitRequest = async () => {
     requestSuccess.value = 'Request submitted successfully!'
     rawRequests.value.unshift({
       id:           data.id,
-      equipmentIds: data.equipmentIds || [selectedItem.value.id],
+      equipmentIds: data.equipmentIds || ids,
       requestDate:  data.requestDate  || today,
       fromDate:     data.startDateTime ? data.startDateTime.split('T')[0] : reqFrom.value,
       toDate:       data.endDateTime   ? data.endDateTime.split('T')[0]   : reqTo.value,
       status:       (data.status || 'pending').toLowerCase(),
     })
+    selectedItemIds.value = new Set()
     setTimeout(() => { showRequestModal.value = false }, 1500)
   } catch (_) {
     requestError.value = 'Could not reach the request service. Is it running?'

@@ -1,6 +1,6 @@
 # Invtr
 
-> Repository for team **The Night King** — AIBEST Tech Academy
+> Repository for team **The Night King** — AIBEST Tech Academy. Ask Yavor to setup .env for Gemini API and mailing. Current API keys are outdated
 
 ---
 

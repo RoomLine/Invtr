@@ -54,6 +54,13 @@ public class AuthController {
         return ResponseEntity.ok(authService.updateUserById(request, id));
     }
 
+    @DeleteMapping("/users/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteUserById(@PathVariable Long id) {
+        authService.deleteUserById(id);
+        return ResponseEntity.ok("User deleted successfully.");
+    }
+
     @GetMapping("/logout")
     public ResponseEntity<String> logout() {
         // Since we are using JWT, there is so such thing as a session.

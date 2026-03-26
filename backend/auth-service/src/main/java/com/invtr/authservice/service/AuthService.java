@@ -7,6 +7,7 @@ import com.invtr.authservice.exception.*;
 import com.invtr.authservice.repository.RoleRepository;
 import com.invtr.authservice.repository.UserRepository;
 import com.invtr.authservice.security.JwtService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -108,5 +109,13 @@ public class AuthService {
 
         User updated = userRepository.save(existing);
         return mapToUsersResponse(updated);
+    }
+
+    @Transactional
+    public void deleteUserById(Long id) {
+        User existing = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        userRepository.delete(existing);
     }
 }

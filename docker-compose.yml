@@ -24,7 +24,6 @@ services:
 
   # --- AUTH SERVICE ---
   auth-service:
-    # 🔥 UPDATED PATH: Points inside the backend folder
     build: ./backend/auth-service
     container_name: auth-service
     ports:
@@ -41,24 +40,25 @@ services:
 
   # --- EQUIPMENT SERVICE ---
   equipment-service:
-    # 🔥 UPDATED PATH
     build: ./backend/equipment-service
-    container_name: equipment-service
     ports:
       - "8082:8082"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://invtr-db:5432/equipment_db
-      - SPRING_DATASOURCE_USERNAME=user
-      - SPRING_DATASOURCE_PASSWORD=password
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=root
+      - AUTH_SERVICE_URL=http://auth-service:8081
+      # Добави тези два реда:
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     depends_on:
-      invtr-db:
-        condition: service_healthy
+      - invtr-db
+      - auth-service
     networks:
       - invtr-network
 
   # --- REQUEST SERVICE ---
   request-service:
-    # 🔥 UPDATED PATH
     build: ./backend/request-service
     container_name: request-service
     ports:
@@ -78,7 +78,6 @@ services:
 
   # --- REPORTS SERVICE ---
   reports-service:
-    # 🔥 UPDATED PATH
     build: ./backend/reports-service
     container_name: reports-service
     ports:
@@ -94,7 +93,6 @@ services:
 
   # --- API GATEWAY ---
   api-gateway:
-    # 🔥 UPDATED PATH
     build: ./backend/api-gateway
     container_name: api-gateway
     ports:
@@ -114,7 +112,6 @@ services:
 
   # --- FRONTEND (Vue.js) ---
   frontend:
-    # 🔥 UPDATED PATH: Now just ./frontend since we are at the root
     build: ./frontend
     container_name: invtr-frontend
     ports:

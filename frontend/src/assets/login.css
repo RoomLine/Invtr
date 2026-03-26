@@ -177,14 +177,7 @@
 }
 
 /* --- OPTIONS & BUTTONS --- */
-.options {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 13px;
-  color: #7a8a9a;
-  margin: 4px 0 22px;
-}
+
 .options label { display: flex; align-items: center; gap: 6px; cursor: pointer; }
 .options a { color: #103852; text-decoration: none; font-weight: 600; }
 .options a:hover { text-decoration: underline; }

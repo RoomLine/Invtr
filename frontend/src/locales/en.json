@@ -74,39 +74,6 @@
       "admin": "ADMIN"
     }
   },
-  "settings": {
-    "subTitle": "Configure system preferences and policies",
-    "notifications": {
-      "title": "Notifications",
-      "email": "Email Notifications",
-      "emailSub": "Send emails on new requests",
-      "overdue": "Overdue Alerts",
-      "overdueSub": "Notify when items are overdue",
-      "repair": "Repair Reminders",
-      "repairSub": "Remind about items under repair"
-    },
-    "system": {
-      "title": "System",
-      "dark": "Dark Mode",
-      "darkSub": "Switch interface theme",
-      "auto": "Auto-approve Requests",
-      "autoSub": "Skip manual approval step",
-      "maint": "Maintenance Mode",
-      "maintSub": "Disable user access temporarily"
-    },
-    "profile": {
-      "title": "Profile",
-      "displayName": "Display Name",
-      "newPassword": "New Password"
-    },
-    "policy": {
-      "title": "Borrow Policy",
-      "maxDays": "Max Borrow Days",
-      "maxItems": "Max Items Per User",
-      "lateFee": "Late Fee (per day)",
-      "updateBtn": "Update Policy"
-    }
-  },
   "auth": {
     "systemName": "School Inventory System",
     "login": "Log In",

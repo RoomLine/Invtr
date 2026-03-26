@@ -61,11 +61,6 @@
         @deleteUser="deleteUser"
         @changeRole="updateUserRole"
       />
-
-      <SettingsView
-        v-if="currentView === 'settings'"
-        :settings="settings"
-      />
     </div>
 
     <AddItemModal
@@ -93,7 +88,6 @@ import DashboardView from '@/components/admin/DashboardView.vue'
 import InventoryView from '@/components/admin/InventoryView.vue'
 import RequestsView  from '@/components/admin/RequestsView.vue'
 import UsersView     from '@/components/admin/UsersView.vue'
-import SettingsView  from '@/components/admin/SettingsView.vue'
 import AddItemModal  from '@/components/admin/AddItemModal.vue'
 import AddUserModal  from '@/components/admin/AddUserModal.vue'
 
@@ -124,9 +118,6 @@ function toggleTheme() {
   document.documentElement.classList.add('theme-transitioning')
   isDark.value = !isDark.value
   applyTheme(isDark.value)
-  // Синхронизация с обекта settings, ако съществува
-  const darkSetting = settings.system.find(s => s.key === 'dark')
-  if (darkSetting) darkSetting.value = isDark.value
   setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 400)
 }
 
@@ -153,8 +144,7 @@ const navItems = [
   { view: 'dashboard', icon: '📊' },
   { view: 'inventory', icon: '📦' },
   { view: 'requests',  icon: '📋' },
-  { view: 'users',     icon: '👥' },
-  { view: 'settings',  icon: '⚙️' },
+  { view: 'users',     icon: '👥' }
 ]
 
 // ── Мапинги за базата данни (Enum Mapping) ──

@@ -33,11 +33,6 @@
           <label>{{ $t('auth.password') }}</label>
           <input type="password" v-model="password" placeholder="••••••••" :disabled="loading" />
         </div>
-        <div class="options">
-          <label><input type="checkbox" v-model="rememberMe"> {{ $t('auth.rememberMe') }}</label>
-          <a href="#" @click.prevent="handleForgot">{{ $t('auth.forgotPassword') }}</a>
-        </div>
-
         <button class="login-button" @click="handleLogin" :disabled="loading">
           <span v-if="loading" class="spinner"></span>
           <span v-else>{{ $t('auth.login') }}</span>
@@ -151,11 +146,6 @@ const handleLogin = async () => {
   } finally {
     loading.value = false
   }
-}
-
-const handleForgot = () => {
-  if (!email.value) { errorMsg.value = t('auth.errors.enterEmail'); return }
-  showModal.value = true
 }
 
 // Регистрация

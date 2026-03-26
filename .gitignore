@@ -1,47 +1,65 @@
-#temp
-*~
-*un~
-*.swp
-*.tmp
-*.temp
+# =========================
+# Java & Spring Boot (Backend)
+# =========================
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+.mvn/wrapper/maven-wrapper.jar
 
-#IDEs
+# =========================
+# Node & Vue.js (Frontend)
+# =========================
+node_modules/
+dist/
+dist-ssr/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+
+# =========================
+# Docker & Database
+# =========================
+# Ignore local database data if you ever switch to a bind mount instead of a named volume
+postgres_data/
+pgdata/
+*.sql.gz
+
+# =========================
+# IDEs & Editors
+# =========================
 .idea/
 .vscode/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*~
+*un~
 
-#Python
-__pycache__/
-*.pyc
-*.pyo
+# =========================
+# OS & Misc
+# =========================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
 
-#misc
+# =========================
+# Environments & Secrets
+# =========================
 .env
-.env.*
 .env.local
-*.log
-*.logs
-
-backend/api-gateway/target
-*/.DS_Store
-*/node_modules
-*/dist
-
-
-# local env files
-*/.env.local
-*/.env.*.local
-
-# Log files
-*/npm-debug.log*
-*/yarn-debug.log*
-*/yarn-error.log*
-*/pnpm-debug.log*
-
-# Editor directories and files
-*/.idea
-*/.vscode
-*/*.suo
-*/*.ntvs*
-*/*.njsproj
-*/*.sln
-*/*.sw?
+.env.*.local
+*.temp
+*.tmp

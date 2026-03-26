@@ -3,10 +3,7 @@ package com.invtr.authservice.service;
 import com.invtr.authservice.dto.*;
 import com.invtr.authservice.entity.Role;
 import com.invtr.authservice.entity.User;
-import com.invtr.authservice.exception.EmailAlreadyExistsException;
-import com.invtr.authservice.exception.RoleNotFoundException;
-import com.invtr.authservice.exception.RoleNotFoundInDbException;
-import com.invtr.authservice.exception.UserNotFoundException;
+import com.invtr.authservice.exception.*;
 import com.invtr.authservice.repository.RoleRepository;
 import com.invtr.authservice.repository.UserRepository;
 import com.invtr.authservice.security.JwtService;
@@ -60,10 +57,10 @@ public class AuthService {
 
     public AuthResponse loginUser(LoginRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Invalid email or password!"));
+                .orElseThrow(() -> new InvalidCredentialsException("Invalid credentials"));
 
         if (!passwordEncoder.matches(request.getPassword(), user.getPasswordHash())) {
-            throw new RuntimeException("Invalid email or password!");
+            throw new InvalidCredentialsException("Invalid credentials");
         }
 
         String token = jwtService.generateToken(user);

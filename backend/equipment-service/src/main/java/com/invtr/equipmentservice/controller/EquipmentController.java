@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -85,6 +87,14 @@ public class EquipmentController {
             @PathVariable Long id) {
 
         return ResponseEntity.ok(equipmentService.updateEquipmentStatus(request, id));
+    }
+
+    @PostMapping("/equipment/{id}/assess-condition")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ConditionAssessmentResponse> assessCondition(
+            @PathVariable Long id,
+            @RequestParam("file") MultipartFile file) throws IOException {
+        return ResponseEntity.ok(equipmentService.assessCondition(id, file));
     }
 
 }

@@ -45,8 +45,8 @@ services:
       - "8082:8082"
     environment:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://invtr-db:5432/equipment_db
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
       - AUTH_SERVICE_URL=http://auth-service:8081
       # Добави тези два реда:
       - MAIL_PASSWORD=${MAIL_PASSWORD}

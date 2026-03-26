@@ -1,96 +1,100 @@
 <template>
   <div class="login-fon">
-    <div class="login-center-card">
+    <div class="lang-wrapper">
+      <button class="lang-switch-btn" @click="$i18n.locale = $i18n.locale === 'bg' ? 'en' : 'bg'">
+        {{ $i18n.locale === 'bg' ? 'EN' : 'BG' }}
+      </button>
+    </div>
 
-      <!-- Logo -->
+    <div class="login-center-card">
       <div class="card-header">
         <img src="@/assets/logo-full.jpg" alt="INVTR Logo" class="logo-image">
-        <p class="subtitle"><span>School Inventory System</span></p>
+        <p class="subtitle"><span>{{ $t('auth.systemName') }}</span></p>
       </div>
 
-      <!-- Tab switcher -->
       <div class="tab-switcher">
-        <button class="tab-btn" :class="{ active: activeTab === 'login' }" @click="switchTab('login')">Log In</button>
-        <button class="tab-btn" :class="{ active: activeTab === 'register' }" @click="switchTab('register')">Register</button>
+        <button class="tab-btn" :class="{ active: activeTab === 'login' }" @click="switchTab('login')">
+          {{ $t('auth.login') }}
+        </button>
+        <button class="tab-btn" :class="{ active: activeTab === 'register' }" @click="switchTab('register')">
+          {{ $t('auth.register') }}
+        </button>
       </div>
 
-      <!-- ── LOGIN FORM ── -->
       <template v-if="activeTab === 'login'">
         <div v-if="errorMsg"   class="alert alert-error">{{ errorMsg }}</div>
         <div v-if="successMsg" class="alert alert-success">{{ successMsg }}</div>
 
         <div class="input-field">
-          <label>Email Address</label>
+          <label>{{ $t('auth.email') }}</label>
           <input type="email" v-model="email" placeholder="you@example.com" :disabled="loading" />
         </div>
         <div class="input-field">
-          <label>Password</label>
+          <label>{{ $t('auth.password') }}</label>
           <input type="password" v-model="password" placeholder="••••••••" :disabled="loading" />
         </div>
         <div class="options">
-          <label><input type="checkbox" v-model="rememberMe"> Remember Me</label>
-          <a href="#" @click.prevent="handleForgot">Forgotten Password</a>
+          <label><input type="checkbox" v-model="rememberMe"> {{ $t('auth.rememberMe') }}</label>
+          <a href="#" @click.prevent="handleForgot">{{ $t('auth.forgotPassword') }}</a>
         </div>
 
         <button class="login-button" @click="handleLogin" :disabled="loading">
           <span v-if="loading" class="spinner"></span>
-          <span v-else>Log In</span>
+          <span v-else>{{ $t('auth.login') }}</span>
         </button>
 
         <p class="bottom-link">
-          Don't have an account? <a href="#" @click.prevent="switchTab('register')">Register →</a>
+          {{ $t('auth.noAccount') }} <a href="#" @click.prevent="switchTab('register')">{{ $t('auth.registerNow') }} →</a>
         </p>
       </template>
 
-      <!-- ── REGISTER FORM ── -->
       <template v-if="activeTab === 'register'">
         <div v-if="regError"   class="alert alert-error">{{ regError }}</div>
         <div v-if="regSuccess" class="alert alert-success">{{ regSuccess }}</div>
 
         <div class="name-row">
           <div class="input-field">
-            <label>First Name</label>
-            <input type="text" v-model="regFirstName" placeholder="First Name" :disabled="regLoading" />
+            <label>{{ $t('auth.firstName') }}</label>
+            <input type="text" v-model="regFirstName" :placeholder="$t('auth.firstName')" :disabled="regLoading" />
           </div>
           <div class="input-field">
-            <label>Last Name</label>
-            <input type="text" v-model="regFamilyName" placeholder="Last Name" :disabled="regLoading" />
+            <label>{{ $t('auth.lastName') }}</label>
+            <input type="text" v-model="regFamilyName" :placeholder="$t('auth.lastName')" :disabled="regLoading" />
           </div>
         </div>
         <div class="input-field">
-          <label>Email Address</label>
+          <label>{{ $t('auth.email') }}</label>
           <input type="email" v-model="regEmail" placeholder="you@example.com" :disabled="regLoading" />
         </div>
         <div class="input-field">
-          <label>Password</label>
+          <label>{{ $t('auth.password') }}</label>
           <input type="password" v-model="regPassword" placeholder="••••••••" :disabled="regLoading" />
         </div>
         <div class="input-field">
-          <label>Confirm Password</label>
+          <label>{{ $t('auth.confirmPassword') }}</label>
           <input type="password" v-model="regConfirmPassword" placeholder="••••••••" :disabled="regLoading" />
         </div>
 
         <button class="login-button" @click="handleFinalRegister" :disabled="regLoading">
           <span v-if="regLoading" class="spinner"></span>
-          <span v-else>Create Account</span>
+          <span v-else>{{ $t('auth.createAccount') }}</span>
         </button>
 
         <p class="bottom-link">
-          Already have an account? <a href="#" @click.prevent="switchTab('login')">Log in →</a>
+          {{ $t('auth.haveAccount') }} <a href="#" @click.prevent="switchTab('login')">{{ $t('auth.loginNow') }} →</a>
         </p>
       </template>
     </div>
 
-    <!-- Forgot Password Modal -->
     <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
       <div class="modal-box">
         <div class="success-icon">✓</div>
-        <h3 class="modal-title">Email Sent!</h3>
+        <h3 class="modal-title">{{ $t('auth.modal.title') }}</h3>
         <p style="color:#7a8a9a;font-size:14px;line-height:1.5">
-          Password reset instructions have been sent to<br>
+          {{ $t('auth.modal.sub') }}<br>
           <strong style="color:#1a2d3e">{{ email }}</strong>
         </p>
-        <button @click="showModal = false" class="close-modal-button">OK, Got it</button>
+        <button @click="showModal = false" class="close-modal-button">{{ $t('auth.modal.btn') }}</button>
       </div>
     </div>
   </div>
@@ -99,18 +103,20 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
+const { t } = useI18n()
 const API_BASE = ''
 const router = useRouter()
 
-// Tab
+// Табове и грешки
 const activeTab = ref('login')
 const switchTab = (tab) => {
   activeTab.value = tab
   errorMsg.value = successMsg.value = regError.value = regSuccess.value = ''
 }
 
-// Login
+// Променливи за вход
 const email      = ref('')
 const password   = ref('')
 const rememberMe = ref(false)
@@ -122,7 +128,7 @@ const showModal  = ref(false)
 const handleLogin = async () => {
   errorMsg.value = ''
   successMsg.value = ''
-  if (!email.value || !password.value) { errorMsg.value = 'Please fill in all fields.'; return }
+  if (!email.value || !password.value) { errorMsg.value = t('auth.errors.fillAll'); return }
   loading.value = true
   try {
     const res = await fetch(`${API_BASE}/auth/login`, {
@@ -131,45 +137,28 @@ const handleLogin = async () => {
       body: JSON.stringify({ email: email.value, password: password.value })
     })
     if (!res.ok) {
-      let msg = 'Invalid email or password.'
-      try { const d = await res.json(); msg = d.message || d.error || msg } catch (_) {}
-      errorMsg.value = msg; return
+      errorMsg.value = t('auth.errors.invalid'); return
     }
     const data = await res.json()
     const token = data.token
     if (rememberMe.value) localStorage.setItem('invtr_token', token)
     else sessionStorage.setItem('invtr_token', token)
-const payload = JSON.parse(atob(token.split('.')[1]))
-    // Normalize role — handles string, camelCase roleId, snake_case role_id, roles array
-    const role = (() => {
-      if (payload.role) return String(payload.role).toUpperCase()
-      const numericId = payload.roleId !== undefined ? payload.roleId
-                      : payload.role_id !== undefined ? payload.role_id
-                      : null
-      if (numericId !== null) return Number(numericId) === 2 ? 'ADMIN' : 'USER'
-      if (Array.isArray(payload.roles))
-        return payload.roles.some(r => String(r).toUpperCase().includes('ADMIN')) ? 'ADMIN' : 'USER'
-      return 'USER'
-    })()
-
-    successMsg.value = 'Login successful! Redirecting...'
-    setTimeout(() => {
-      if (role === 'ADMIN') router.push('/admin-dashboard')
-      else router.push('/dashboard')
-    }, 800)
+    
+    successMsg.value = t('auth.success.login')
+    setTimeout(() => router.push('/dashboard'), 800)
   } catch (_) {
-    errorMsg.value = 'Could not reach the server. Is the backend running?'
+    errorMsg.value = t('auth.errors.server')
   } finally {
     loading.value = false
   }
 }
 
 const handleForgot = () => {
-  if (!email.value) { errorMsg.value = 'Enter your email first, then click Forgotten Password.'; return }
+  if (!email.value) { errorMsg.value = t('auth.errors.enterEmail'); return }
   showModal.value = true
 }
 
-// Register
+// Регистрация
 const regFirstName       = ref('')
 const regFamilyName      = ref('')
 const regEmail           = ref('')
@@ -183,10 +172,10 @@ const handleFinalRegister = async () => {
   regError.value = ''
   regSuccess.value = ''
   if (!regFirstName.value || !regFamilyName.value || !regEmail.value || !regPassword.value || !regConfirmPassword.value) {
-    regError.value = 'Please fill in all fields.'; return
+    regError.value = t('auth.errors.fillAll'); return
   }
   if (regPassword.value !== regConfirmPassword.value) {
-    regError.value = 'Passwords do not match.'; return
+    regError.value = t('auth.errors.noMatch'); return
   }
   regLoading.value = true
   try {
@@ -199,14 +188,12 @@ const handleFinalRegister = async () => {
       })
     })
     if (!res.ok) {
-      let msg = 'Registration failed. Please try again.'
-      try { const d = await res.json(); msg = d.message || d.error || msg } catch (_) {}
-      regError.value = msg; return
+      regError.value = t('auth.errors.regFailed'); return
     }
-    regSuccess.value = 'Account created! You can now log in.'
+    regSuccess.value = t('auth.success.register')
     setTimeout(() => { email.value = regEmail.value; switchTab('login') }, 2000)
   } catch (_) {
-    regError.value = 'Could not reach the server. Is the backend running?'
+    regError.value = t('auth.errors.server')
   } finally {
     regLoading.value = false
   }
@@ -215,4 +202,4 @@ const handleFinalRegister = async () => {
 
 <style>
 @import '@/assets/login.css';
-</style>
+</style> 

@@ -1,0 +1,155 @@
+{
+  "navigation": {
+    "dashboard": "Dashboard",
+    "inventory": "Inventory",
+    "requests": "Requests",
+    "myRequests": "My Requests",
+    "history": "History",
+    "users": "Users",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "overview": "Inventory Overview",
+    "totalItems": "Total Items",
+    "available": "Available",
+    "pendingRequests": "Pending Requests",
+    "underRepair": "Under Repair",
+    "activeBorrows": "Active Borrows",
+    "recentRequests": "Recent Requests",
+    "noData": "No items found.",
+    "noRequests": "No requests yet."
+  },
+  "inventory": {
+    "addNew": "Add New Item",
+    "editItem": "Edit Item",
+    "addItemBtn": "Add Item",
+    "itemName": "Item Name",
+    "category": "Category",
+    "serialNumber": "Serial Number",
+    "status": "Status",
+    "condition": "Condition",
+    "photoUrl": "Photo URL",
+    "location": "Location",
+    "search": "Search equipment...",
+    "placeholders": {
+      "name": "e.g. Dell XPS Laptop",
+      "serial": "e.g. SN-XPS-001",
+      "location": "e.g. Room 101",
+      "photoHelp": "Paste a direct link to a JPG or PNG image.",
+      "email": "you@example.com"
+    },
+    "categories": {
+      "electronics": "Electronics",
+      "furniture": "Furniture",
+      "utility": "Utility"
+    },
+    "statuses": {
+      "available": "Available",
+      "checkedOut": "Checked Out",
+      "underRepair": "Under Repair",
+      "retired": "Retired"
+    },
+    "conditions": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "damaged": "Damaged",
+      "broken": "Broken"
+    }
+  },
+  "requests": {
+    "tabs": {
+      "all": "All",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected"
+    }
+  },
+  "users": {
+    "addNew": "Add User",
+    "subTitle": "Manage registered users and their access",
+    "noUsers": "No users found.",
+    "role": "Role",
+    "roles": {
+      "user": "USER",
+      "admin": "ADMIN"
+    }
+  },
+  "settings": {
+    "subTitle": "Configure system preferences and policies",
+    "notifications": {
+      "title": "Notifications",
+      "email": "Email Notifications",
+      "emailSub": "Send emails on new requests",
+      "overdue": "Overdue Alerts",
+      "overdueSub": "Notify when items are overdue",
+      "repair": "Repair Reminders",
+      "repairSub": "Remind about items under repair"
+    },
+    "system": {
+      "title": "System",
+      "dark": "Dark Mode",
+      "darkSub": "Switch interface theme",
+      "auto": "Auto-approve Requests",
+      "autoSub": "Skip manual approval step",
+      "maint": "Maintenance Mode",
+      "maintSub": "Disable user access temporarily"
+    },
+    "profile": {
+      "title": "Profile",
+      "displayName": "Display Name",
+      "newPassword": "New Password"
+    },
+    "policy": {
+      "title": "Borrow Policy",
+      "maxDays": "Max Borrow Days",
+      "maxItems": "Max Items Per User",
+      "lateFee": "Late Fee (per day)",
+      "updateBtn": "Update Policy"
+    }
+  },
+  "auth": {
+    "systemName": "School Inventory System",
+    "login": "Log In",
+    "register": "Register",
+    "email": "Email Address",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "createAccount": "Create Account",
+    "forgotPassword": "Forgotten Password",
+    "rememberMe": "Remember Me",
+    "noAccount": "Don't have an account?",
+    "registerNow": "Register now",
+    "haveAccount": "Already have an account?",
+    "loginNow": "Log in here",
+    "errors": {
+      "fillAll": "Please fill in all fields.",
+      "invalid": "Invalid email or password.",
+      "server": "Server error. Is the backend running?",
+      "noMatch": "Passwords do not match.",
+      "enterEmail": "Enter your email to reset password.",
+      "regFailed": "Registration failed."
+    },
+    "success": {
+      "login": "Login successful! Redirecting...",
+      "register": "Account created! You can now log in."
+    },
+    "modal": {
+      "title": "Email Sent!",
+      "sub": "Password reset instructions have been sent to",
+      "btn": "OK, Got it"
+    }
+  },
+  "common": {
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "viewAll": "View All",
+    "remove": "Remove",
+    "active": "Actions",
+    "activeStatus": "Active",
+    "inactive": "Inactive",
+    "approve": "Approve",
+    "reject": "Reject"
+  }
+}

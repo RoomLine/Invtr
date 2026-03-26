@@ -13,7 +13,36 @@
   overflow: hidden;
 }
 
-/* Декоративни кръгове на фона */
+/* --- LANGUAGE SWITCHER --- */
+.lang-wrapper {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  z-index: 100;
+}
+
+.lang-switch-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(10px);
+}
+
+.lang-switch-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: white;
+  transform: translateY(-2px);
+}
+
+/* --- DECORATIVE CIRCLES --- */
 .login-fon::before,
 .login-fon::after {
   content: '';
@@ -32,7 +61,7 @@
   top: -60px; right: -60px;
 }
 
-/* Card */
+/* --- CARD --- */
 .login-center-card {
   background: #fff;
   width: 92%;
@@ -44,7 +73,7 @@
   z-index: 1;
 }
 
-/* Logo area */
+/* --- LOGO --- */
 .card-header {
   text-align: center;
   margin-bottom: 6px;
@@ -54,7 +83,6 @@
   margin-bottom: 6px;
 }
 
-/* Subtitle divider */
 .subtitle {
   display: flex;
   align-items: center;
@@ -73,7 +101,7 @@
 }
 .subtitle span { padding: 0 12px; }
 
-/* Tab switcher */
+/* --- TABS --- */
 .tab-switcher {
   display: flex;
   background: #f0f3f7;
@@ -101,7 +129,7 @@
 }
 .tab-btn:not(.active):hover { color: #103852; }
 
-/* Alerts */
+/* --- ALERTS --- */
 .alert {
   padding: 10px 14px;
   border-radius: 8px;
@@ -111,7 +139,7 @@
 .alert-error   { background: #fff0f0; color: #c0392b; border: 1px solid #f5c6c6; }
 .alert-success { background: #f0fdf4; color: #22863a; border: 1px solid #b7efc5; }
 
-/* Input fields with labels */
+/* --- INPUTS --- */
 .input-field {
   margin-bottom: 16px;
 }
@@ -135,7 +163,6 @@
   background: #fff;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
-.input-field input::placeholder { color: #b0bbc8; }
 .input-field input:focus {
   outline: none;
   border-color: #103852;
@@ -143,14 +170,13 @@
 }
 .input-field input:disabled { background: #f5f7fa; cursor: not-allowed; }
 
-/* Two-column row for first/last name */
 .name-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-/* Options row */
+/* --- OPTIONS & BUTTONS --- */
 .options {
   display: flex;
   justify-content: space-between;
@@ -163,7 +189,6 @@
 .options a { color: #103852; text-decoration: none; font-weight: 600; }
 .options a:hover { text-decoration: underline; }
 
-/* Primary button */
 .login-button {
   width: 100%;
   padding: 14px;
@@ -181,7 +206,6 @@
   justify-content: center;
   gap: 8px;
   margin-bottom: 16px;
-  letter-spacing: 0.01em;
 }
 .login-button:hover:not(:disabled) {
   background: #0a2538;
@@ -189,33 +213,15 @@
 }
 .login-button:disabled { background: #6a8fa8; cursor: not-allowed; }
 
-/* Bottom link text (already have account) */
 .bottom-link {
   text-align: center;
   font-size: 13.5px;
   color: #8a9ab0;
   margin-top: 4px;
 }
-.bottom-link a {
-  color: #103852;
-  font-weight: 700;
-  text-decoration: none;
-}
-.bottom-link a:hover { text-decoration: underline; }
+.bottom-link a { color: #103852; font-weight: 700; text-decoration: none; }
 
-/* Spinner */
-.spinner {
-  width: 17px;
-  height: 17px;
-  border: 2.5px solid rgba(255,255,255,0.35);
-  border-top-color: white;
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  display: inline-block;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* Forgot password modal */
+/* --- MODAL --- */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -233,13 +239,6 @@
   text-align: center;
   width: 90%;
   max-width: 340px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-}
-.modal-title {
-  margin: 0 0 20px;
-  color: #1a2d3e;
-  font-size: 19px;
-  font-weight: 700;
 }
 .success-icon {
   width: 56px; height: 56px;
@@ -252,23 +251,18 @@
   font-size: 26px;
   margin: 0 auto 14px;
 }
-.close-modal-button {
-  background: #103852;
-  color: white;
-  border: none;
-  padding: 11px 0;
-  width: 100%;
-  border-radius: 8px;
-  cursor: pointer;
-  font-family: 'DM Sans', sans-serif;
-  font-weight: 700;
-  margin-top: 16px;
-  font-size: 15px;
-  transition: background 0.2s;
+
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner {
+  width: 17px; height: 17px;
+  border: 2.5px solid rgba(255,255,255,0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
 }
-.close-modal-button:hover { background: #0a2538; }
 
 @media (max-width: 480px) {
   .login-center-card { padding: 28px 24px; }
   .name-row { grid-template-columns: 1fr; gap: 0; }
+  .lang-wrapper { top: 15px; right: 15px; }
 }

@@ -15,14 +15,6 @@
     <div class="topbar-right">
       <button class="lang-toggle-btn" @click="toggleLanguage">{{ $i18n.locale === 'bg' ? '🇬🇧 EN' : '🇧🇬 BG' }}</button>
       <div class="topbar-date">{{ todayDate }}</div>
-      
-      <div class="admin-chip">
-        <div class="admin-chip-avatar">{{ initials }}</div>
-        <div class="admin-chip-info">
-          <span class="admin-chip-name">{{ adminName || 'Admin' }}</span>
-          <span class="admin-chip-role">{{ $t('auth.adminRole') }}</span>
-        </div>
-      </div>
     </div>
   </div>
 </template>

@@ -632,6 +632,19 @@ const submitRequest = async () => {
   }
 }
 
+// ── Page title (reactive to view + locale) ──
+const USER_TITLE_KEYS = {
+  overview:  'navigation.dashboard',
+  inventory: 'navigation.inventory',
+  requests:  'navigation.myRequests',
+  history:   'navigation.history',
+}
+const userPageTitle = computed(() => {
+  const key = USER_TITLE_KEYS[activeView.value]
+  return key ? `${t(key)} · INVTR` : 'INVTR'
+})
+watch(userPageTitle, title => { document.title = title }, { immediate: true })
+
 // ── Logout ──
 const handleLogout = () => {
   localStorage.removeItem('invtr_token')

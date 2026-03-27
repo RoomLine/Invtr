@@ -507,6 +507,19 @@ watch(() => settings.system.find(s => s.key === 'dark')?.value, (val) => {
     applyTheme(val)
   }
 })
+
+// ── Page title (reactive to view + locale) ──
+const ADMIN_TITLE_KEYS = {
+  dashboard: 'navigation.dashboard',
+  inventory: 'navigation.inventory',
+  requests:  'navigation.requests',
+  users:     'navigation.users',
+}
+const adminPageTitle = computed(() => {
+  const key = ADMIN_TITLE_KEYS[currentView.value]
+  return key ? `${t(key)} · INVTR` : 'INVTR'
+})
+watch(adminPageTitle, title => { document.title = title }, { immediate: true })
 </script>
 
 <style>

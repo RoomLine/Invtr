@@ -1,5 +1,7 @@
 <template>
   <div class="view-section">
+
+    <!-- ── Section header ── -->
     <div class="section-header">
       <div>
         <h2 class="section-title">{{ $t('navigation.inventory') }}</h2>
@@ -18,15 +20,24 @@
       </div>
     </div>
 
+    <!-- ── Filters ── -->
     <div class="filter-bar">
-      <select class="filter-select" :value="filterCategory" @change="$emit('update:filterCategory', $event.target.value)">
+      <select
+        class="filter-select"
+        :value="filterCategory"
+        @change="$emit('update:filterCategory', $event.target.value)"
+      >
         <option value="">{{ $t('inventory.category') }}: {{ $t('common.viewAll') }}</option>
         <option value="Electronics">{{ $t('inventory.categories.electronics') }}</option>
         <option value="Utility">{{ $t('inventory.categories.utility') }}</option>
         <option value="Furniture">{{ $t('inventory.categories.furniture') }}</option>
       </select>
 
-      <select class="filter-select" :value="filterStatus" @change="$emit('update:filterStatus', $event.target.value)">
+      <select
+        class="filter-select"
+        :value="filterStatus"
+        @change="$emit('update:filterStatus', $event.target.value)"
+      >
         <option value="">{{ $t('inventory.status') }}: {{ $t('common.viewAll') }}</option>
         <option value="Available">{{ $t('inventory.statuses.available') }}</option>
         <option value="Checked-Out">{{ $t('inventory.statuses.checkedOut') }}</option>
@@ -35,137 +46,129 @@
       </select>
     </div>
 
-    <div class="panel">
-      <div v-if="filteredItems.length === 0" class="empty-state">{{ $t('dashboard.noData') }}</div>
-      <table v-else class="data-table">
-        <thead>
-          <tr>
-            <th>{{ $t('inventory.itemName') }}</th>
-            <th>{{ $t('inventory.category') }}</th>
-            <th>{{ $t('inventory.serialNumber') }}</th>
-            <th>{{ $t('inventory.status') }}</th>
-            <th>{{ $t('inventory.condition') }}</th>
-            <th>{{ $t('inventory.location') }}</th>
-            <th>{{ $t('common.active') }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <template v-for="item in filteredItems" :key="item.id">
-            <tr class="inv-row" :class="{ 'inv-row-expanded': expandedId === item.id }" @click="toggleExpand(item.id)">
-              <td>
-                <div class="item-name-cell">
-                  <div class="item-img-wrapper">
-                    <img v-if="item.photoUrl" :src="item.photoUrl" class="item-actual-img" alt="item" />
-                    <span v-else class="item-emoji">{{ item.emoji }}</span>
-                  </div>
-                  <span class="item-text-name">{{ item.name }}</span>
-                  <span class="expand-arrow">{{ expandedId === item.id ? '▲' : '▼' }}</span>
-                </div>
-              </td>
-              <td>{{ translateCategory(item.category) }}</td>
-              <td class="mono-cell">{{ item.serial || '—' }}</td>
-              <td>
-                <span class="status-badge" :class="statusClass(item.status)">
-                  {{ translateStatus(item.status) }}
-                </span>
-              </td>
-              <td>
-                <span class="cond-badge" :class="'cond-' + item.condition">
-                  {{ translateCondition(item.condition) }}
-                </span>
-              </td>
-              <td class="location-cell">{{ item.location || '—' }}</td>
-              <td>
-                <div class="action-btns" @click.stop>
-                  <button class="act-btn act-edit" @click="$emit('editItem', item)">{{ $t('common.save') }}</button>
-                  <button class="act-btn act-delete" @click="$emit('deleteItem', item.id)">{{ $t('common.remove') }}</button>
-                  <button class="act-btn act-usage" :disabled="exportingUsage === item.id + '_CSV'" @click="exportUsage(item, 'CSV')" title="Export usage report CSV">
-                    {{ exportingUsage === item.id + '_CSV' ? '...' : '⬇ CSV' }}
-                  </button>
-                  <button class="act-btn act-usage" :disabled="exportingUsage === item.id + '_XLSX'" @click="exportUsage(item, 'XLSX')" title="Export usage report XLSX">
-                    {{ exportingUsage === item.id + '_XLSX' ? '...' : '⬇ XLSX' }}
-                  </button>
-                </div>
-              </td>
-            </tr>
-            <tr v-if="expandedId === item.id" class="inv-detail-row">
-              <td colspan="7">
-                <div class="inv-detail-panel">
-                  <div class="inv-detail-info">
-                    <div class="inv-detail-photo">
-                      <img v-if="item.photoUrl" :src="item.photoUrl" class="inv-detail-img" alt="item" />
-                      <span v-else class="inv-detail-emoji">{{ item.emoji }}</span>
-                    </div>
-                    <div class="inv-detail-fields">
-                      <h3 class="inv-detail-name">{{ item.name }}</h3>
-                      <div class="inv-detail-grid">
-                        <div class="inv-detail-field">
-                          <span class="inv-detail-label">{{ $t('inventory.category') }}</span>
-                          <span class="inv-detail-value">{{ translateCategory(item.category) }}</span>
-                        </div>
-                        <div class="inv-detail-field">
-                          <span class="inv-detail-label">{{ $t('inventory.serialNumber') }}</span>
-                          <span class="inv-detail-value mono-cell">{{ item.serial || '—' }}</span>
-                        </div>
-                        <div class="inv-detail-field">
-                          <span class="inv-detail-label">{{ $t('inventory.status') }}</span>
-                          <span class="status-badge" :class="statusClass(item.status)">{{ translateStatus(item.status) }}</span>
-                        </div>
-                        <div class="inv-detail-field">
-                          <span class="inv-detail-label">{{ $t('inventory.condition') }}</span>
-                          <span class="cond-badge" :class="'cond-' + item.condition">{{ translateCondition(item.condition) }}</span>
-                        </div>
-                        <div class="inv-detail-field">
-                          <span class="inv-detail-label">{{ $t('inventory.location') }}</span>
-                          <span class="inv-detail-value">{{ item.location || '—' }}</span>
-                        </div>
-                        <div class="inv-detail-field">
-                          <span class="inv-detail-label">ID</span>
-                          <span class="inv-detail-value mono-cell">{{ item.id }}</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="inv-detail-qr">
-                    <p class="inv-detail-qr-label">QR Code</p>
-                    <img
-                      :src="item.qrCodeUrl || `https://api.qrserver.com/v1/create-qr-code/?size=140x140&data=${encodeURIComponent(item.serial || item.name)}`"
-                      class="inv-qr-img"
-                      alt="QR Code"
-                    />
-                    <p class="inv-qr-sub">{{ item.serial || item.name }}</p>
-                  </div>
-                </div>
-              </td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
+    <!-- ── Empty state ── -->
+    <div v-if="filteredItems.length === 0" class="empty-state-full">
+      {{ $t('dashboard.noData') }}
     </div>
+
+    <!-- ── Card grid ── -->
+    <div v-else class="equipment-grid">
+      <div
+        v-for="item in filteredItems"
+        :key="item.id"
+        class="equip-card admin-equip-card"
+      >
+
+        <!-- Photo or emoji fallback -->
+        <div v-if="item.photoUrl" class="equip-photo-container">
+          <img
+            :src="item.photoUrl"
+            :alt="item.name"
+            class="equip-photo"
+            @error="$event.target.closest('.equip-photo-container').style.display='none'"
+          />
+        </div>
+        <div v-else class="equip-no-photo">{{ item.emoji }}</div>
+
+        <!-- Name / category / location / status -->
+        <div class="equip-card-top">
+          <div>
+            <h4 class="equip-name">{{ item.name }}</h4>
+            <p class="equip-meta">{{ translateCategory(item.category) }} · {{ item.location || '—' }}</p>
+          </div>
+          <span class="status-badge" :class="statusClass(item.status)">
+            {{ translateStatus(item.status) }}
+          </span>
+        </div>
+
+        <!-- Condition -->
+        <div class="equip-condition">
+          <span class="cond-label">{{ $t('inventory.condition') }}</span>
+          <span class="cond-badge" :class="'cond-' + item.condition">
+            {{ translateCondition(item.condition) }}
+          </span>
+        </div>
+
+        <!-- Serial number -->
+        <div class="equip-serial-row">
+          <span class="serial-label">{{ $t('inventory.serialNumber') }}:</span>
+          <span class="mono-cell">{{ item.serial || '—' }}</span>
+        </div>
+
+        <!-- Edit / Delete -->
+        <div class="admin-card-actions">
+          <button class="admin-card-edit-btn" @click="$emit('editItem', item)">
+            ✏️ {{ $t('common.save') }}
+          </button>
+          <button class="admin-card-delete-btn" @click="$emit('deleteItem', item.id)">
+            🗑 {{ $t('common.remove') }}
+          </button>
+        </div>
+
+        <!-- Usage export per item -->
+        <div class="admin-card-export">
+          <button
+            class="usage-export-btn"
+            :disabled="exportingUsage === item.id + '_CSV'"
+            @click="exportUsage(item, 'CSV')"
+            title="Export usage CSV"
+          >
+            {{ exportingUsage === item.id + '_CSV' ? '…' : '⬇ CSV' }}
+          </button>
+          <button
+            class="usage-export-btn"
+            :disabled="exportingUsage === item.id + '_XLSX'"
+            @click="exportUsage(item, 'XLSX')"
+            title="Export usage XLSX"
+          >
+            {{ exportingUsage === item.id + '_XLSX' ? '…' : '⬇ XLSX' }}
+          </button>
+        </div>
+
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+
 const { t } = useI18n()
 
 defineProps({
-  filteredItems: Array,
+  filteredItems:  Array,
   filterCategory: String,
-  filterStatus: String,
+  filterStatus:   String,
 })
 
 defineEmits(['openAddItem', 'editItem', 'deleteItem', 'update:filterCategory', 'update:filterStatus'])
 
-const exporting = ref(null)
+const exporting      = ref(null)
 const exportingUsage = ref(null)
-const expandedId = ref(null)
 
-function toggleExpand(id) {
-  expandedId.value = expandedId.value === id ? null : id
+// ── Bulk export ──
+async function exportItems(format) {
+  exporting.value = format
+  try {
+    const token = localStorage.getItem('invtr_token') || sessionStorage.getItem('invtr_token')
+    const res = await fetch(`/reports/export-equipment?format=${format}`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    })
+    if (!res.ok) { exporting.value = null; return }
+    const blob = await res.blob()
+    const url  = URL.createObjectURL(blob)
+    const a    = document.createElement('a')
+    a.href     = url
+    a.download = format === 'CSV' ? 'equipment.csv' : 'equipment.xlsx'
+    a.click()
+    URL.revokeObjectURL(url)
+  } catch (_) {}
+  exporting.value = null
 }
 
+// ── Per-item usage export ──
 async function exportUsage(item, format) {
   const key = item.id + '_' + format
   exportingUsage.value = key
@@ -178,53 +181,35 @@ async function exportUsage(item, format) {
     })
     if (!res.ok) { exportingUsage.value = null; return }
     const blob = await res.blob()
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    const safeName = (item.name || 'item').replace(/\s+/g, '_')
-    a.download = format === 'CSV' ? `${safeName}_usage.csv` : `${safeName}_usage.xlsx`
+    const url  = URL.createObjectURL(blob)
+    const a    = document.createElement('a')
+    a.href     = url
+    const safe = (item.name || 'item').replace(/\s+/g, '_')
+    a.download = format === 'CSV' ? `${safe}_usage.csv` : `${safe}_usage.xlsx`
     a.click()
     URL.revokeObjectURL(url)
   } catch (_) {}
   exportingUsage.value = null
 }
 
-async function exportItems(format) {
-  exporting.value = format
-  try {
-    const token = localStorage.getItem('invtr_token') || sessionStorage.getItem('invtr_token')
-    const res = await fetch(`/reports/export-equipment?format=${format}`, {
-      headers: { 'Authorization': `Bearer ${token}` }
-    })
-    if (!res.ok) { exporting.value = null; return }
-    const blob = await res.blob()
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = format === 'CSV' ? 'equipment.csv' : 'equipment.xlsx'
-    a.click()
-    URL.revokeObjectURL(url)
-  } catch (_) {}
-  exporting.value = null
-}
-
+// ── Translation helpers ──
 function translateCategory(category) {
-  const catMap = {
-    'Electronics': 'inventory.categories.electronics',
-    'Furniture': 'inventory.categories.furniture',
-    'Utility': 'inventory.categories.utility'
+  const map = {
+    Electronics: 'inventory.categories.electronics',
+    Furniture:   'inventory.categories.furniture',
+    Utility:     'inventory.categories.utility',
   }
-  return t(catMap[category] || category)
+  return t(map[category] || category)
 }
 
 function translateStatus(status) {
-  const statMap = {
-    'Available': 'inventory.statuses.available',
+  const map = {
+    'Available':   'inventory.statuses.available',
     'Checked-Out': 'inventory.statuses.checkedOut',
-    'Under-Repair': 'inventory.statuses.underRepair',
-    'Retired': 'inventory.statuses.retired'
+    'Under-Repair':'inventory.statuses.underRepair',
+    'Retired':     'inventory.statuses.retired',
   }
-  return t(statMap[status] || status)
+  return t(map[status] || status)
 }
 
 function translateCondition(condition) {
@@ -233,143 +218,120 @@ function translateCondition(condition) {
 }
 
 function statusClass(status) {
-  return 'status-' + (status || '').toLowerCase().replace(/[\s-]+/g, '-')
+  return 'status-' + (status || '').replace(/[\s]+/g, '-')
 }
 </script>
 
 <style scoped>
-.act-usage {
-  background: rgba(82, 130, 210, 0.12);
+/* ── Card-level admin additions ── */
+.admin-equip-card {
+  cursor: default;
+}
+
+/* Serial row */
+.equip-serial-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  margin-top: 2px;
+}
+.serial-label {
+  font-size: 12px;
+  color: #8a9ab0;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+/* Edit + Delete row */
+.admin-card-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 6px;
+}
+.admin-card-edit-btn,
+.admin-card-delete-btn {
+  flex: 1;
+  padding: 9px 6px;
+  border: none;
+  border-radius: 9px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  white-space: nowrap;
+}
+.admin-card-edit-btn {
+  background: #eef4ff;
+  color: #1d6fa6;
+}
+.admin-card-edit-btn:hover {
+  background: #d6eaff;
+}
+.admin-card-delete-btn {
+  background: #fff0f0;
+  color: #c0392b;
+}
+.admin-card-delete-btn:hover {
+  background: #ffe0e0;
+}
+
+/* Usage export row */
+.admin-card-export {
+  display: flex;
+  gap: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #f0f4f8;
+}
+.usage-export-btn {
+  flex: 1;
+  padding: 6px 8px;
+  background: rgba(82, 130, 210, 0.10);
   color: #3a7bd5;
   border: none;
-  border-radius: 6px;
-  padding: 4px 8px;
+  border-radius: 7px;
+  font-family: 'DM Sans', sans-serif;
   font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
-  font-family: inherit;
+  transition: background 0.2s;
 }
-.act-usage:hover:not(:disabled) {
+.usage-export-btn:hover:not(:disabled) {
   background: rgba(82, 130, 210, 0.22);
 }
-.act-usage:disabled {
+.usage-export-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.inv-row {
-  cursor: pointer;
-  transition: background 0.15s;
+/* ── Dark mode ── */
+:global(.dark) .admin-card-edit-btn {
+  background: rgba(29, 111, 166, 0.15);
+  color: #7ab8e0;
 }
-.inv-row:hover {
-  background: rgba(82, 210, 101, 0.06);
+:global(.dark) .admin-card-edit-btn:hover {
+  background: rgba(29, 111, 166, 0.28);
 }
-.inv-row-expanded {
-  background: rgba(82, 210, 101, 0.08);
+:global(.dark) .admin-card-delete-btn {
+  background: rgba(192, 57, 43, 0.15);
+  color: #f87171;
 }
-.expand-arrow {
-  margin-left: 6px;
-  font-size: 10px;
-  color: #8a9baa;
+:global(.dark) .admin-card-delete-btn:hover {
+  background: rgba(192, 57, 43, 0.28);
 }
-.inv-detail-row td {
-  padding: 0;
+:global(.dark) .admin-card-export {
+  border-top-color: #1e3347;
 }
-.inv-detail-panel {
-  display: flex;
-  gap: 24px;
-  padding: 20px 24px;
-  background: #f7fafc;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 2px solid #52d265;
+:global(.dark) .usage-export-btn {
+  background: rgba(82, 130, 210, 0.12);
+  color: #60a5fa;
 }
-:global(.dark) .inv-detail-panel {
-  background: rgba(255,255,255,0.04);
-  border-top-color: rgba(255,255,255,0.08);
+:global(.dark) .usage-export-btn:hover:not(:disabled) {
+  background: rgba(82, 130, 210, 0.24);
 }
-.inv-detail-info {
-  display: flex;
-  gap: 20px;
-  flex: 1;
-}
-.inv-detail-photo {
-  display: flex;
-  align-items: flex-start;
-}
-.inv-detail-img {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-}
-.inv-detail-emoji {
-  font-size: 52px;
-  line-height: 1;
-}
-.inv-detail-fields {
-  flex: 1;
-}
-.inv-detail-name {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: #1a2d3e;
-}
-:global(.dark) .inv-detail-name {
-  color: #e2e8f0;
-}
-.inv-detail-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px 20px;
-}
-.inv-detail-field {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.inv-detail-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #8a9baa;
-}
-.inv-detail-value {
-  font-size: 13px;
-  color: #1a2d3e;
-}
-:global(.dark) .inv-detail-value {
-  color: #cbd5e0;
-}
-.inv-detail-qr {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-.inv-detail-qr-label {
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #8a9baa;
-}
-.inv-qr-img {
-  width: 140px;
-  height: 140px;
-  border-radius: 8px;
-  border: 1px solid #e2e8f0;
-  background: #fff;
-}
-.inv-qr-sub {
-  font-size: 11px;
-  color: #8a9baa;
-  max-width: 140px;
-  text-align: center;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+:global(.dark) .serial-label {
+  color: #4a6070;
 }
 </style>

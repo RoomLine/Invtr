@@ -1702,6 +1702,25 @@ html.dark .filter-bar .filter-select {
   color: #d0dde8;
   border-color: #2a3d52;
 }
+/* ── Dark mode: dropdown option lists ── */
+html.dark .filter-select option,
+html.dark .filter-bar .filter-select option {
+  background: #152433;
+  color: #d0dde8;
+}
+html.dark .input-field select option {
+  background: #1a2f40;
+  color: #d0dde8;
+}
+html.dark .role-select option {
+  background: #1a3050;
+  color: #7ab8e0;
+}
+html.dark .modal-box select option,
+html.dark .modal-overlay select option {
+  background: #1a2f40;
+  color: #d0dde8;
+}
 html.dark .equip-card .equip-name {
   color: #d0dde8;
 }

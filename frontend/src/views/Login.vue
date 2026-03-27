@@ -123,7 +123,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { toast } from '@/services/toast'
@@ -137,6 +137,10 @@ const activeTab = ref('login')
 const switchTab = (tab) => {
   activeTab.value = tab
 }
+
+// ── Page title (reactive to tab + locale) ──
+const loginPageTitle = computed(() => `${t('auth.' + activeTab.value)} · INVTR`)
+watch(loginPageTitle, title => { document.title = title }, { immediate: true })
 
 // Login
 const email    = ref('')

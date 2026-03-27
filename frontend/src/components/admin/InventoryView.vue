@@ -5,6 +5,7 @@
         <h2 class="section-title">{{ $t('navigation.inventory') }}</h2>
         <p class="section-sub">{{ $t('dashboard.overview') }}</p>
       </div>
+<<<<<<< HEAD
       <div class="header-actions">
         <div class="export-group">
           <button class="export-btn" @click="exportItems('CSV')" :disabled="exporting">
@@ -16,6 +17,9 @@
         </div>
         <button class="add-btn" @click="$emit('openAddItem')">+ {{ $t('inventory.addNew') }}</button>
       </div>
+=======
+      <button class="add-btn" @click="$emit('openAddItem')">+ {{ $t('inventory.addNew') }}</button>
+>>>>>>> origin/main
     </div>
 
     <div class="filter-bar">
@@ -50,6 +54,7 @@
           </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
           <template v-for="item in filteredItems" :key="item.id">
             <tr class="inv-row" :class="{ 'inv-row-expanded': expandedId === item.id }" @click="toggleExpand(item.id)">
               <td>
@@ -139,6 +144,38 @@
               </td>
             </tr>
           </template>
+=======
+          <tr v-for="item in filteredItems" :key="item.id">
+            <td>
+              <div class="item-name-cell">
+                <div class="item-img-wrapper">
+                  <img v-if="item.photoUrl" :src="item.photoUrl" class="item-actual-img" alt="item" />
+                  <span v-else class="item-emoji">{{ item.emoji }}</span>
+                </div>
+                <span class="item-text-name">{{ item.name }}</span>
+              </div>
+            </td> 
+            <td>{{ translateCategory(item.category) }}</td>
+            <td class="mono-cell">{{ item.serial || '—' }}</td>
+            <td>
+              <span class="status-badge" :class="statusClass(item.status)">
+                {{ translateStatus(item.status) }}
+              </span>
+            </td>
+            <td>
+              <span class="cond-badge" :class="'cond-' + item.condition">
+                {{ translateCondition(item.condition) }}
+              </span>
+            </td>
+            <td class="location-cell">{{ item.location || '—' }}</td>
+            <td>
+              <div class="action-btns">
+                <button class="act-btn act-edit" @click="$emit('editItem', item)">{{ $t('common.save') }}</button>
+                <button class="act-btn act-delete" @click="$emit('deleteItem', item.id)">{{ $t('common.remove') }}</button>
+              </div>
+            </td>
+          </tr>
+>>>>>>> origin/main
         </tbody>
       </table>
     </div>
@@ -146,7 +183,10 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import { ref } from 'vue'
+=======
+>>>>>>> origin/main
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
@@ -158,6 +198,7 @@ defineProps({
 
 defineEmits(['openAddItem', 'editItem', 'deleteItem', 'update:filterCategory', 'update:filterStatus'])
 
+<<<<<<< HEAD
 const exporting = ref(null)
 const exportingUsage = ref(null)
 const expandedId = ref(null)
@@ -208,6 +249,9 @@ async function exportItems(format) {
   exporting.value = null
 }
 
+=======
+// Мапинг функции за превод
+>>>>>>> origin/main
 function translateCategory(category) {
   const catMap = {
     'Electronics': 'inventory.categories.electronics',
@@ -235,6 +279,7 @@ function translateCondition(condition) {
 function statusClass(status) {
   return 'status-' + (status || '').toLowerCase().replace(/[\s-]+/g, '-')
 }
+<<<<<<< HEAD
 </script>
 
 <style scoped>
@@ -373,3 +418,6 @@ function statusClass(status) {
   white-space: nowrap;
 }
 </style>
+=======
+</script>
+>>>>>>> origin/main

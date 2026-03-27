@@ -26,16 +26,30 @@
           <span class="user-role">{{ $t('auth.adminRole')  }}</span>
         </div>
       </div>
+<<<<<<< HEAD
       <button v-show="!modelValue" class="theme-toggle-btn" @click="$emit('toggleTheme')" :title="isDark ? $t('common.lightMode') : $t('common.darkMode')">
         {{ isDark ? '☀️' : '🌙' }}
       </button>
       <button v-show="!modelValue" class="logout-btn" @click="$emit('logout')" :title="$t('auth.logout')">⏻</button>
     </div>
+=======
+      <button class="theme-toggle-btn" @click="$emit('toggleTheme')" :title="isDark ? $t('common.lightMode') : $t('common.darkMode')">
+        {{ isDark ? '☀️' : '🌙' }}
+      </button>
+      <button class="logout-btn" @click="$emit('logout')" :title="$t('auth.logout')">⏻</button>
+    </div>
+    <button class="lang-toggle-btn" @click="toggleLanguage">{{ $i18n.locale === 'bg' ? '🇬🇧 EN' : '🇧🇬 BG' }}</button>
+>>>>>>> origin/main
   </aside>
 </template>
 
 <script setup>
 import { computed } from 'vue'
+<<<<<<< HEAD
+=======
+import { useI18n} from 'vue-i18n'
+const { locale } = useI18n()
+>>>>>>> origin/main
 
 const props = defineProps({
   modelValue: Boolean,
@@ -51,4 +65,12 @@ const initials = computed(() => {
   if (!props.adminName) return 'AD'
   return props.adminName.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
 })
+<<<<<<< HEAD
+=======
+const toggleLanguage = () => {
+  const newLocale = locale.value === 'bg' ? 'en' : 'bg';
+  locale.value = newLocale;
+  localStorage.setItem('user-locale', newLocale); 
+}
+>>>>>>> origin/main
 </script>

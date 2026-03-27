@@ -28,9 +28,12 @@ public class EquipmentResponse {
     @Size(max = 100, message = "Name must be at most 100 characters")
     private String name;
 
+<<<<<<< HEAD
     @Size(max = 50, message = "Serial number must be at most 50 characters")
     private String serialNumber;
 
+=======
+>>>>>>> origin/main
     @NotNull(message = "Status cannot be null")
     @Enumerated(EnumType.STRING)
     private EquipmentStatus status;

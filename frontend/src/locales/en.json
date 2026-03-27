@@ -6,7 +6,10 @@
     "myRequests": "My Requests",
     "history": "History",
     "users": "Users",
+<<<<<<< HEAD
     "reports": "Reports",
+=======
+>>>>>>> origin/main
     "settings": "Settings"
   },
   "dashboard": {
@@ -15,6 +18,7 @@
     "available": "Available",
     "pendingRequests": "Pending Requests",
     "underRepair": "Under Repair",
+<<<<<<< HEAD
     "notAvailable": "Not Available",
     "activeBorrows": "Active Borrows",
     "recentRequests": "Recent Requests",
@@ -63,6 +67,15 @@
   "inventory": {
     "addNew": "Add New Item",
     "preview": "Live Preview",
+=======
+    "activeBorrows": "Active Borrows",
+    "recentRequests": "Recent Requests",
+    "noData": "No items found.",
+    "noRequests": "No requests yet."
+  },
+  "inventory": {
+    "addNew": "Add New Item",
+>>>>>>> origin/main
     "editItem": "Edit Item",
     "addItemBtn": "Add Item",
     "itemName": "Item Name",
@@ -96,10 +109,13 @@
       "good": "Good",
       "damaged": "Damaged",
       "broken": "Broken"
+<<<<<<< HEAD
     },
     "errors": {
       "nameRequired": "Item name is required.",
       "serialRequired": "Serial number is required."
+=======
+>>>>>>> origin/main
     }
   },
   "requests": {
@@ -107,19 +123,27 @@
       "all": "All",
       "pending": "Pending",
       "approved": "Approved",
+<<<<<<< HEAD
       "rejected": "Rejected",
       "returned": "Returned",
       "return": "Mark Returned"
     },
     "returnTitle": "Process Return",
     "confirmReturn": "Confirm Return"
+=======
+      "rejected": "Rejected"
+    }
+>>>>>>> origin/main
   },
   "users": {
     "addNew": "Add User",
     "subTitle": "Manage registered users and their access",
     "noUsers": "No users found.",
     "role": "Role",
+<<<<<<< HEAD
     "exportHistory": "Export History",
+=======
+>>>>>>> origin/main
     "roles": {
       "user": "USER",
       "admin": "ADMIN"
@@ -160,8 +184,11 @@
   },
   "auth": {
     "systemName": "School Inventory System",
+<<<<<<< HEAD
     "adminRole": "Administrator",
     "logout": "Log out",
+=======
+>>>>>>> origin/main
     "login": "Log In",
     "register": "Register",
     "email": "Email Address",
@@ -194,6 +221,7 @@
       "btn": "OK, Got it"
     }
   },
+<<<<<<< HEAD
   "user": {
     "role": "User",
     "overview": {
@@ -254,6 +282,10 @@
   },
   "common": {
     "save": "Edit",
+=======
+  "common": {
+    "save": "Save Changes",
+>>>>>>> origin/main
     "cancel": "Cancel",
     "viewAll": "View All",
     "remove": "Remove",
@@ -261,8 +293,12 @@
     "activeStatus": "Active",
     "inactive": "Inactive",
     "approve": "Approve",
+<<<<<<< HEAD
     "reject": "Reject",
     "lightMode": "Light mode",
     "darkMode": "Dark mode"
+=======
+    "reject": "Reject"
+>>>>>>> origin/main
   }
 }

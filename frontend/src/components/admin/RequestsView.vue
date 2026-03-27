@@ -5,10 +5,13 @@
         <h2 class="section-title">{{ $t('navigation.requests') }}</h2>
         <p class="section-sub">{{ $t('dashboard.recentRequests') }}</p>
       </div>
+<<<<<<< HEAD
       <div class="search-bar">
         <span class="search-icon">🔍</span>
         <input class="search-input" type="text" v-model="reqSearch" placeholder="Search user or item..." />
       </div>
+=======
+>>>>>>> origin/main
     </div>
 
     <div class="req-tabs">
@@ -19,25 +22,43 @@
         :class="{ active: reqFilter === tab.key }"
         @click="$emit('update:reqFilter', tab.key)"
       >
+<<<<<<< HEAD
         {{ $t(`requests.tabs.${tab.key}`) }}
+=======
+        {{ translateTab(tab.label, tab.key) }}
+>>>>>>> origin/main
       </button>
     </div>
 
     <div class="panel">
+<<<<<<< HEAD
       <div v-if="displayedRequests.length === 0" class="empty-state">{{ $t('dashboard.noRequests') }}</div>
+=======
+      <div v-if="filteredRequests.length === 0" class="empty-state">{{ $t('dashboard.noRequests') }}</div>
+>>>>>>> origin/main
       <table v-else class="data-table">
         <thead>
           <tr>
             <th>{{ $t('auth.firstName') }}</th>
             <th>{{ $t('inventory.itemName') }}</th>
+<<<<<<< HEAD
             <th>{{ $t('dashboard.dateRequested') }}</th>
             <th>{{ $t('dashboard.returnBy') }}</th>
             <th>{{ $t('inventory.status') }}</th>
+=======
+            <th>{{ $t('dashboard.recentRequests') }}</th>
+            <th>{{ $t('inventory.status') }}</th>
+            <th>{{ $t('inventory.condition') }}</th>
+>>>>>>> origin/main
             <th>{{ $t('common.active') }}</th>
           </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
           <tr v-for="req in displayedRequests" :key="req.id">
+=======
+          <tr v-for="req in filteredRequests" :key="req.id">
+>>>>>>> origin/main
             <td>
               <div class="item-name-cell">
                 <div class="req-user-avatar">{{ req.user.charAt(0).toUpperCase() }}</div>
@@ -61,17 +82,21 @@
                   {{ $t('common.reject') }}
                 </button>
               </div>
+<<<<<<< HEAD
               <div class="action-btns" v-else-if="req.status === 'approved'">
                 <button class="act-btn act-return" @click="openReturnModal(req)">
                   {{ $t('requests.tabs.return') }}
                 </button>
               </div>
+=======
+>>>>>>> origin/main
               <span v-else class="no-action">—</span>
             </td>
           </tr>
         </tbody>
       </table>
     </div>
+<<<<<<< HEAD
 
     <!-- Return Modal -->
     <div v-if="showReturnModal" class="modal-overlay" @click.self="closeReturnModal">
@@ -100,19 +125,29 @@
         </div>
       </div>
     </div>
+=======
+>>>>>>> origin/main
   </div>
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import { ref, reactive, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 const { t } = useI18n()
 
 const props = defineProps({
+=======
+import { useI18n } from 'vue-i18n'
+const { t } = useI18n()
+
+defineProps({
+>>>>>>> origin/main
   filteredRequests: Array,
   reqFilter: String,
 })
 
+<<<<<<< HEAD
 const reqSearch = ref('')
 const displayedRequests = computed(() => {
   const q = reqSearch.value.toLowerCase()
@@ -140,11 +175,41 @@ function translateStatus(status) {
     'returned': 'requests.tabs.returned',
   }
   return t(statMap[status?.toLowerCase()] || status)
+=======
+defineEmits(['update:reqFilter', 'approveReq', 'rejectReq'])
+
+const tabs = [
+  { key: 'all',      label: 'All' },
+  { key: 'pending',  label: 'Pending' },
+  { key: 'approved', label: 'Approved' },
+  { key: 'rejected', label: 'Rejected' },
+]
+
+function translateTab(label, key) {
+  const tabMap = {
+    'all': 'common.viewAll',
+    'pending': 'inventory.statuses.underRepair', // Използваме смислово сходни или нови ключове
+    'approved': 'inventory.statuses.available',
+    'rejected': 'inventory.statuses.retired'
+  }
+  // Ако искаш специфични преводи за табовете, добавих ги в JSON-а по-долу
+  return t(`requests.tabs.${key}`)
+}
+
+function translateStatus(status) {
+  const statMap = {
+    'pending': 'requests.tabs.pending',
+    'approved': 'requests.tabs.approved',
+    'rejected': 'requests.tabs.rejected'
+  }
+  return t(statMap[status.toLowerCase()] || status)
+>>>>>>> origin/main
 }
 
 function statusClass(status) {
   return 'status-' + (status || '').replace(/\s+/g, '-')
 }
+<<<<<<< HEAD
 
 // ── Return Modal ──
 const showReturnModal = ref(false)
@@ -183,3 +248,6 @@ async function submitReturn() {
   }
 }
 </script>
+=======
+</script>
+>>>>>>> origin/main

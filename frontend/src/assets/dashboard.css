@@ -215,8 +215,12 @@
 .search-bar {
   display: flex;
   align-items: center;
+<<<<<<< HEAD
   background: #fff;
   border: 1.5px solid #dde3ea;
+=======
+  background: #f0f4f8;
+>>>>>>> origin/main
   border-radius: 10px;
   padding: 8px 14px;
   gap: 8px;
@@ -1441,6 +1445,7 @@ object-fit: cover;
   background: rgba(255, 255, 255, 0.18);
 }
 .lang-toggle-btn {
+<<<<<<< HEAD
   background: #fff;
   border: 1.5px solid #dde3ea;
   color: #103852;
@@ -1462,6 +1467,21 @@ html.dark .lang-toggle-btn {
 }
 html.dark .lang-toggle-btn:hover {
   background: #223a4f;
+=======
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: 0;
+  transition: all 0.3s;
+}
+.lang-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+
+>>>>>>> origin/main
 }
 /* Language switch button in topbar */
 .lang-dash-btn {
@@ -1539,7 +1559,10 @@ html.dark .topbar-date {
 }
 html.dark .search-bar {
   background: #1a2f40;
+<<<<<<< HEAD
   border-color: #1e3347;
+=======
+>>>>>>> origin/main
 }
 html.dark .search-input {
   color: #d0dde8;
@@ -1695,7 +1718,10 @@ html.dark .req-items-cell {
 }
 html.dark .topbar-left .search-bar {
   background: #1a2f40;
+<<<<<<< HEAD
   border-color: #1e3347;
+=======
+>>>>>>> origin/main
 }
 html.dark .filter-bar .filter-select {
   background: #1a2f40;
@@ -1876,6 +1902,7 @@ html.theme-transitioning *::after {
     border-color 0.3s ease,
     box-shadow 0.3s ease !important;
 }
+<<<<<<< HEAD
 
 /* ── HEADER ACTIONS (Export + Add button group) ── */
 .header-actions {
@@ -2472,3 +2499,5 @@ html.dark .pagination-row { border-top-color: #1e3347; }
 html.dark .page-btn { background: #152433; border-color: #2a3d52; color: #d0dde8; }
 html.dark .page-btn:hover:not(:disabled) { background: #1a2f40; border-color: #6a8090; }
 html.dark .page-info { color: #4a6070; }
+=======
+>>>>>>> origin/main

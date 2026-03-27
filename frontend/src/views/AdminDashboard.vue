@@ -16,18 +16,29 @@
         v-model="searchQuery"
         :todayDate="formattedDate"
         :adminName="adminName"
+<<<<<<< HEAD
         :currentView="currentView"
+=======
+>>>>>>> origin/main
       />
 
       <DashboardView
         v-if="currentView === 'dashboard'"
+<<<<<<< HEAD
         :searchedItems="items"
+=======
+        :searchedItems="searchedItems"
+>>>>>>> origin/main
         :requests="requests"
         :categoryBreakdown="categoryBreakdown"
         :totalItems="items.length"
         :availableCount="availableCount"
         :pendingCount="pendingCount"
+<<<<<<< HEAD
         :notAvailableCount="notAvailableCount"
+=======
+        :repairCount="repairCount"
+>>>>>>> origin/main
         @openAddItem="openAddModal"
         @editItem="editItem"
         @deleteItem="deleteItem"
@@ -53,7 +64,10 @@
         @update:reqFilter="reqFilter = $event"
         @approveReq="updateReqStatus($event, 'approved')"
         @rejectReq="updateReqStatus($event, 'rejected')"
+<<<<<<< HEAD
         @returnReq="processReturn"
+=======
+>>>>>>> origin/main
       />
 
       <UsersView
@@ -64,7 +78,14 @@
         @changeRole="updateUserRole"
       />
 
+<<<<<<< HEAD
 
+=======
+      <SettingsView
+        v-if="currentView === 'settings'"
+        :settings="settings"
+      />
+>>>>>>> origin/main
     </div>
 
     <AddItemModal
@@ -81,18 +102,27 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import { ref, computed, reactive, onMounted, onUnmounted, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { toast } from '@/services/toast'
 
 // Component imports
+=======
+import { ref, computed, reactive, onMounted, watch } from 'vue'
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+
+// Импорт на компоненти
+>>>>>>> origin/main
 import AdminSidebar  from '@/components/admin/AdminSidebar.vue'
 import AdminTopbar   from '@/components/admin/AdminTopbar.vue'
 import DashboardView from '@/components/admin/DashboardView.vue'
 import InventoryView from '@/components/admin/InventoryView.vue'
 import RequestsView  from '@/components/admin/RequestsView.vue'
 import UsersView     from '@/components/admin/UsersView.vue'
+<<<<<<< HEAD
 import AddItemModal  from '@/components/admin/AddItemModal.vue'
 import AddUserModal  from '@/components/admin/AddUserModal.vue'
 
@@ -102,13 +132,30 @@ const token = localStorage.getItem('invtr_token') || sessionStorage.getItem('inv
 const authHeaders = () => ({ 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' })
 
 // ── Date ──
+=======
+import SettingsView  from '@/components/admin/SettingsView.vue'
+import AddItemModal  from '@/components/admin/AddItemModal.vue'
+import AddUserModal  from '@/components/admin/AddUserModal.vue'
+
+// Инициализация на инструменти
+const router = useRouter()
+const { locale } = useI18n()
+const token = localStorage.getItem('invtr_token') || sessionStorage.getItem('invtr_token')
+const authHeaders = () => ({ 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' })
+
+// ── Локализация на датата ──
+>>>>>>> origin/main
 const formattedDate = computed(() => {
   return new Date().toLocaleDateString(locale.value, {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
   })
 })
 
+<<<<<<< HEAD
 // ── Theme ──
+=======
+// ── Тема (Dark/Light) ──
+>>>>>>> origin/main
 const isDark = ref(localStorage.getItem('invtr_theme') === 'dark')
 
 function applyTheme(dark) {
@@ -122,12 +169,20 @@ function toggleTheme() {
   document.documentElement.classList.add('theme-transitioning')
   isDark.value = !isDark.value
   applyTheme(isDark.value)
+<<<<<<< HEAD
+=======
+  // Синхронизация с обекта settings, ако съществува
+>>>>>>> origin/main
   const darkSetting = settings.system.find(s => s.key === 'dark')
   if (darkSetting) darkSetting.value = isDark.value
   setTimeout(() => document.documentElement.classList.remove('theme-transitioning'), 400)
 }
 
+<<<<<<< HEAD
 // ── Session ──
+=======
+// ── Потребителска сесия ──
+>>>>>>> origin/main
 const adminName = ref('')
 let adminEmail = ''
 try {
@@ -141,16 +196,24 @@ function logout() {
   router.push('/login')
 }
 
+<<<<<<< HEAD
 // ── Navigation ──
 const currentView      = ref('dashboard')
 const sidebarCollapsed = ref(false)
 const searchQuery      = ref('')
+=======
+// ── Навигация и Търсене ──
+const currentView = ref('dashboard')
+const sidebarCollapsed = ref(false)
+const searchQuery = ref('')
+>>>>>>> origin/main
 
 const navItems = [
   { view: 'dashboard', icon: '📊' },
   { view: 'inventory', icon: '📦' },
   { view: 'requests',  icon: '📋' },
   { view: 'users',     icon: '👥' },
+<<<<<<< HEAD
 ]
 
 // ── Enum maps ──
@@ -181,6 +244,35 @@ const requests = computed(() =>
       id: r.id,
       equipmentIds: r.equipmentIds || [],
       itemMap,
+=======
+  { view: 'settings',  icon: '⚙️' },
+]
+
+// ── Мапинги за базата данни (Enum Mapping) ──
+const TYPE_MAP = { ELECTRICAL: 'Electronics', FURNITURE: 'Furniture', UTILITY: 'Utility' }
+const TYPE_ENUM = { Electronics: 'ELECTRICAL', Furniture: 'FURNITURE', Utility: 'UTILITY' }
+const STATUS_MAP = { AVAILABLE: 'Available', CHECKED_OUT: 'Checked-Out', UNDER_REPAIR: 'Under-Repair', RETIRED: 'Retired' }
+const STATUS_ENUM = { Available: 'AVAILABLE', 'Checked-Out': 'CHECKED_OUT', 'Under-Repair': 'UNDER_REPAIR', Retired: 'RETIRED' }
+const COND_MAP = { EXCELLENT: 'excellent', GOOD: 'good', DAMAGED: 'damaged', BROKEN: 'broken' }
+const COND_ENUM = { excellent: 'EXCELLENT', good: 'GOOD', damaged: 'DAMAGED', broken: 'BROKEN' }
+const EMOJI_MAP = { Electronics: '💻', Furniture: '🪑', Utility: '🔧' }
+
+// ── Данни (Data) ──
+const items = ref([])
+const users = ref([])
+const rawRequests = ref([])
+
+// Списък със заявки с обогатени данни (имена на потребители и предмети)
+const requests = computed(() =>
+  rawRequests.value.map(r => {
+    const user = users.value.find(u => u.id === r.userId)
+    const itemNames = (r.equipmentIds || []).map(id => {
+      const item = items.value.find(i => i.id === id)
+      return item ? item.name : `Item #${id}`
+    }).join(', ')
+    return {
+      id: r.id,
+>>>>>>> origin/main
       user: user ? user.name : `User #${r.userId}`,
       item: itemNames,
       requested: r.requestDate || '',
@@ -190,8 +282,13 @@ const requests = computed(() =>
   })
 )
 
+<<<<<<< HEAD
 // ── API calls ──
 const loadItems = async (showError = false) => {
+=======
+// ── API заявки ──
+const loadItems = async () => {
+>>>>>>> origin/main
   try {
     const res = await fetch('/equipment', { headers: authHeaders() })
     if (res.ok) {
@@ -202,18 +299,26 @@ const loadItems = async (showError = false) => {
         emoji: EMOJI_MAP[TYPE_MAP[e.type]] || '📦',
         category: TYPE_MAP[e.type] || e.type,
         serial: e.serialNumber || '',
+<<<<<<< HEAD
         qrCodeUrl: e.qrCodeUrl || '',
+=======
+>>>>>>> origin/main
         status: STATUS_MAP[e.status] || e.status,
         condition: COND_MAP[e.condition] || (e.condition || '').toLowerCase(),
         location: e.location || '',
         photoUrl: e.photoUrl || '',
       }))
+<<<<<<< HEAD
     } else if (showError) {
       toast.error(t('toast.loadItemsFailed'))
     }
   } catch (_) {
     if (showError) toast.error(t('toast.networkError'))
   }
+=======
+    }
+  } catch (_) {}
+>>>>>>> origin/main
 }
 
 const loadUsers = async () => {
@@ -244,6 +349,7 @@ const loadRequests = async () => {
   } catch (_) {}
 }
 
+<<<<<<< HEAD
 let pollTimer = null
 let fastPollTimer = null
 
@@ -290,6 +396,20 @@ const pendingCount        = computed(() => requests.value.filter(r => r.status =
 const notAvailableCount   = computed(() => items.value.filter(i => i.status !== 'Available').length)
 const categoryBreakdown = computed(() => items.value.reduce((acc, item) => {
   acc[item.category] = (acc[item.category] || 0) + 1; return acc
+=======
+onMounted(async () => {
+  await Promise.all([loadItems(), loadUsers()])
+  await loadRequests()
+})
+
+// ── Computed статистики за Dashboard ──
+const availableCount = computed(() => items.value.filter(i => i.status === 'Available').length)
+const pendingCount = computed(() => requests.value.filter(r => r.status === 'pending').length)
+const repairCount = computed(() => items.value.filter(i => i.status === 'Under-Repair').length)
+const categoryBreakdown = computed(() => items.value.reduce((acc, item) => {
+  acc[item.category] = (acc[item.category] || 0) + 1
+  return acc
+>>>>>>> origin/main
 }, {}))
 
 const searchedItems = computed(() =>
@@ -300,6 +420,7 @@ const searchedItems = computed(() =>
   )
 )
 
+<<<<<<< HEAD
 const filterCategory = ref('')
 const filterStatus   = ref('')
 const filteredItems  = computed(() =>
@@ -307,6 +428,15 @@ const filteredItems  = computed(() =>
     (!filterCategory.value || i.category === filterCategory.value) &&
     (!filterStatus.value   || i.status   === filterStatus.value) &&
     (!searchQuery.value    || i.name.toLowerCase().includes(searchQuery.value.toLowerCase()))
+=======
+// Филтри за Inventory
+const filterCategory = ref('')
+const filterStatus = ref('')
+const filteredItems = computed(() =>
+  items.value.filter(i =>
+    (!filterCategory.value || i.category === filterCategory.value) &&
+    (!filterStatus.value || i.status === filterStatus.value)
+>>>>>>> origin/main
   )
 )
 
@@ -315,7 +445,11 @@ const filteredRequests = computed(() =>
   reqFilter.value === 'all' ? requests.value : requests.value.filter(r => r.status === reqFilter.value)
 )
 
+<<<<<<< HEAD
 // ── Request actions ──
+=======
+// ── Управление на състоянието (Логика) ──
+>>>>>>> origin/main
 async function updateReqStatus(id, status) {
   const endpoint = status === 'approved' ? `/requests/${id}/approve` : `/requests/${id}/reject`
   try {
@@ -324,6 +458,7 @@ async function updateReqStatus(id, status) {
       const updated = await res.json()
       const raw = rawRequests.value.find(r => r.id === id)
       if (raw) raw.status = updated.status
+<<<<<<< HEAD
       await loadItems()
       if (status === 'approved') toast.success(t('toast.requestApproved'))
       else toast.info(t('toast.requestRejected'))
@@ -374,6 +509,29 @@ const settings = reactive({
 
 // ── Item CRUD ──
 const showAddModal   = ref(false)
+=======
+    }
+  } catch (_) {}
+}
+
+// Settings реактивен обект
+const settings = reactive({
+  notifications: [
+    { key: 'email', label: 'Email Notifications', sub: 'Send emails on new requests', value: true },
+    { key: 'overdue', label: 'Overdue Alerts', sub: 'Notify when items are overdue', value: true },
+    { key: 'repair', label: 'Repair Reminders', sub: 'Remind about items under repair', value: false },
+  ],
+  system: [
+    { key: 'dark', label: 'Dark Mode', sub: 'Switch interface theme', value: isDark.value },
+    { key: 'auto', label: 'Auto-approve Requests', sub: 'Skip manual approval step', value: false },
+    { key: 'maint', label: 'Maintenance Mode', sub: 'Disable user access temporarily', value: false },
+  ],
+  profile: { name: 'Admin User', email: 'admin@equipro.com', password: '' },
+  policy: { maxDays: 14, maxItems: 3, lateFee: '$2.00' },
+})
+
+const showAddModal = ref(false)
+>>>>>>> origin/main
 const showAddUserModal = ref(false)
 const editingItemObj = ref(null)
 
@@ -390,17 +548,25 @@ function editItem(item) {
 async function saveItem(form) {
   if (editingItemObj.value) {
     const body = {
+<<<<<<< HEAD
       type:         TYPE_ENUM[form.category] || 'ELECTRICAL',
       condition:    COND_ENUM[form.condition]  || 'GOOD',
       location:     form.location || 'Unknown',
       status:       STATUS_ENUM[form.status]   || 'AVAILABLE',
       serialNumber: form.serial || undefined,
+=======
+      type: TYPE_ENUM[form.category] || 'ELECTRICAL',
+      condition: COND_ENUM[form.condition] || 'GOOD',
+      location: form.location || 'Unknown',
+      status: STATUS_ENUM[form.status] || 'AVAILABLE',
+>>>>>>> origin/main
     }
     try {
       const res = await fetch(`/equipment/${editingItemObj.value.id}`, {
         method: 'PATCH', headers: authHeaders(), body: JSON.stringify(body),
       })
       if (res.ok) {
+<<<<<<< HEAD
         await loadItems()
         toast.success(t('toast.itemUpdated'))
       } else {
@@ -418,6 +584,20 @@ async function saveItem(form) {
       condition:    COND_ENUM[form.condition] || 'GOOD',
       location:     form.location || 'Unknown',
       photoUrl:     form.photoUrl || null,
+=======
+        await loadItems() // Презареждаме за най-сигурно
+      }
+    } catch (_) {}
+  } else {
+    const body = {
+      type: TYPE_ENUM[form.category] || 'ELECTRICAL',
+      name: form.name,
+      serialNumber: form.serial,
+      status: STATUS_ENUM[form.status] || 'AVAILABLE',
+      condition: COND_ENUM[form.condition] || 'GOOD',
+      location: form.location || 'Unknown',
+      photoUrl: form.photoUrl || null,
+>>>>>>> origin/main
     }
     try {
       const res = await fetch('/equipment', {
@@ -425,6 +605,7 @@ async function saveItem(form) {
       })
       if (res.ok || res.status === 201) {
         await loadItems()
+<<<<<<< HEAD
         toast.success(t('toast.itemAdded'))
       } else {
         toast.error(t('toast.saveFailed'))
@@ -432,15 +613,24 @@ async function saveItem(form) {
     } catch (_) {
       toast.error(t('toast.networkError'))
     }
+=======
+      }
+    } catch (_) {}
+>>>>>>> origin/main
   }
 }
 
 async function deleteItem(id) {
+<<<<<<< HEAD
   if (confirm(t('toast.confirmDelete'))) {
+=======
+  if (confirm('Delete this item?')) {
+>>>>>>> origin/main
     try {
       const res = await fetch(`/equipment/${id}`, { method: 'DELETE', headers: authHeaders() })
       if (res.ok) {
         items.value = items.value.filter(i => i.id !== id)
+<<<<<<< HEAD
         toast.success(t('toast.itemDeleted'))
       } else {
         toast.error(t('toast.deleteFailed'))
@@ -455,6 +645,16 @@ async function deleteItem(id) {
 async function saveUser(form) {
   const parts      = form.name.trim().split(' ')
   const firstName  = parts[0] || form.name
+=======
+      }
+    } catch (_) {}
+  }
+}
+
+async function saveUser(form) {
+  const parts = form.name.trim().split(' ')
+  const firstName = parts[0] || form.name
+>>>>>>> origin/main
   const familyName = parts.slice(1).join(' ') || parts[0]
   try {
     const res = await fetch('/auth/register', {
@@ -464,6 +664,7 @@ async function saveUser(form) {
     })
     if (res.ok) {
       await loadUsers()
+<<<<<<< HEAD
       toast.success(t('toast.userAdded'))
     } else {
       toast.error(t('toast.saveFailed'))
@@ -477,6 +678,15 @@ function deleteUser(id) {
   if (confirm(t('toast.confirmDelete'))) {
     users.value = users.value.filter(u => u.id !== id)
     toast.success(t('toast.userDeleted'))
+=======
+    }
+  } catch (_) {}
+}
+
+function deleteUser(id) {
+  if (confirm('Remove this user?')) {
+    users.value = users.value.filter(u => u.id !== id)
+>>>>>>> origin/main
   }
 }
 
@@ -485,12 +695,17 @@ async function updateUserRole({ userId, role }) {
     const res = await fetch(`/auth/users/${userId}`, {
       method: 'PATCH',
       headers: authHeaders(),
+<<<<<<< HEAD
       body: JSON.stringify({ role }),
+=======
+      body: JSON.stringify({ role: role }),
+>>>>>>> origin/main
     })
     if (res.ok) {
       const updated = await res.json()
       const u = users.value.find(u => u.id === userId)
       if (u) u.role = updated.roleName || role
+<<<<<<< HEAD
       toast.success(t('toast.roleUpdated'))
     } else {
       toast.error(t('toast.actionFailed'))
@@ -501,6 +716,13 @@ async function updateUserRole({ userId, role }) {
 }
 
 // ── Dark mode sync from settings panel ──
+=======
+    }
+  } catch (_) {}
+}
+
+// Синхронизация на Dark Mode от настройките
+>>>>>>> origin/main
 watch(() => settings.system.find(s => s.key === 'dark')?.value, (val) => {
   if (val !== undefined && val !== isDark.value) {
     isDark.value = val
@@ -511,4 +733,8 @@ watch(() => settings.system.find(s => s.key === 'dark')?.value, (val) => {
 
 <style>
 @import '@/assets/dashboard.css';
+<<<<<<< HEAD
 </style>
+=======
+</style>
+>>>>>>> origin/main

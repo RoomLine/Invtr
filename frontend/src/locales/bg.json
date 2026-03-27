@@ -6,7 +6,10 @@
     "myRequests": "Моите заявки",
     "history": "История",
     "users": "Потребители",
+<<<<<<< HEAD
     "reports": "Отчети",
+=======
+>>>>>>> origin/main
     "settings": "Настройки"
   },
   "dashboard": {
@@ -15,6 +18,7 @@
     "available": "Налични",
     "pendingRequests": "Чакащи заявки",
     "underRepair": "За ремонт",
+<<<<<<< HEAD
     "notAvailable": "Недостъпно",
     "activeBorrows": "Активни заеми",
     "recentRequests": "Последни заявки",
@@ -63,6 +67,15 @@
   "inventory": {
     "addNew": "Добави нов предмет",
     "preview": "Преглед на живо",
+=======
+    "activeBorrows": "Активни заеми",
+    "recentRequests": "Последни заявки",
+    "noData": "Няма намерени елементи.",
+    "noRequests": "Все още няма заявки."
+  },
+  "inventory": {
+    "addNew": "Добави нов предмет",
+>>>>>>> origin/main
     "editItem": "Редактирай предмет",
     "addItemBtn": "Добави предмет",
     "itemName": "Име на предмета",
@@ -96,10 +109,13 @@
       "good": "Добро",
       "damaged": "Повредено",
       "broken": "Счупено"
+<<<<<<< HEAD
     },
     "errors": {
       "nameRequired": "Името на артикула е задължително.",
       "serialRequired": "Серийният номер е задължителен."
+=======
+>>>>>>> origin/main
     }
   },
   "requests": {
@@ -107,19 +123,27 @@
       "all": "Всички",
       "pending": "Чакащи",
       "approved": "Одобрени",
+<<<<<<< HEAD
       "rejected": "Отхвърлени",
       "returned": "Върнати",
       "return": "Маркирай като върнато"
     },
     "returnTitle": "Обработи връщане",
     "confirmReturn": "Потвърди връщане"
+=======
+      "rejected": "Отхвърлени"
+    }
+>>>>>>> origin/main
   },
   "users": {
     "addNew": "Добави потребител",
     "subTitle": "Управление на регистрираните потребители и техния достъп",
     "noUsers": "Няма намерени потребители.",
     "role": "Роля",
+<<<<<<< HEAD
     "exportHistory": "Експорт история",
+=======
+>>>>>>> origin/main
     "roles": {
       "user": "ПОТРЕБИТЕЛ",
       "admin": "АДМИН"
@@ -160,8 +184,11 @@
   },
   "auth": {
     "systemName": "Училищна инвентарна система",
+<<<<<<< HEAD
     "adminRole": "Администратор",
     "logout": "Изход",
+=======
+>>>>>>> origin/main
     "login": "Вход",
     "register": "Регистрация",
     "email": "Имейл адрес",
@@ -194,6 +221,7 @@
       "btn": "Добре, разбрах"
     }
   },
+<<<<<<< HEAD
   "user": {
     "role": "Потребител",
     "overview": {
@@ -254,6 +282,10 @@
   },
   "common": {
     "save": "Промени",
+=======
+  "common": {
+    "save": "Запази промените",
+>>>>>>> origin/main
     "cancel": "Отказ",
     "viewAll": "Виж всички",
     "remove": "Премахни",
@@ -261,8 +293,12 @@
     "activeStatus": "Активен",
     "inactive": "Неактивен",
     "approve": "Одобри",
+<<<<<<< HEAD
     "reject": "Отхвърли",
     "lightMode": "Светъл режим",
     "darkMode": "Тъмен режим"
+=======
+    "reject": "Отхвърли"
+>>>>>>> origin/main
   }
 }

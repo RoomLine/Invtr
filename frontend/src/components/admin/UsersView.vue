@@ -5,6 +5,7 @@
         <h2 class="section-title">{{ $t('navigation.users') }}</h2>
         <p class="section-sub">{{ $t('users.subTitle') }}</p>
       </div>
+<<<<<<< HEAD
       <div style="display:flex;gap:10px;align-items:center;">
         <div class="search-bar">
           <span class="search-icon">🔍</span>
@@ -16,6 +17,13 @@
 
     <div class="panel">
       <div v-if="filteredUsers.length === 0" class="empty-state">{{ $t('users.noUsers') }}</div>
+=======
+      <button class="add-btn" @click="$emit('openAddUser')">+ {{ $t('users.addNew') }}</button>
+    </div>
+
+    <div class="panel">
+      <div v-if="users.length === 0" class="empty-state">{{ $t('users.noUsers') }}</div>
+>>>>>>> origin/main
       <table v-else class="data-table">
         <thead>
           <tr>
@@ -24,12 +32,19 @@
             <th>{{ $t('users.role') }}</th>
             <th>{{ $t('dashboard.activeBorrows') }}</th>
             <th>{{ $t('inventory.status') }}</th>
+<<<<<<< HEAD
             <th>{{ $t('users.exportHistory') }}</th>
+=======
+>>>>>>> origin/main
             <th>{{ $t('common.active') }}</th>
           </tr>
         </thead>
         <tbody>
+<<<<<<< HEAD
           <tr v-for="user in filteredUsers" :key="user.id">
+=======
+          <tr v-for="user in users" :key="user.id">
+>>>>>>> origin/main
             <td>
               <div class="item-name-cell">
                 <div class="user-initials" :class="{ 'user-initials-admin': user.role !== 'USER' }">
@@ -55,6 +70,7 @@
                 {{ user.active ? $t('common.activeStatus') : $t('common.inactive') }}
               </span>
             </td>
+<<<<<<< HEAD
             <!-- Per-user history export -->
             <td>
               <div class="export-group">
@@ -76,6 +92,8 @@
                 </button>
               </div>
             </td>
+=======
+>>>>>>> origin/main
             <td>
               <div class="action-btns">
                 <button class="act-btn act-delete" @click="$emit('deleteUser', user.id)">
@@ -91,6 +109,7 @@
 </template>
 
 <script setup>
+<<<<<<< HEAD
 import { ref, computed } from 'vue'
 
 const props = defineProps({
@@ -132,3 +151,11 @@ async function exportHistory(user, format) {
   exportingId.value = null
 }
 </script>
+=======
+defineProps({
+  users: Array,
+})
+
+defineEmits(['openAddUser', 'deleteUser', 'changeRole'])
+</script>
+>>>>>>> origin/main

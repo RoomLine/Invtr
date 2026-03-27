@@ -1,0 +1,52 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/\*\*]':
+            allowedOrigins:
+              - "http://localhost:5173"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+              - OPTIONS
+            allowedHeaders:
+              - "*"
+            allowCredentials: true
+
+      routes:
+        # --- 1. SECURITY BLOCKERS (Must be at the top!) ---
+        - id: block-internal-auth
+          uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/auth/internal/**
+          filters:
+            - SetStatus=403 # Returns "Forbidden" without hitting the actual service
+
+        # --- 2. NORMAL ROUTES ---
+        - id: auth-service
+          uri: ${AUTH_SERVICE_URL:http://localhost:8081}
+          predicates:
+            - Path=/auth/**
+
+        - id: equipment-service
+          uri: ${EQUIPMENT_SERVICE_URL:http://localhost:8082}
+          predicates:
+            - Path=/equipment/**
+
+        - id: request-service
+          uri: ${REQUEST_SERVICE_URL:http://localhost:8083}
+          predicates:
+            - Path=/requests/**
+
+        - id: reports-service
+          uri: ${REPORTS_SERVICE_URL:http://localhost:8084}
+          predicates:
+            - Path=/reports/**

@@ -1,0 +1,136 @@
+version: '3.8'
+
+services:
+  # --- DATABASE ---
+  invtr-db:
+    image: postgres:17.3-alpine
+    container_name: invtr-db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      # This path is still correct since postgres-init is also at the root
+      - ./postgres-init:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - invtr-network
+
+  # --- AUTH SERVICE ---
+  auth-service:
+    build: ./backend/auth-service
+    container_name: auth-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://invtr-db:5432/auth_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+    depends_on:
+      invtr-db:
+        condition: service_healthy
+    networks:
+      - invtr-network
+
+  # --- EQUIPMENT SERVICE ---
+  equipment-service:
+    build: ./backend/equipment-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://invtr-db:5432/equipment_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - AUTH_SERVICE_URL=http://auth-service:8081
+      # Добави тези два реда:
+      - MAIL_PASSWORD=${MAIL_PASSWORD}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+    depends_on:
+      - invtr-db
+      - auth-service
+    networks:
+      - invtr-network
+
+  # --- REQUEST SERVICE ---
+  request-service:
+    build: ./backend/request-service
+    container_name: request-service
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://invtr-db:5432/request_db
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=password
+      - EQUIPMENT_SERVICE_URL=http://equipment-service:8082
+    depends_on:
+      invtr-db:
+        condition: service_healthy
+      equipment-service:
+        condition: service_started
+    networks:
+      - invtr-network
+
+  # --- REPORTS SERVICE ---
+  reports-service:
+    build: ./backend/reports-service
+    container_name: reports-service
+    ports:
+      - "8084:8084"
+    environment:
+      - REQUEST_SERVICE_URL=http://request-service:8083
+      - EQUIPMENT_SERVICE_URL=http://equipment-service:8082
+      - AUTH_SERVICE_URL=http://auth-service:8081
+      - JAVA_TOOL_OPTIONS=-Djava.awt.headless=true
+    depends_on:
+      - request-service
+      - equipment-service
+    networks:
+      - invtr-network
+
+  # --- API GATEWAY ---
+  api-gateway:
+    build: ./backend/api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    environment:
+      - AUTH_SERVICE_URL=http://auth-service:8081
+      - EQUIPMENT_SERVICE_URL=http://equipment-service:8082
+      - REQUEST_SERVICE_URL=http://request-service:8083
+      - REPORTS_SERVICE_URL=http://reports-service:8084
+    depends_on:
+      - auth-service
+      - equipment-service
+      - request-service
+      - reports-service
+    networks:
+      - invtr-network
+
+  # --- FRONTEND (Vue.js) ---
+  frontend:
+    build: ./frontend
+    container_name: invtr-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      - VUE_APP_API_TARGET=http://api-gateway:8080
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      - api-gateway
+    networks:
+      - invtr-network
+
+networks:
+  invtr-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

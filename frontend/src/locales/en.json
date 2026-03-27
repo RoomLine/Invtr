@@ -1,0 +1,268 @@
+{
+  "navigation": {
+    "dashboard": "Dashboard",
+    "inventory": "Inventory",
+    "requests": "Requests",
+    "myRequests": "My Requests",
+    "history": "History",
+    "users": "Users",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "overview": "Inventory Overview",
+    "totalItems": "Total Items",
+    "available": "Available",
+    "pendingRequests": "Pending Requests",
+    "underRepair": "Under Repair",
+    "notAvailable": "Not Available",
+    "activeBorrows": "Active Borrows",
+    "recentRequests": "Recent Requests",
+    "dateRequested": "Date Requested",
+    "returnBy": "Return By",
+    "noData": "No items found.",
+    "noRequests": "No requests yet."
+  },
+  "reports": {
+    "subTitle": "Borrowing history and system statistics",
+    "totalRequests": "Total Requests",
+    "returned": "Returned",
+    "pending": "Pending",
+    "approvalRate": "Approval Rate",
+    "noData": "No records found.",
+    "items": "Items",
+    "statusBreakdown": "Status Breakdown",
+    "tabs": {
+      "all": "All",
+      "pending": "Pending",
+      "approved": "Approved",
+      "returned": "Returned",
+      "rejected": "Rejected",
+      "taken": "Taken",
+      "late": "Late"
+    }
+  },
+  "toast": {
+    "itemAdded": "Item added successfully.",
+    "itemUpdated": "Item updated successfully.",
+    "itemDeleted": "Item removed successfully.",
+    "userAdded": "User created successfully.",
+    "userDeleted": "User removed.",
+    "roleUpdated": "Role updated successfully.",
+    "requestApproved": "Request approved.",
+    "requestRejected": "Request rejected.",
+    "itemReturned": "Item return processed successfully.",
+    "loadItemsFailed": "Could not load equipment.",
+    "networkError": "Network error. Please try again.",
+    "actionFailed": "Action failed. Please try again.",
+    "saveFailed": "Could not save. Please try again.",
+    "deleteFailed": "Could not delete. Please try again.",
+    "returnFailed": "Could not process return.",
+    "confirmDelete": "Are you sure you want to delete this?"
+  },
+  "inventory": {
+    "addNew": "Add New Item",
+    "preview": "Live Preview",
+    "editItem": "Edit Item",
+    "addItemBtn": "Add Item",
+    "itemName": "Item Name",
+    "category": "Category",
+    "serialNumber": "Serial Number",
+    "status": "Status",
+    "condition": "Condition",
+    "photoUrl": "Photo URL",
+    "location": "Location",
+    "search": "Search equipment...",
+    "placeholders": {
+      "name": "e.g. Dell XPS Laptop",
+      "serial": "e.g. SN-XPS-001",
+      "location": "e.g. Room 101",
+      "photoHelp": "Paste a direct link to a JPG or PNG image.",
+      "email": "you@example.com"
+    },
+    "categories": {
+      "electronics": "Electronics",
+      "furniture": "Furniture",
+      "utility": "Utility"
+    },
+    "statuses": {
+      "available": "Available",
+      "checkedOut": "Checked Out",
+      "underRepair": "Under Repair",
+      "retired": "Retired"
+    },
+    "conditions": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "damaged": "Damaged",
+      "broken": "Broken"
+    },
+    "errors": {
+      "nameRequired": "Item name is required.",
+      "serialRequired": "Serial number is required."
+    }
+  },
+  "requests": {
+    "tabs": {
+      "all": "All",
+      "pending": "Pending",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "returned": "Returned",
+      "return": "Mark Returned"
+    },
+    "returnTitle": "Process Return",
+    "confirmReturn": "Confirm Return"
+  },
+  "users": {
+    "addNew": "Add User",
+    "subTitle": "Manage registered users and their access",
+    "noUsers": "No users found.",
+    "role": "Role",
+    "exportHistory": "Export History",
+    "roles": {
+      "user": "USER",
+      "admin": "ADMIN"
+    }
+  },
+  "settings": {
+    "subTitle": "Configure system preferences and policies",
+    "notifications": {
+      "title": "Notifications",
+      "email": "Email Notifications",
+      "emailSub": "Send emails on new requests",
+      "overdue": "Overdue Alerts",
+      "overdueSub": "Notify when items are overdue",
+      "repair": "Repair Reminders",
+      "repairSub": "Remind about items under repair"
+    },
+    "system": {
+      "title": "System",
+      "dark": "Dark Mode",
+      "darkSub": "Switch interface theme",
+      "auto": "Auto-approve Requests",
+      "autoSub": "Skip manual approval step",
+      "maint": "Maintenance Mode",
+      "maintSub": "Disable user access temporarily"
+    },
+    "profile": {
+      "title": "Profile",
+      "displayName": "Display Name",
+      "newPassword": "New Password"
+    },
+    "policy": {
+      "title": "Borrow Policy",
+      "maxDays": "Max Borrow Days",
+      "maxItems": "Max Items Per User",
+      "lateFee": "Late Fee (per day)",
+      "updateBtn": "Update Policy"
+    }
+  },
+  "auth": {
+    "systemName": "School Inventory System",
+    "adminRole": "Administrator",
+    "logout": "Log out",
+    "login": "Log In",
+    "register": "Register",
+    "email": "Email Address",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "createAccount": "Create Account",
+    "forgotPassword": "Forgotten Password",
+    "rememberMe": "Remember Me",
+    "noAccount": "Don't have an account?",
+    "registerNow": "Register now",
+    "haveAccount": "Already have an account?",
+    "loginNow": "Log in here",
+    "errors": {
+      "fillAll": "Please fill in all fields.",
+      "invalid": "Invalid email or password.",
+      "server": "Server error. Is the backend running?",
+      "noMatch": "Passwords do not match.",
+      "enterEmail": "Enter your email to reset password.",
+      "regFailed": "Registration failed."
+    },
+    "success": {
+      "login": "Login successful! Redirecting...",
+      "register": "Account created! You can now log in."
+    },
+    "modal": {
+      "title": "Email Sent!",
+      "sub": "Password reset instructions have been sent to",
+      "btn": "OK, Got it"
+    }
+  },
+  "user": {
+    "role": "User",
+    "overview": {
+      "availableItems": "Available Items",
+      "currentRequests": "Current Requests",
+      "activeBorrows": "Active Borrows",
+      "totalRequests": "Total Requests (All Time)",
+      "myActiveBorrows": "My Active Borrows",
+      "noActiveBorrows": "No active borrows",
+      "borrowed": "Borrowed:",
+      "recentRequests": "Recent Requests",
+      "noRecentRequests": "No recent requests"
+    },
+    "inventory": {
+      "allTypes": "All Types",
+      "allStatuses": "All Statuses",
+      "loading": "Loading equipment...",
+      "noEquipment": "No equipment found.",
+      "condition": "Condition:",
+      "unavailable": "Unavailable",
+      "addToRequest": "+ Add to Request",
+      "selected": "✓ Selected",
+      "unitsAvailable": "unit available | units available"
+    },
+    "cart": {
+      "selected": "item selected | items selected",
+      "clear": "Clear",
+      "requestAll": "Request All →"
+    },
+    "requests": {
+      "title": "My Requests",
+      "serviceOffline": "⚠ Request service offline",
+      "empty": "You have no requests yet.",
+      "item": "Item",
+      "requested": "Requested",
+      "from": "From",
+      "until": "Until"
+    },
+    "history": {
+      "title": "Borrowing History",
+      "empty": "No history yet.",
+      "item": "Item",
+      "borrowed": "Borrowed",
+      "returned": "Returned",
+      "condition": "Condition"
+    },
+    "modal": {
+      "title": "Request Borrow",
+      "fromDate": "From Date",
+      "untilDate": "Until Date",
+      "submit": "Submit Request",
+      "noItems": "No items selected.",
+      "selectDates": "Please select both dates.",
+      "endAfterStart": "End date must be after start date.",
+      "success": "Request submitted successfully!",
+      "serverError": "Could not reach the request service."
+    }
+  },
+  "common": {
+    "save": "Edit",
+    "cancel": "Cancel",
+    "viewAll": "View All",
+    "remove": "Remove",
+    "active": "Actions",
+    "activeStatus": "Active",
+    "inactive": "Inactive",
+    "approve": "Approve",
+    "reject": "Reject",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode"
+  }
+}

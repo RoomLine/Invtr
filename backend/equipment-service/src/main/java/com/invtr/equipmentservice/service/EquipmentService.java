@@ -35,6 +35,10 @@ public class EquipmentService {
         return EquipmentResponse.builder()
                 .id(equipment.getId())
                 .name(equipment.getName())
+<<<<<<< HEAD
+                .serialNumber(equipment.getSerialNumber())
+=======
+>>>>>>> origin/main
                 .type(equipment.getType())
                 .status(equipment.getStatus())
                 .condition(equipment.getCondition())

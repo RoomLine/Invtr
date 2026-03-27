@@ -21,6 +21,30 @@
         </button>
       </div>
 
+<<<<<<< HEAD
+      <!-- ── LOGIN TAB ── -->
+      <template v-if="activeTab === 'login'">
+        <div class="input-field">
+          <label>{{ $t('auth.email') }}</label>
+          <input
+            type="email"
+            v-model="email"
+            placeholder="you@example.com"
+            :disabled="loading"
+            @keyup.enter="handleLogin"
+          />
+        </div>
+        <div class="input-field">
+          <label>{{ $t('auth.password') }}</label>
+          <input
+            type="password"
+            v-model="password"
+            placeholder="••••••••"
+            :disabled="loading"
+            @keyup.enter="handleLogin"
+          />
+        </div>
+=======
       <template v-if="activeTab === 'login'">
         <div v-if="errorMsg"   class="alert alert-error">{{ errorMsg }}</div>
         <div v-if="successMsg" class="alert alert-success">{{ successMsg }}</div>
@@ -38,6 +62,7 @@
           <a href="#" @click.prevent="handleForgot">{{ $t('auth.forgotPassword') }}</a>
         </div>
 
+>>>>>>> origin/main
         <button class="login-button" @click="handleLogin" :disabled="loading">
           <span v-if="loading" class="spinner"></span>
           <span v-else>{{ $t('auth.login') }}</span>
@@ -48,6 +73,30 @@
         </p>
       </template>
 
+<<<<<<< HEAD
+      <!-- ── REGISTER TAB ── -->
+      <template v-if="activeTab === 'register'">
+        <div class="name-row">
+          <div class="input-field">
+            <label>{{ $t('auth.firstName') }}</label>
+            <input
+              type="text"
+              v-model="regFirstName"
+              :placeholder="$t('auth.firstName')"
+              :disabled="regLoading"
+              @keyup.enter="handleFinalRegister"
+            />
+          </div>
+          <div class="input-field">
+            <label>{{ $t('auth.lastName') }}</label>
+            <input
+              type="text"
+              v-model="regFamilyName"
+              :placeholder="$t('auth.lastName')"
+              :disabled="regLoading"
+              @keyup.enter="handleFinalRegister"
+            />
+=======
       <template v-if="activeTab === 'register'">
         <div v-if="regError"   class="alert alert-error">{{ regError }}</div>
         <div v-if="regSuccess" class="alert alert-success">{{ regSuccess }}</div>
@@ -60,10 +109,40 @@
           <div class="input-field">
             <label>{{ $t('auth.lastName') }}</label>
             <input type="text" v-model="regFamilyName" :placeholder="$t('auth.lastName')" :disabled="regLoading" />
+>>>>>>> origin/main
           </div>
         </div>
         <div class="input-field">
           <label>{{ $t('auth.email') }}</label>
+<<<<<<< HEAD
+          <input
+            type="email"
+            v-model="regEmail"
+            placeholder="you@example.com"
+            :disabled="regLoading"
+            @keyup.enter="handleFinalRegister"
+          />
+        </div>
+        <div class="input-field">
+          <label>{{ $t('auth.password') }}</label>
+          <input
+            type="password"
+            v-model="regPassword"
+            placeholder="••••••••"
+            :disabled="regLoading"
+            @keyup.enter="handleFinalRegister"
+          />
+        </div>
+        <div class="input-field">
+          <label>{{ $t('auth.confirmPassword') }}</label>
+          <input
+            type="password"
+            v-model="regConfirmPassword"
+            placeholder="••••••••"
+            :disabled="regLoading"
+            @keyup.enter="handleFinalRegister"
+          />
+=======
           <input type="email" v-model="regEmail" placeholder="you@example.com" :disabled="regLoading" />
         </div>
         <div class="input-field">
@@ -73,6 +152,7 @@
         <div class="input-field">
           <label>{{ $t('auth.confirmPassword') }}</label>
           <input type="password" v-model="regConfirmPassword" placeholder="••••••••" :disabled="regLoading" />
+>>>>>>> origin/main
         </div>
 
         <button class="login-button" @click="handleFinalRegister" :disabled="regLoading">
@@ -86,6 +166,8 @@
       </template>
     </div>
 
+<<<<<<< HEAD
+=======
     <div v-if="showModal" class="modal-overlay" @click.self="showModal = false">
       <div class="modal-box">
         <div class="success-icon">✓</div>
@@ -97,6 +179,7 @@
         <button @click="showModal = false" class="close-modal-button">{{ $t('auth.modal.btn') }}</button>
       </div>
     </div>
+>>>>>>> origin/main
   </div>
 </template>
 
@@ -104,11 +187,33 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+<<<<<<< HEAD
+import { toast } from '@/services/toast'
+=======
+>>>>>>> origin/main
 
 const { t } = useI18n()
 const API_BASE = ''
 const router = useRouter()
 
+<<<<<<< HEAD
+// Tabs
+const activeTab = ref('login')
+const switchTab = (tab) => {
+  activeTab.value = tab
+}
+
+// Login
+const email    = ref('')
+const password = ref('')
+const loading  = ref(false)
+
+const handleLogin = async () => {
+  if (!email.value || !password.value) {
+    toast.error(t('auth.errors.fillAll'))
+    return
+  }
+=======
 // Табове и грешки
 const activeTab = ref('login')
 const switchTab = (tab) => {
@@ -129,6 +234,7 @@ const handleLogin = async () => {
   errorMsg.value = ''
   successMsg.value = ''
   if (!email.value || !password.value) { errorMsg.value = t('auth.errors.fillAll'); return }
+>>>>>>> origin/main
   loading.value = true
   try {
     const res = await fetch(`${API_BASE}/auth/login`, {
@@ -137,6 +243,19 @@ const handleLogin = async () => {
       body: JSON.stringify({ email: email.value, password: password.value })
     })
     if (!res.ok) {
+<<<<<<< HEAD
+      toast.error(t('auth.errors.invalid'))
+      return
+    }
+    const data = await res.json()
+    const token = data.token
+    localStorage.setItem('invtr_token', token)
+
+    toast.success(t('auth.success.login'))
+    setTimeout(() => router.push('/dashboard'), 900)
+  } catch (_) {
+    toast.error(t('auth.errors.server'))
+=======
       errorMsg.value = t('auth.errors.invalid'); return
     }
     const data = await res.json()
@@ -148,23 +267,39 @@ const handleLogin = async () => {
     setTimeout(() => router.push('/dashboard'), 800)
   } catch (_) {
     errorMsg.value = t('auth.errors.server')
+>>>>>>> origin/main
   } finally {
     loading.value = false
   }
 }
 
+<<<<<<< HEAD
+// Register
+=======
 const handleForgot = () => {
   if (!email.value) { errorMsg.value = t('auth.errors.enterEmail'); return }
   showModal.value = true
 }
 
 // Регистрация
+>>>>>>> origin/main
 const regFirstName       = ref('')
 const regFamilyName      = ref('')
 const regEmail           = ref('')
 const regPassword        = ref('')
 const regConfirmPassword = ref('')
 const regLoading         = ref(false)
+<<<<<<< HEAD
+
+const handleFinalRegister = async () => {
+  if (!regFirstName.value || !regFamilyName.value || !regEmail.value || !regPassword.value || !regConfirmPassword.value) {
+    toast.error(t('auth.errors.fillAll'))
+    return
+  }
+  if (regPassword.value !== regConfirmPassword.value) {
+    toast.error(t('auth.errors.noMatch'))
+    return
+=======
 const regError           = ref('')
 const regSuccess         = ref('')
 
@@ -176,6 +311,7 @@ const handleFinalRegister = async () => {
   }
   if (regPassword.value !== regConfirmPassword.value) {
     regError.value = t('auth.errors.noMatch'); return
+>>>>>>> origin/main
   }
   regLoading.value = true
   try {
@@ -188,12 +324,22 @@ const handleFinalRegister = async () => {
       })
     })
     if (!res.ok) {
+<<<<<<< HEAD
+      toast.error(t('auth.errors.regFailed'))
+      return
+    }
+    toast.success(t('auth.success.register'))
+    setTimeout(() => { email.value = regEmail.value; switchTab('login') }, 1800)
+  } catch (_) {
+    toast.error(t('auth.errors.server'))
+=======
       regError.value = t('auth.errors.regFailed'); return
     }
     regSuccess.value = t('auth.success.register')
     setTimeout(() => { email.value = regEmail.value; switchTab('login') }, 2000)
   } catch (_) {
     regError.value = t('auth.errors.server')
+>>>>>>> origin/main
   } finally {
     regLoading.value = false
   }
@@ -202,4 +348,8 @@ const handleFinalRegister = async () => {
 
 <style>
 @import '@/assets/login.css';
+<<<<<<< HEAD
+</style>
+=======
 </style> 
+>>>>>>> origin/main

@@ -23,10 +23,17 @@
         </div>
       </div>
       <div class="stat-card stat-red">
+<<<<<<< HEAD
+        <div class="stat-icon">🚫</div>
+        <div class="stat-body">
+          <span class="stat-value">{{ notAvailableCount }}</span>
+          <span class="stat-label">{{ $t('dashboard.notAvailable') }}</span>
+=======
         <div class="stat-icon">🔧</div>
         <div class="stat-body">
           <span class="stat-value">{{ repairCount }}</span>
           <span class="stat-label">{{ $t('dashboard.underRepair') }}</span>
+>>>>>>> origin/main
         </div>
       </div>
     </div>
@@ -143,7 +150,11 @@ defineProps({
   totalItems: Number,
   availableCount: Number,
   pendingCount: Number,
+<<<<<<< HEAD
+  notAvailableCount: Number,
+=======
   repairCount: Number,
+>>>>>>> origin/main
 })
 
 defineEmits(['openAddItem', 'editItem', 'deleteItem', 'navigate'])

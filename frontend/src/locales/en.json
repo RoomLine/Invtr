@@ -6,6 +6,10 @@
     "myRequests": "My Requests",
     "history": "History",
     "users": "Users",
+<<<<<<< HEAD
+    "reports": "Reports",
+=======
+>>>>>>> origin/main
     "settings": "Settings"
   },
   "dashboard": {
@@ -14,6 +18,56 @@
     "available": "Available",
     "pendingRequests": "Pending Requests",
     "underRepair": "Under Repair",
+<<<<<<< HEAD
+    "notAvailable": "Not Available",
+    "activeBorrows": "Active Borrows",
+    "recentRequests": "Recent Requests",
+    "dateRequested": "Date Requested",
+    "returnBy": "Return By",
+    "noData": "No items found.",
+    "noRequests": "No requests yet."
+  },
+  "reports": {
+    "subTitle": "Borrowing history and system statistics",
+    "totalRequests": "Total Requests",
+    "returned": "Returned",
+    "pending": "Pending",
+    "approvalRate": "Approval Rate",
+    "noData": "No records found.",
+    "items": "Items",
+    "statusBreakdown": "Status Breakdown",
+    "tabs": {
+      "all": "All",
+      "pending": "Pending",
+      "approved": "Approved",
+      "returned": "Returned",
+      "rejected": "Rejected",
+      "taken": "Taken",
+      "late": "Late"
+    }
+  },
+  "toast": {
+    "itemAdded": "Item added successfully.",
+    "itemUpdated": "Item updated successfully.",
+    "itemDeleted": "Item removed successfully.",
+    "userAdded": "User created successfully.",
+    "userDeleted": "User removed.",
+    "roleUpdated": "Role updated successfully.",
+    "requestApproved": "Request approved.",
+    "requestRejected": "Request rejected.",
+    "itemReturned": "Item return processed successfully.",
+    "loadItemsFailed": "Could not load equipment.",
+    "networkError": "Network error. Please try again.",
+    "actionFailed": "Action failed. Please try again.",
+    "saveFailed": "Could not save. Please try again.",
+    "deleteFailed": "Could not delete. Please try again.",
+    "returnFailed": "Could not process return.",
+    "confirmDelete": "Are you sure you want to delete this?"
+  },
+  "inventory": {
+    "addNew": "Add New Item",
+    "preview": "Live Preview",
+=======
     "activeBorrows": "Active Borrows",
     "recentRequests": "Recent Requests",
     "noData": "No items found.",
@@ -21,6 +75,7 @@
   },
   "inventory": {
     "addNew": "Add New Item",
+>>>>>>> origin/main
     "editItem": "Edit Item",
     "addItemBtn": "Add Item",
     "itemName": "Item Name",
@@ -54,6 +109,13 @@
       "good": "Good",
       "damaged": "Damaged",
       "broken": "Broken"
+<<<<<<< HEAD
+    },
+    "errors": {
+      "nameRequired": "Item name is required.",
+      "serialRequired": "Serial number is required."
+=======
+>>>>>>> origin/main
     }
   },
   "requests": {
@@ -61,14 +123,27 @@
       "all": "All",
       "pending": "Pending",
       "approved": "Approved",
+<<<<<<< HEAD
+      "rejected": "Rejected",
+      "returned": "Returned",
+      "return": "Mark Returned"
+    },
+    "returnTitle": "Process Return",
+    "confirmReturn": "Confirm Return"
+=======
       "rejected": "Rejected"
     }
+>>>>>>> origin/main
   },
   "users": {
     "addNew": "Add User",
     "subTitle": "Manage registered users and their access",
     "noUsers": "No users found.",
     "role": "Role",
+<<<<<<< HEAD
+    "exportHistory": "Export History",
+=======
+>>>>>>> origin/main
     "roles": {
       "user": "USER",
       "admin": "ADMIN"
@@ -109,6 +184,11 @@
   },
   "auth": {
     "systemName": "School Inventory System",
+<<<<<<< HEAD
+    "adminRole": "Administrator",
+    "logout": "Log out",
+=======
+>>>>>>> origin/main
     "login": "Log In",
     "register": "Register",
     "email": "Email Address",
@@ -141,8 +221,71 @@
       "btn": "OK, Got it"
     }
   },
+<<<<<<< HEAD
+  "user": {
+    "role": "User",
+    "overview": {
+      "availableItems": "Available Items",
+      "currentRequests": "Current Requests",
+      "activeBorrows": "Active Borrows",
+      "totalRequests": "Total Requests (All Time)",
+      "myActiveBorrows": "My Active Borrows",
+      "noActiveBorrows": "No active borrows",
+      "borrowed": "Borrowed:",
+      "recentRequests": "Recent Requests",
+      "noRecentRequests": "No recent requests"
+    },
+    "inventory": {
+      "allTypes": "All Types",
+      "allStatuses": "All Statuses",
+      "loading": "Loading equipment...",
+      "noEquipment": "No equipment found.",
+      "condition": "Condition:",
+      "unavailable": "Unavailable",
+      "addToRequest": "+ Add to Request",
+      "selected": "✓ Selected",
+      "unitsAvailable": "unit available | units available"
+    },
+    "cart": {
+      "selected": "item selected | items selected",
+      "clear": "Clear",
+      "requestAll": "Request All →"
+    },
+    "requests": {
+      "title": "My Requests",
+      "serviceOffline": "⚠ Request service offline",
+      "empty": "You have no requests yet.",
+      "item": "Item",
+      "requested": "Requested",
+      "from": "From",
+      "until": "Until"
+    },
+    "history": {
+      "title": "Borrowing History",
+      "empty": "No history yet.",
+      "item": "Item",
+      "borrowed": "Borrowed",
+      "returned": "Returned",
+      "condition": "Condition"
+    },
+    "modal": {
+      "title": "Request Borrow",
+      "fromDate": "From Date",
+      "untilDate": "Until Date",
+      "submit": "Submit Request",
+      "noItems": "No items selected.",
+      "selectDates": "Please select both dates.",
+      "endAfterStart": "End date must be after start date.",
+      "success": "Request submitted successfully!",
+      "serverError": "Could not reach the request service."
+    }
+  },
+  "common": {
+    "save": "Edit",
+=======
   "common": {
     "save": "Save Changes",
+>>>>>>> origin/main
     "cancel": "Cancel",
     "viewAll": "View All",
     "remove": "Remove",
@@ -150,6 +293,12 @@
     "activeStatus": "Active",
     "inactive": "Inactive",
     "approve": "Approve",
+<<<<<<< HEAD
+    "reject": "Reject",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode"
+=======
     "reject": "Reject"
+>>>>>>> origin/main
   }
 }
